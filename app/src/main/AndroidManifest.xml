@@ -14,16 +14,7 @@
         android:theme="@style/Theme.Projecto_CM"
         tools:targetApi="31" >
         <activity
-            android:name=".Function3_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Function2_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Function1_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".Login_Register"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -3,4 +3,12 @@
     <string name="button1">Function 1</string>
     <string name="button2">Function 2</string>
     <string name="button3">Function 3</string>
+    <string name="username" />
+    <string name="password" />
+    <string name="register_new_account_button">Register account</string>
+    <string name="login_with_existent_account_button">I already have an account</string>
+    <string name="email" />
+    <string name="confirm_register">Register new account</string>
+    <string name="confirm_login_button">Login</string>
+    <string name="create_new_account_message">Don\'t have an account, create one!</string>
 </resources>
