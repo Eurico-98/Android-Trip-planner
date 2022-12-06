@@ -1,4 +1,4 @@
-package com.example.projecto_cm;
+package com.example.projecto_cm.Frags_Login_Register;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class Login extends Fragment {
+import com.example.projecto_cm.FragmentChangeListener;
+import com.example.projecto_cm.Main_Activity;
+import com.example.projecto_cm.R;
+import com.example.projecto_cm.SharedViewModel;
+
+public class Frag_Login extends Fragment {
 
     private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
@@ -39,7 +44,7 @@ public class Login extends Fragment {
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_login_layout, container, false);
-        fcl = (Login_Register) inflater.getContext(); // to change fragments
+        fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         // load toolbar of this fragment
         Toolbar login_toolbar = view.findViewById(R.id.login_toolbar);
@@ -58,7 +63,7 @@ public class Login extends Fragment {
         register_button.setOnClickListener(v -> {
 
             // load register fragment
-            Register register_frag = new Register();
+            Frag_Register register_frag = new Frag_Register();
             fcl.replaceFragment(register_frag);
         });
     }

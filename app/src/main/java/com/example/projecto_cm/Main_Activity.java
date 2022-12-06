@@ -6,7 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
-public class Login_Register extends AppCompatActivity implements FragmentChangeListener {
+import com.example.projecto_cm.Frags_Login_Register.Frag_Login;
+
+public class Main_Activity extends AppCompatActivity implements FragmentChangeListener {
 
     /**
      * on create of login_register activity
@@ -18,7 +20,7 @@ public class Login_Register extends AppCompatActivity implements FragmentChangeL
         setContentView(R.layout.activity_login_register_layout);
 
         // load login fragment
-        Login frag_login = new Login();
+        Frag_Login frag_login = new Frag_Login();
         replaceFragment(frag_login);
     }
 
@@ -30,7 +32,6 @@ public class Login_Register extends AppCompatActivity implements FragmentChangeL
         FragmentManager fragmentManager = getSupportFragmentManager();;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.activity_login_register_container, fragment);
-        fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
 }
