@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
-import com.example.projecto_cm.Frags_Login_Register.Frag_Login;
+import com.example.projecto_cm.Fragments.Frag_Login;
 
 public class Main_Activity extends AppCompatActivity implements FragmentChangeListener {
 
@@ -17,7 +17,7 @@ public class Main_Activity extends AppCompatActivity implements FragmentChangeLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_register_layout);
+        setContentView(R.layout.activity_layout);
 
         // load login fragment
         Frag_Login frag_login = new Frag_Login();

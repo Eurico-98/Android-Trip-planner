@@ -11,4 +11,8 @@
     <string name="confirm_register">Register new account</string>
     <string name="confirm_login_button">Login</string>
     <string name="create_new_account_message">Don\'t have an account, create one!</string>
+    <string name="add_friends">Add friends</string>
+    <string name="take_photo">Take photo</string>
+    <string name="view_my_trips">View my trips</string>
+    <string name="plan_a_trip">Plan a trip</string>
 </resources>

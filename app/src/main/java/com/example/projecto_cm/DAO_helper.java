@@ -3,7 +3,8 @@ package com.example.projecto_cm;
 import androidx.annotation.NonNull;
 
 import com.example.projecto_cm.DB_entities.MyUser;
-import com.example.projecto_cm.Frags_Login_Register.Frag_Register;
+import com.example.projecto_cm.Fragments.Frag_Login;
+import com.example.projecto_cm.Fragments.Frag_Register;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,9 +16,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -41,6 +40,7 @@ public class DAO_helper{
         databaseReference = db.getReference();
     }
 
+    // ------------------------------------------ Methods for registration ------------------------------------------------------------
     public void check_inserted_username(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
@@ -121,6 +121,58 @@ public class DAO_helper{
         // insert new user (child) into the Users reference tree
         return databaseReference.child("Users").child(username).setValue(new_user);
     }
+    // ------------------------------------------ Methods for registration ------------------------------------------------------------
+
+
+    // ------------------------------------------ Methods for login -------------------------------------------------------------------
+    public void check_credentials(String username, String password, DAO_helper dao, Frag_Login fg) {
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+
+        // check if username exists
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // if it exists check password
+                if(dataSnapshot.exists()) {
+
+                    DatabaseReference passwordRef = databaseReference.child("Users").child(username).child("password");
+                    ValueEventListener passwordEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            // decrypt password in database and compare
+                            try {
+                                if(validatePassword(password, Objects.requireNonNull(dataSnapshot.getValue()).toString())){
+                                    fg.result("Valid user");
+                                }
+                                else{
+                                    fg.result("Wrong password!");
+                                }
+                            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                    };
+                    passwordRef.addListenerForSingleValueEvent(passwordEventListener);
+                }
+                else{
+                    fg.result("Username not registered!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+    // ------------------------------------------ Methods for login -------------------------------------------------------------------
+
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------
     private static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -143,7 +195,7 @@ public class DAO_helper{
         return salt;
     }
 
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+    private static String toHex(byte[] array) {
 
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
@@ -175,7 +227,7 @@ public class DAO_helper{
         return diff == 0;
     }
 
-    private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+    private static byte[] fromHex(String hex) {
         byte[] bytes = new byte[hex.length() / 2];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
