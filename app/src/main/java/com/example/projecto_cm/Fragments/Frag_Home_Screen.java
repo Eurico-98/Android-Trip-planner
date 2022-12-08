@@ -15,7 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.projecto_cm.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.SharedViewModel;
@@ -53,7 +53,7 @@ public class Frag_Home_Screen extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.no_actions_appbar, menu);
+        inflater.inflate(R.menu.home_screen_actions, menu);
 
         // change app bar title
         ActionBar ab = ((AppCompatActivity) requireActivity()).getSupportActionBar();

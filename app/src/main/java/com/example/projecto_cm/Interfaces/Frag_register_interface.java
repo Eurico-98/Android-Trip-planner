@@ -1,4 +1,6 @@
-package com.example.projecto_cm;
+package com.example.projecto_cm.Interfaces;
+
+import com.example.projecto_cm.DAO_helper;
 
 public interface Frag_register_interface {
 

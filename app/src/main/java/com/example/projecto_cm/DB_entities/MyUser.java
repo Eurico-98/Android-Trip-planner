@@ -2,7 +2,6 @@ package com.example.projecto_cm.DB_entities;
 
 import android.net.Uri;
 
-
 public class MyUser {
 
     private String username;

@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.projecto_cm.DAO_helper;
-import com.example.projecto_cm.Frag_register_interface;
-import com.example.projecto_cm.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Frag_register_interface;
+import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 

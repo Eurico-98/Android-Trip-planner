@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.projecto_cm.DAO_helper;
-import com.example.projecto_cm.Frag_login_interface;
-import com.example.projecto_cm.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Frag_login_interface;
+import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.SharedViewModel;
