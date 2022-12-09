@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,24 +14,26 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
-import com.example.projecto_cm.SharedViewModel;
 
 public class Frag_Home_Screen extends Fragment {
 
-    private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
+    private String username;
 
-
+    /**
+     *  onCreateView of home screen fragment
+     *  load layout and toolbar
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        // get activity to get shared view model
-        model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_home_screen_layout, container, false);
@@ -45,9 +48,42 @@ public class Frag_Home_Screen extends Fragment {
     }
 
     /**
+     * bind buttons to listeners
+     * crete trip
+     * add friend
+     * view my trips
+     * take photo
+     * @param view
+     * @param savedInstanceState
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button create_trip, add_friend, view_my_trips, take_photo;
+
+        create_trip = view.findViewById(R.id.plan_trip);
+        create_trip.setOnClickListener(view1 -> {
+            Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
+            fcl.replaceFragment(frag_create_trip);
+        });
+
+
+        add_friend = view.findViewById(R.id.add_friends);
+        //add_friend.setOnClickListener(view1 -> );
+
+
+        view_my_trips = view.findViewById(R.id.view_trips);
+        //view_my_trips.setOnClickListener(view1 -> );
+
+
+        take_photo = view.findViewById(R.id.take_photo);
+        //take_photo.setOnClickListener(view1 -> );
+    }
+
+    /**
      * app bar menu set up
-     * just changes the title in the app bar to Login
-     * uses empty app bar layout
+     * has logout button and view profile button
      * @param menu
      * @param inflater
      */

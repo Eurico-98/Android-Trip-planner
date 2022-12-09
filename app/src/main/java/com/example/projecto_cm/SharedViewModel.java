@@ -5,17 +5,17 @@ import androidx.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
 
-    private final MutableLiveData<Object> user_id = new MutableLiveData<>();
+    private final MutableLiveData<Object> username = new MutableLiveData<>();
 
     /**
-     * function to send user ID
-     * @param _id
+     * function to send username
+     * @param username_
      */
-    public void send_user_id(Object _id) { user_id.setValue(_id); }
+    public void send_username(Object username_) { username.setValue(username_); }
 
     /**
-     * function to get user id
+     * function to get username
      * @return
      */
-    public LiveData<Object> get_user_id() {return user_id; }
+    public LiveData<Object> get_username() {return username; }
 }

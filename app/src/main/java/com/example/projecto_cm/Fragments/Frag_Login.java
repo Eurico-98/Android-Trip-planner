@@ -90,7 +90,7 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
                 service.execute(() -> {
 
                     DAO_helper dao = new DAO_helper();
-                    dao.check_credentials(username.getText().toString(), password.getText().toString(), dao, this);
+                    dao.check_credentials(username.getText().toString(), password.getText().toString(), this);
                 });
 
             }
@@ -105,13 +105,20 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
      * @param result
      */
     @Override
-    public void result(String result) {
+    public void result(String result, String username) {
 
         // if credentials are wrong
         if(!Objects.equals(result, "Valid user")){
             Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
         }
         else {
+
+            // clear model view and send username
+            requireActivity().getViewModelStore().clear();
+
+            // send username to get it in home screen
+            model.send_username(username);
+
             Frag_Home_Screen home_screen = new Frag_Home_Screen();
             fcl.replaceFragment(home_screen);
         }

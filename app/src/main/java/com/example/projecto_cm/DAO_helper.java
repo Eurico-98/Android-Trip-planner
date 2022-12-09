@@ -40,6 +40,7 @@ public class DAO_helper{
         databaseReference = db.getReference();
     }
 
+
     // ------------------------------------------ Methods for registration ------------------------------------------------------------
     public void check_inserted_username(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
@@ -124,8 +125,9 @@ public class DAO_helper{
     // ------------------------------------------ Methods for registration ------------------------------------------------------------
 
 
+
     // ------------------------------------------ Methods for login -------------------------------------------------------------------
-    public void check_credentials(String username, String password, DAO_helper dao, Frag_Login fg) {
+    public void check_credentials(String username, String password, Frag_Login fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
 
@@ -145,10 +147,10 @@ public class DAO_helper{
                             // decrypt password in database and compare
                             try {
                                 if(validatePassword(password, Objects.requireNonNull(dataSnapshot.getValue()).toString())){
-                                    fg.result("Valid user");
+                                    fg.result("Valid user", username);
                                 }
                                 else{
-                                    fg.result("Wrong password!");
+                                    fg.result("Wrong password!", "");
                                 }
                             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                                 e.printStackTrace();
@@ -162,7 +164,7 @@ public class DAO_helper{
                     passwordRef.addListenerForSingleValueEvent(passwordEventListener);
                 }
                 else{
-                    fg.result("Username not registered!");
+                    fg.result("Username not registered!", "");
                 }
             }
 
@@ -172,6 +174,7 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
     // ------------------------------------------ Methods for login -------------------------------------------------------------------
+
 
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------

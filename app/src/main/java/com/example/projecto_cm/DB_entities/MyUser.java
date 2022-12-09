@@ -4,11 +4,11 @@ import android.net.Uri;
 
 public class MyUser {
 
-    private String username;
+    private String username; // this is unique it is like the user ID
     private String email;
     private String password;
     private Uri filePath; // for the profile image location
-    private String fullName;
+    private String fullName; // this is the user real name
 
     public MyUser() {}
 

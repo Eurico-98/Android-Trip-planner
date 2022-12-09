@@ -17,4 +17,6 @@
     <string name="plan_a_trip">Plan a trip</string>
     <string name="log_out">Log out</string>
     <string name="view_profile">My Profile</string>
+    <string name="save_trip">Save</string>
+    <string name="search">Search location</string>
 </resources>
