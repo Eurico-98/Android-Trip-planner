@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -91,7 +92,7 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
 
             // load login frag
             Frag_Login login_frag = new Frag_Login();
-            fcl.replaceFragment(login_frag);
+            fcl.replaceFragment(login_frag, "no");
         });
     }
 
@@ -122,7 +123,7 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
 
                     // on success load login frag
                     Frag_Login login_frag = new Frag_Login();
-                    fcl.replaceFragment(login_frag);
+                    fcl.replaceFragment(login_frag, "no");
 
                 }).addOnFailureListener(er ->
                         Toast.makeText(requireActivity(), "Failed to create account \n" + er.getMessage(), Toast.LENGTH_SHORT).show()

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import com.example.projecto_cm.Fragments.Frag_Login;
 import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 
+import java.util.Objects;
+
 public class Main_Activity extends AppCompatActivity implements FragmentChangeListener {
 
     /**
@@ -22,17 +24,20 @@ public class Main_Activity extends AppCompatActivity implements FragmentChangeLi
 
         // load login fragment
         Frag_Login frag_login = new Frag_Login();
-        replaceFragment(frag_login);
+        replaceFragment(frag_login, "no");
     }
 
     /**
      * to navigate through fragments
      * @param fragment
      */
-    public void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment, String keep_frag_in_stack) {
         FragmentManager fragmentManager = getSupportFragmentManager();;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.activity_login_register_container, fragment);
+        if(Objects.equals(keep_frag_in_stack, "yes")){
+            fragmentTransaction.addToBackStack(fragment.toString());
+        }
         fragmentTransaction.commit();
     }
 }

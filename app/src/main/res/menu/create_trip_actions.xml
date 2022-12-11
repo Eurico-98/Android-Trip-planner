@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/save_trip"
-        android:icon="@drawable/ic_save"
-        android:title="@string/save_trip"
+        android:id="@+id/normal_map"
+        android:title="@string/normal_map"
+        android:icon="@drawable/ic_normal_map"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/satellite_map"
+        android:title="@string/satellite_map"
+        android:icon="@drawable/ic_satellite_map"
         app:showAsAction="ifRoom" />
 
 </menu>

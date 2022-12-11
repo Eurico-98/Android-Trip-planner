@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,12 +61,13 @@ public class Frag_Home_Screen extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button create_trip, add_friend, view_my_trips, take_photo;
+        Button create_trip, view_my_trips, take_photo;
+        ImageButton add_friend;
 
         create_trip = view.findViewById(R.id.plan_trip);
         create_trip.setOnClickListener(view1 -> {
             Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
-            fcl.replaceFragment(frag_create_trip);
+            fcl.replaceFragment(frag_create_trip, "yes");
         });
 
 

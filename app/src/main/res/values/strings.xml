@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">CM_Project</string>
-    <string name="button1">Function 1</string>
-    <string name="button2">Function 2</string>
-    <string name="button3">Function 3</string>
     <string name="username" />
     <string name="password" />
     <string name="register_new_account_button">Register account</string>
@@ -19,4 +16,9 @@
     <string name="view_profile">My Profile</string>
     <string name="save_trip">Save</string>
     <string name="search">Search location</string>
+    <string name="normal_map">Normal map</string>
+    <string name="satellite_map">Satellite map</string>
+    <string name="add_location">Add</string>
+    <string name="create_trip">Confirm and create Trip</string>
+    <string name="Locations">List of locations</string>
 </resources>

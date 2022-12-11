@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -74,7 +75,7 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
 
             // load register fragment
             Frag_Register register_frag = new Frag_Register();
-            fcl.replaceFragment(register_frag);
+            fcl.replaceFragment(register_frag, "no");
         });
 
         // get login button
@@ -82,6 +83,10 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
         EditText username = requireActivity().findViewById(R.id.editUsername);
         EditText password = requireActivity().findViewById(R.id.editPassword);
         login_button.setOnClickListener(v -> {
+
+            // dismiss keyboard
+            username.onEditorAction(EditorInfo.IME_ACTION_DONE);
+            password.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
             // if username and pass were inserted
             if(!username.getText().toString().equals("") && !password.getText().toString().equals("")){
@@ -120,7 +125,7 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
             model.send_username(username);
 
             Frag_Home_Screen home_screen = new Frag_Home_Screen();
-            fcl.replaceFragment(home_screen);
+            fcl.replaceFragment(home_screen, "no");
         }
     }
 }
