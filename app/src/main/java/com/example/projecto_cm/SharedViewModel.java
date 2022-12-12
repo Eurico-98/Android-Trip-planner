@@ -15,7 +15,7 @@ public class SharedViewModel extends ViewModel {
 
     /**
      * function to get username
-     * @return
+     * @return username
      */
-    public LiveData<Object> get_username() {return username; }
+    public LiveData<Object> get_username() { return username; }
 }

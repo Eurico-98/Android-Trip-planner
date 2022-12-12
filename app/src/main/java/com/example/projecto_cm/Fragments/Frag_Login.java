@@ -31,8 +31,6 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
 
     private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
-    private ExecutorService service;
-    private Handler handler;
 
     /**
      * onCreateView of login fragment
@@ -47,10 +45,6 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
 
         // get activity to get shared view model
         model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-
-        // create 2 threads just in case - to read and write from database
-        service = Executors.newFixedThreadPool(2);
-        handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_login_layout, container, false);
@@ -92,12 +86,8 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
             if(!username.getText().toString().equals("") && !password.getText().toString().equals("")){
 
                 // check if username and email are valid
-                service.execute(() -> {
-
-                    DAO_helper dao = new DAO_helper();
-                    dao.check_credentials(username.getText().toString(), password.getText().toString(), this);
-                });
-
+                DAO_helper dao = new DAO_helper();
+                dao.check_credentials(username.getText().toString(), password.getText().toString(), this);
             }
             else {
                 Toast.makeText(requireActivity(), "Please insert username and password!", Toast.LENGTH_SHORT).show();
@@ -117,9 +107,6 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
             Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
         }
         else {
-
-            // clear model view and send username
-            requireActivity().getViewModelStore().clear();
 
             // send username to get it in home screen
             model.send_username(username);

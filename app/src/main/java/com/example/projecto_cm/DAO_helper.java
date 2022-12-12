@@ -3,6 +3,8 @@ package com.example.projecto_cm;
 import androidx.annotation.NonNull;
 
 import com.example.projecto_cm.DB_entities.MyUser;
+import com.example.projecto_cm.DB_entities.Trip;
+import com.example.projecto_cm.Fragments.Frag_Create_Trip;
 import com.example.projecto_cm.Fragments.Frag_Login;
 import com.example.projecto_cm.Fragments.Frag_Register;
 import com.google.android.gms.tasks.Task;
@@ -16,6 +18,8 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.crypto.SecretKeyFactory;
@@ -175,6 +179,58 @@ public class DAO_helper{
     }
     // ------------------------------------------ Methods for login -------------------------------------------------------------------
 
+
+    // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
+    public void get_user_trips(String username, Frag_Create_Trip fg){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // if user has trips return them
+                if(dataSnapshot.exists()) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+    public void add_trips(String username, Frag_Create_Trip fg, Trip new_trip){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                List<Trip> my_trips = new ArrayList<>();
+
+                // if user already has a list of trips
+                if(dataSnapshot.exists()) {
+                    System.out.println("------------------------------------------------ lista de viagens: "+ dataSnapshot.getValue());
+                    my_trips = (List<Trip>) dataSnapshot.getValue();
+                }
+
+                my_trips.add(new_trip);
+
+                // return task that has a on success listener
+                fg.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+    // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
 
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------

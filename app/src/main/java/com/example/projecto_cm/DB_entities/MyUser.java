@@ -2,6 +2,8 @@ package com.example.projecto_cm.DB_entities;
 
 import android.net.Uri;
 
+import java.util.List;
+
 public class MyUser {
 
     private String username; // this is unique it is like the user ID
@@ -9,6 +11,7 @@ public class MyUser {
     private String password;
     private Uri filePath; // for the profile image location
     private String fullName; // this is the user real name
+    private List<Trip> my_trips;
 
     public MyUser() {}
 
@@ -59,4 +62,8 @@ public class MyUser {
     public String getFullName() { return fullName; }
 
     public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public List<Trip> getMy_trips() { return my_trips; }
+
+    public void setMy_trips(List<Trip> my_trips) { this.my_trips = my_trips; }
 }

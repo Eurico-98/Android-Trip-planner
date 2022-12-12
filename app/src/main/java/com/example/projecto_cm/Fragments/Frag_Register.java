@@ -27,7 +27,6 @@ import java.util.concurrent.Executors;
 public class Frag_Register extends Fragment implements Frag_register_interface {
 
     private FragmentChangeListener fcl; // to change fragment
-    private ExecutorService service;
 
     /**
      * on create view of register fragment
@@ -39,9 +38,6 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        // create 2 threads just in case - to read and write from database
-        service = Executors.newFixedThreadPool(2);
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_register_layout, container, false);
@@ -74,15 +70,11 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
             // execute only if all inputs fields have text
             if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !password.getText().toString().equals("")){
 
-                // do this in the background
-                service.execute(() -> {
+                // create new DAO instance for database access
+                DAO_helper dao = new DAO_helper();
 
-                    // create new DAO instance for database access
-                    DAO_helper dao = new DAO_helper();
-
-                    // check if username and mail already exist
-                    dao.check_inserted_username(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
-                });
+                // check if username and mail already exist
+                dao.check_inserted_username(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
             }
         });
 

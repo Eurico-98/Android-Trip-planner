@@ -1,5 +1,6 @@
 package com.example.projecto_cm.DB_entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -7,18 +8,18 @@ import java.util.List;
 public class Trip {
 
     private String title;
-    private Date star_date;
-    private Date end_date;
-    private HashMap locations_and_poi; // keys will be locations values will be a list of points of interest
+    private String start_date;
+    private String end_date;
+    private ArrayList<String> locations; // keys will be locations values will be a list of points of interest
     private List invited_friend;
 
     public Trip() {}
 
-    public Trip(String title, Date star_date, Date end_date, HashMap locations_and_poi) {
+    public Trip(String title, String start_date, String end_date, ArrayList<String> locations) {
         this.title = title;
-        this.star_date = star_date;
+        this.start_date = start_date;
         this.end_date = end_date;
-        this.locations_and_poi = locations_and_poi;
+        this.locations = locations;
     }
 
     public String getTitle() {
@@ -29,29 +30,27 @@ public class Trip {
         this.title = title;
     }
 
-    public Date getStar_date() {
-        return star_date;
+    public String getStar_date() {
+        return start_date;
     }
 
-    public void setStar_date(Date star_date) {
-        this.star_date = star_date;
+    public void setStar_date(String start_date) {
+        this.start_date = start_date;
     }
 
-    public Date getEnd_date() {
+    public String getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(Date end_date) {
+    public void setEnd_date(String end_date) {
         this.end_date = end_date;
     }
 
-    public HashMap getLocations_and_poi() {
-        return locations_and_poi;
+    public ArrayList<String> getLocations() {
+        return locations;
     }
 
-    public void setLocations_and_poi(HashMap locations_and_poi) {
-        this.locations_and_poi = locations_and_poi;
-    }
+    public void setLocations(ArrayList<String> locations) {this.locations = locations;}
 
     public List getInvited_friend() {
         return invited_friend;

@@ -15,13 +15,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.projecto_cm.Interfaces.FragmentChangeListener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
+import com.example.projecto_cm.SharedViewModel;
 
 public class Frag_Home_Screen extends Fragment {
 
+    private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
     private String username;
 
@@ -35,6 +38,10 @@ public class Frag_Home_Screen extends Fragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        // get activity to get shared view model
+        model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_home_screen_layout, container, false);
@@ -66,6 +73,8 @@ public class Frag_Home_Screen extends Fragment {
 
         create_trip = view.findViewById(R.id.plan_trip);
         create_trip.setOnClickListener(view1 -> {
+            model.send_username(username);
+
             Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
             fcl.replaceFragment(frag_create_trip, "yes");
         });
