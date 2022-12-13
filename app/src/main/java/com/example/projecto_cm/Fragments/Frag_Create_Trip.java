@@ -49,7 +49,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,6 +90,8 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
     private Date start_date_for_comparison;
     private EditText trip_title_input;
 
+    private Dialog loading_animation_dialog;
+
     /**
      *  onCreateView of create trip fragment
      *  load layout and toolbar and get username from shared model view
@@ -129,6 +130,12 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // prepare loading animation
+        loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loading_animation_dialog.setCanceledOnTouchOutside(false);
+        loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
 
         mapView = requireActivity().findViewById(R.id.map_view); // bind map view
         trip_locations_recyclerView = view.findViewById(R.id.trip_location_list);
@@ -199,6 +206,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
 
     /**
      * app bar menu actions
+     * simple map view and satellite map view
      * @param item
      * @return
      */
@@ -223,12 +231,11 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int result = googleApiAvailability.isGooglePlayServicesAvailable(requireContext());
 
-        if (result == ConnectionResult.SUCCESS){
+        if (result == ConnectionResult.SUCCESS) {
             return true;
-        }
-        else if(googleApiAvailability.isUserResolvableError(result)){
+        } else if (googleApiAvailability.isUserResolvableError(result)) {
             Dialog dialog = googleApiAvailability.getErrorDialog(requireActivity(), result, 201, dialog1 ->
-                    Toast.makeText(requireActivity(), "Canceled!",Toast.LENGTH_SHORT).show());
+                    Toast.makeText(requireActivity(), "Canceled!", Toast.LENGTH_SHORT).show());
             assert dialog != null;
             dialog.show();
         }
@@ -292,14 +299,14 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
                     // automatically zoom to the inserted location if there is only one result
                     if(listAddress.size() == 1){
                         Toast.makeText(requireActivity(), "Found 1 location!", Toast.LENGTH_SHORT).show();
-                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
                         google_Map.animateCamera(cameraUpdate);
                     }
 
                     // zoom in only to level 5 in case of multiple results
                     else if(i == listAddress.size()-1){
                         Toast.makeText(requireActivity(), "Found "+ listAddress.size() + " locations!", Toast.LENGTH_SHORT).show();
-                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 2);
+                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 3);
                         google_Map.animateCamera(cameraUpdate);
                     }
                 }
@@ -583,14 +590,13 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
 
         if(!trip_title_input.getText().toString().equals("")){
 
+            // hide login layout and show loading animation
+            loading_animation_dialog.show();
             complete_trip_data_dialog.dismiss();
 
             Trip new_trip = new Trip(trip_title_input.getText().toString(), start_date_input.getText().toString(), end_date_input.getText().toString(), trip_locations_list);
             DAO_helper dao = new DAO_helper();
             dao.add_trips(username, this, new_trip);
-
-            // show loading animation while data is sent to database
-
         }
         else {
             Toast.makeText(requireActivity(), "Insert Trip title!",Toast.LENGTH_SHORT).show();
@@ -603,11 +609,12 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
      */
     public void getDAOResultMessage(Task<Void> add_trip) {
 
+        // cancel loading animation and go back to home screen
+        loading_animation_dialog.dismiss();
+
         add_trip.addOnSuccessListener(suc -> {
 
             Toast.makeText(requireActivity(), "Trip saved successfully!",Toast.LENGTH_SHORT).show();
-
-            // cancel loading animation and go back to home screen
 
             // don't keep Frag_create_trip in back stack
             Frag_Home_Screen frag_home_screen = new Frag_Home_Screen();

@@ -12,6 +12,7 @@ public class Trip {
     private String end_date;
     private ArrayList<String> locations; // keys will be locations values will be a list of points of interest
     private List invited_friend;
+    private int election_duration;
 
     public Trip() {}
 
@@ -30,11 +31,11 @@ public class Trip {
         this.title = title;
     }
 
-    public String getStar_date() {
+    public String getStart_date() {
         return start_date;
     }
 
-    public void setStar_date(String start_date) {
+    public void setStart_date(String start_date) {
         this.start_date = start_date;
     }
 
@@ -58,5 +59,13 @@ public class Trip {
 
     public void setInvited_friend(List invited_friend) {
         this.invited_friend = invited_friend;
+    }
+
+    public int getElection_duration() {
+        return election_duration;
+    }
+
+    public void setElection_duration(int election_duration) {
+        this.election_duration = election_duration;
     }
 }

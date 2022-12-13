@@ -1,11 +1,13 @@
 package com.example.projecto_cm.Fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
 
     private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
+    private Dialog loading_animation_dialog;
 
     /**
      * onCreateView of login fragment
@@ -63,6 +66,12 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // prepare loading animation
+        loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loading_animation_dialog.setCanceledOnTouchOutside(false);
+        loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
+
         // get register button view from layout
         Button register_button = requireView().findViewById(R.id.register_new_account_button);
         register_button.setOnClickListener(v -> {
@@ -85,12 +94,15 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
             // if username and pass were inserted
             if(!username.getText().toString().equals("") && !password.getText().toString().equals("")){
 
+                // hide login layout and show loading animation
+                loading_animation_dialog.show();
+
                 // check if username and email are valid
                 DAO_helper dao = new DAO_helper();
                 dao.check_credentials(username.getText().toString(), password.getText().toString(), this);
             }
             else {
-                Toast.makeText(requireActivity(), "Please insert username and password!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Insert username and password!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -101,6 +113,8 @@ public class Frag_Login extends Fragment implements Frag_login_interface {
      */
     @Override
     public void result(String result, String username) {
+
+        loading_animation_dialog.dismiss();
 
         // if credentials are wrong
         if(!Objects.equals(result, "Valid user")){

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,6 +28,7 @@ public class Frag_Home_Screen extends Fragment {
     private SharedViewModel model;
     private FragmentChangeListener fcl; // to change fragment
     private String username;
+    private View view;
 
     /**
      *  onCreateView of home screen fragment
@@ -44,7 +46,7 @@ public class Frag_Home_Screen extends Fragment {
         model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_home_screen_layout, container, false);
+        view = inflater.inflate(R.layout.fragment_home_screen_layout, container, false);
         fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         // load toolbar of this fragment
@@ -73,6 +75,9 @@ public class Frag_Home_Screen extends Fragment {
 
         create_trip = view.findViewById(R.id.plan_trip);
         create_trip.setOnClickListener(view1 -> {
+
+            // hide home screen layout while next fragment loads to prevent user from clicking in other buttons while next fragment loads
+            view.setVisibility(View.GONE);
             model.send_username(username);
 
             Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
@@ -85,7 +90,10 @@ public class Frag_Home_Screen extends Fragment {
 
 
         view_my_trips = view.findViewById(R.id.view_trips);
-        //view_my_trips.setOnClickListener(view1 -> );
+        view_my_trips.setOnClickListener(view1 -> {
+            Frag_list_my_trips frag_list_my_trips = new Frag_list_my_trips();
+            fcl.replaceFragment(frag_list_my_trips, "yes");
+        });
 
 
         take_photo = view.findViewById(R.id.take_photo);
@@ -108,5 +116,25 @@ public class Frag_Home_Screen extends Fragment {
         ab.setTitle("Home screen");
 
         super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    /**
+     * app bar menu actions
+     * logout and view profile
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.view_profile){
+            // TODO
+        }
+        else if(item.getItemId() == R.id.log_out){
+            Frag_Login frag_login = new Frag_Login();
+            fcl.replaceFragment(frag_login, "no");
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

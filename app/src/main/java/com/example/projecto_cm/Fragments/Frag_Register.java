@@ -1,9 +1,11 @@
 package com.example.projecto_cm.Fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import java.util.concurrent.Executors;
 public class Frag_Register extends Fragment implements Frag_register_interface {
 
     private FragmentChangeListener fcl; // to change fragment
+    private Dialog loading_animation_dialog;
 
     /**
      * on create view of register fragment
@@ -58,6 +61,12 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // prepare loading animation
+        loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loading_animation_dialog.setCanceledOnTouchOutside(false);
+        loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
+
         // bind input fields
         EditText username = requireView().findViewById(R.id.editUsername);
         EditText password = requireView().findViewById(R.id.editPassword);
@@ -70,11 +79,17 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
             // execute only if all inputs fields have text
             if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !password.getText().toString().equals("")){
 
+                // hide login layout and show loading animation
+                loading_animation_dialog.show();
+
                 // create new DAO instance for database access
                 DAO_helper dao = new DAO_helper();
 
                 // check if username and mail already exist
                 dao.check_inserted_username(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
+            }
+            else {
+                Toast.makeText(requireActivity(), "Fill fields first!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -93,6 +108,7 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
         System.out.println("------------------------------- aqui 3");
 
         if(username_exists == 1){
+            loading_animation_dialog.dismiss();
             Toast.makeText(requireActivity(), "Username already registered!", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -104,6 +120,8 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
     public void create_new_account(String username, String email, String password, DAO_helper dao, int mail_exists) {
 
         System.out.println("------------------------------- aqui 6");
+
+        loading_animation_dialog.dismiss();
 
         if(mail_exists == 0){
 
