@@ -4,16 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray">
+    android:background="@color/fragment_background">
 
     <!--app bar-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/register_toolbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_blue"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:layout_constraintBottom_toTopOf="@+id/editUsername"
+        android:background="@drawable/widget_bar_background"
+        app:layout_constraintBottom_toTopOf="@+id/register_username_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/buttons_and_app_bar_text_color"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -32,7 +31,7 @@
 
     <!--input field for username-->
     <EditText
-        android:id="@+id/editUsername"
+        android:id="@+id/register_username_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:ems="15"
@@ -48,7 +47,7 @@
 
     <!--input field for password-->
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/register_password_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:ems="15"
@@ -64,7 +63,7 @@
 
     <!--input field for email-->
     <EditText
-        android:id="@+id/editEmail"
+        android:id="@+id/register_email_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:ems="15"
@@ -83,9 +82,9 @@
         android:id="@+id/confirm_register_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/confirm_register"
-        android:background="@color/dark_blue"
-        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="Register new account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,9 +96,9 @@
         android:id="@+id/login_with_existent_account_button"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="@string/login_with_existent_account_button"
-        android:background="@color/dark_blue"
-        android:textColor="@color/white"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="I already have an account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

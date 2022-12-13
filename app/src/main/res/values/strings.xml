@@ -2,23 +2,13 @@
     <string name="app_name">CM_Project</string>
     <string name="username" />
     <string name="password" />
-    <string name="register_new_account_button">Register account</string>
-    <string name="login_with_existent_account_button">I already have an account</string>
     <string name="email" />
-    <string name="confirm_register">Register new account</string>
-    <string name="confirm_login_button">Login</string>
-    <string name="create_new_account_message">Don\'t have an account, create one!</string>
     <string name="add_friends">Add friends</string>
-    <string name="take_photo">Take photo</string>
-    <string name="view_my_trips">View my trips</string>
-    <string name="plan_a_trip">Plan a trip</string>
     <string name="log_out">Log out</string>
     <string name="view_profile">My Profile</string>
     <string name="save_trip">Save</string>
     <string name="search">Search location</string>
     <string name="normal_map">Normal map</string>
     <string name="satellite_map">Satellite map</string>
-    <string name="add_location">Add</string>
-    <string name="create_trip">Save Trip</string>
-    <string name="Locations">My Trip</string>
+    <string name="add_location">Add location</string>
 </resources>

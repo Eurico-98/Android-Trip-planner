@@ -2,17 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray">
+    android:background="@color/fragment_background">
 
     <!--app bar-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_trips_list_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/dark_blue"
+        android:background="@color/button_and_appbar_background_color"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,8 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_trips_list_toolbar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/my_trips_list_toolbar"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

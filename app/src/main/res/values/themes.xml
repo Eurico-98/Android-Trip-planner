@@ -2,13 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.Projecto_CM" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/dark_blue</item>
-        <item name="colorPrimaryVariant">@color/dark_blue</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/button_and_appbar_background_color</item>
+        <item name="colorPrimaryVariant">@color/button_and_appbar_background_color</item>
+        <item name="colorOnPrimary">@color/loading_background</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/dark_blue</item>
-        <item name="colorSecondaryVariant">@color/dark_blue</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/button_and_appbar_background_color</item>
+        <item name="colorSecondaryVariant">@color/button_and_appbar_background_color</item>
+        <item name="colorOnSecondary">@color/loading_background</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

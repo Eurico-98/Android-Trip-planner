@@ -29,16 +29,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_Search_results_list;
-import com.example.projecto_cm.Adapters.Adapter_Trip_locations_list;
+import com.example.projecto_cm.Adapters.Adapter_Search_Results_List;
+import com.example.projecto_cm.Adapters.Adapter_Trip_Locations_List;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.DB_entities.Trip;
-import com.example.projecto_cm.Interfaces.Card_Search_result_interface;
-import com.example.projecto_cm.Interfaces.Card_location_interface;
-import com.example.projecto_cm.Interfaces.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result;
+import com.example.projecto_cm.Interfaces.Interface_Card_Location;
+import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
-import com.example.projecto_cm.SharedViewModel;
+import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -59,10 +59,10 @@ import java.util.Locale;
 import java.util.Objects;
 
 
-public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Card_location_interface, Card_Search_result_interface {
+public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Interface_Card_Location, Interface_Card_Search_Result {
 
-    private SharedViewModel model;
-    private FragmentChangeListener fcl; // to change fragment
+    private Shared_View_Model model;
+    private Interface_Frag_Change_Listener fcl; // to change fragment
     private String username;
     private MapView mapView;
     private GoogleMap google_Map;
@@ -78,10 +78,10 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
     private Button save_trip_button, start_date_input, end_date_input, create_trip_button;
     private EditText location_input;
     private ArrayList<String> trip_locations_list = new ArrayList<>(); // this is what will stay in the database
-    private Adapter_Trip_locations_list adapter_trip_locations_list;
+    private Adapter_Trip_Locations_List adapter_trip_locations_list;
 
     private ArrayList<String> search_results_list = new ArrayList<>(); // for searches with multiple results - show list in dialog to select only one of them to add to trip
-    private Adapter_Search_results_list adapter_search_results_list;
+    private Adapter_Search_Results_List adapter_search_results_list;
     private Dialog select_location_dialog; // dialog to select one result when a search returns several results
 
     private Dialog complete_trip_data_dialog;
@@ -104,7 +104,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // get activity to get shared view model
-        model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
         model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // load login fragment layout
@@ -144,7 +144,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
 
 
         // set up list of locations
-        adapter_trip_locations_list = new Adapter_Trip_locations_list(requireActivity(), this, trip_locations_list);
+        adapter_trip_locations_list = new Adapter_Trip_Locations_List(requireActivity(), this, trip_locations_list);
         trip_locations_recyclerView.setAdapter(adapter_trip_locations_list);
         trip_locations_recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
@@ -351,7 +351,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Ca
             }
 
             // set up list of locations
-            adapter_search_results_list = new Adapter_Search_results_list(requireActivity(), this, search_results_list);
+            adapter_search_results_list = new Adapter_Search_Results_List(requireActivity(), this, search_results_list);
             results_recycler_view.setAdapter(adapter_search_results_list);
             results_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 

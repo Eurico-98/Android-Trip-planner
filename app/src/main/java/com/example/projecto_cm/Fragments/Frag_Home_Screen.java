@@ -18,15 +18,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.projecto_cm.Interfaces.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
-import com.example.projecto_cm.SharedViewModel;
+import com.example.projecto_cm.Shared_View_Model;
 
 public class Frag_Home_Screen extends Fragment {
 
-    private SharedViewModel model;
-    private FragmentChangeListener fcl; // to change fragment
+    private Shared_View_Model model;
+    private Interface_Frag_Change_Listener fcl; // to change fragment
     private String username;
     private View view;
 
@@ -42,8 +42,8 @@ public class Frag_Home_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // get activity to get shared view model
-        model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
+        model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
+        //model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // load login fragment layout
         view = inflater.inflate(R.layout.fragment_home_screen_layout, container, false);
@@ -78,7 +78,6 @@ public class Frag_Home_Screen extends Fragment {
 
             // hide home screen layout while next fragment loads to prevent user from clicking in other buttons while next fragment loads
             view.setVisibility(View.GONE);
-            model.send_username(username);
 
             Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
             fcl.replaceFragment(frag_create_trip, "yes");
@@ -88,10 +87,9 @@ public class Frag_Home_Screen extends Fragment {
         add_friend = view.findViewById(R.id.add_friends);
         //add_friend.setOnClickListener(view1 -> );
 
-
         view_my_trips = view.findViewById(R.id.view_trips);
         view_my_trips.setOnClickListener(view1 -> {
-            Frag_list_my_trips frag_list_my_trips = new Frag_list_my_trips();
+            Frag_List_My_Trips frag_list_my_trips = new Frag_List_My_Trips();
             fcl.replaceFragment(frag_list_my_trips, "yes");
         });
 

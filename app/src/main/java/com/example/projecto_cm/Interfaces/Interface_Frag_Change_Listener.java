@@ -2,7 +2,7 @@ package com.example.projecto_cm.Interfaces;
 
 import androidx.fragment.app.Fragment;
 
-public interface FragmentChangeListener {
+public interface Interface_Frag_Change_Listener {
 
     /**
      * interface for the method to change fragments

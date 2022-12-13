@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,19 +15,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.projecto_cm.DAO_helper;
-import com.example.projecto_cm.Interfaces.Frag_register_interface;
-import com.example.projecto_cm.Interfaces.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Interface_Frag_Register;
+import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class Frag_Register extends Fragment implements Frag_register_interface {
+public class Frag_Register extends Fragment implements Interface_Frag_Register {
 
-    private FragmentChangeListener fcl; // to change fragment
+    private Interface_Frag_Change_Listener fcl; // to change fragment
     private Dialog loading_animation_dialog;
 
     /**
@@ -68,9 +65,9 @@ public class Frag_Register extends Fragment implements Frag_register_interface {
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
 
         // bind input fields
-        EditText username = requireView().findViewById(R.id.editUsername);
-        EditText password = requireView().findViewById(R.id.editPassword);
-        EditText email = requireView().findViewById(R.id.editEmail);
+        EditText username = requireView().findViewById(R.id.register_username_input);
+        EditText password = requireView().findViewById(R.id.register_password_input);
+        EditText email = requireView().findViewById(R.id.register_email_input);
         Button register_new_account_button = requireView().findViewById(R.id.confirm_register_button);
 
         // set on click listener for register button

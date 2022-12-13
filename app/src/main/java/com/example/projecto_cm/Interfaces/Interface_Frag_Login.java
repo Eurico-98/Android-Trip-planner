@@ -1,6 +1,6 @@
 package com.example.projecto_cm.Interfaces;
 
-public interface Frag_login_interface {
+public interface Interface_Frag_Login {
 
     void result(String result, String username);
 }

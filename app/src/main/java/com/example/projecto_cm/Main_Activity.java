@@ -7,11 +7,11 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.example.projecto_cm.Fragments.Frag_Login;
-import com.example.projecto_cm.Interfaces.FragmentChangeListener;
+import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 
 import java.util.Objects;
 
-public class Main_Activity extends AppCompatActivity implements FragmentChangeListener {
+public class Main_Activity extends AppCompatActivity implements Interface_Frag_Change_Listener {
 
     /**
      * on create of login_register activity

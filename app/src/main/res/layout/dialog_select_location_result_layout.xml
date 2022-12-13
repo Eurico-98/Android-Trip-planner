@@ -3,14 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:background="@color/dialog_background_color">
 
     <TextView
         android:id="@+id/filter_data_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/text_messages_color"
         android:text="Select one result"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/results_recycler_view"
@@ -18,9 +20,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/results_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_data_dialog_title" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/results_recycler_view"
-        android:layout_width="match_parent"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

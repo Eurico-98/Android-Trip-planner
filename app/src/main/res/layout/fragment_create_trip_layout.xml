@@ -2,18 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background">
 
     <!--app bar-->
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/create_trip_app_bar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_blue"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:background="@drawable/widget_bar_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,34 +45,37 @@
 
     <ImageButton
         android:id="@+id/add_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="15dp"
+        android:background="@drawable/button_background"
         android:text="@string/add_location"
+        app:srcCompat="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@+id/location_list_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/location_input_field"
         app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_add" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/search_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="15dp"
+        android:background="@drawable/button_background"
+        app:srcCompat="@drawable/ic_search"
         app:layout_constraintBottom_toTopOf="@+id/location_list_title"
         app:layout_constraintEnd_toStartOf="@+id/location_input_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_search" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/location_list_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Locations"
+        android:text="My Trip"
+        android:textColor="@color/text_messages_color"
         app:layout_constraintBottom_toTopOf="@+id/trip_location_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -96,7 +97,9 @@
         android:id="@+id/save_trip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_trip"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="Save Trip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

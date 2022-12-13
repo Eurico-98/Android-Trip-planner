@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.projecto_cm.DB_entities.MyUser;
 import com.example.projecto_cm.DB_entities.Trip;
 import com.example.projecto_cm.Fragments.Frag_Create_Trip;
+import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
 import com.example.projecto_cm.Fragments.Frag_Login;
 import com.example.projecto_cm.Fragments.Frag_Register;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +95,7 @@ public class DAO_helper{
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     user_data = child.getValue().toString();
 
-                    if(user_data.contains(email)) {
+                    if(user_data.equals(email)) {
                         System.out.println("------------------------------- aqui 5");
                         mail_exists = 1;
                         break;
@@ -181,7 +183,8 @@ public class DAO_helper{
 
 
     // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
-    public void get_user_trips(String username, Frag_Create_Trip fg){
+    public void get_user_trips(String username, Frag_List_My_Trips fg){
+
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -190,10 +193,17 @@ public class DAO_helper{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                ArrayList<String> my_trips = new ArrayList<>();
+
                 // if user has trips return them
                 if(dataSnapshot.exists()) {
 
+                    // convert data snapshots to hashmap
+                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                        my_trips.add(Objects.requireNonNull(ds.getValue()).toString());
+                    }
                 }
+                fg.getMyTrips(my_trips);
             }
 
             @Override
