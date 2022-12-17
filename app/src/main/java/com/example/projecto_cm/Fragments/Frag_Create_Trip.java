@@ -138,7 +138,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
 
         mapView = requireActivity().findViewById(R.id.map_view); // bind map view
-        trip_locations_recyclerView = view.findViewById(R.id.trip_location_list);
+        trip_locations_recyclerView = requireActivity().findViewById(R.id.trip_location_list);
         location_input = requireActivity().findViewById(R.id.location_input_field);
         markerOptions = new MarkerOptions(); // to mark locations on the map
 
@@ -335,6 +335,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         // if the search return more than one location show dialog to allow selection
         else {
             select_location_dialog = new Dialog(requireActivity());
+            select_location_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
             //Disable the default title
             select_location_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -425,6 +426,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
     private void trip_Title_Start_End_date() {
 
         complete_trip_data_dialog = new Dialog(requireActivity());
+        complete_trip_data_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         //Disable the default title
         complete_trip_data_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

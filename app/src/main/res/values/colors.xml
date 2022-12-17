@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="loading_background">#00000000</color>
+    <color name="loading_background">#13000000</color>
     <color name="buttons_and_app_bar_text_color">#FFFFFFFF</color>
-    <color name="text_messages_color">#FF000000</color>
-    <color name="button_and_appbar_background_color">#135F76</color>
+    <color name="text_messages_color">#FFFFFF</color>
+    <color name="inout_text_hint_color">#61FFFFFF</color>
+    <color name="button_and_appbar_background_color">#136E8A</color>
     <color name="card_background_color">#1B92A7</color>
-    <color name="fragment_background">#28003340</color>
-    <color name="dialog_background_color">#689AFAFF</color>
+    <color name="fragment_background">#02252E</color>
+    <color name="dialog_background_color">#02272E</color>
 
 </resources>

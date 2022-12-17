@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable-v24/button_background.xml" value="0.2695" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3225" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/dialog_background.xml" value="0.237" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_add.xml" value="0.272" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_delete.xml" value="0.2155" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2845" />
@@ -23,7 +24,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_main.xml" value="0.29528985507246375" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_location_layout.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_my_trip_layout.xml" value="0.26132246376811596" />
-        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_search_result_layout.xml" value="0.29393115942028986" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_search_result_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_get_trip_title_star_end_dates_layout.xml" value="0.297554347826087" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_select_location_result_layout.xml" value="0.29393115942028986" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/element_trip_button_layout.xml" value="0.2875905797101449" />
