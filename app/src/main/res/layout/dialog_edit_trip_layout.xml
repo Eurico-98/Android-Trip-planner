@@ -8,12 +8,12 @@
     android:background="@drawable/dialog_background">
 
     <TextView
-        android:id="@+id/trip_dialog_title"
+        android:id="@+id/edit_trip_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical|center_horizontal"
         android:textColor="@color/text_messages_color"
-        android:text="My Trip"
+        android:text="Edit Trip"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,24 +29,24 @@
         android:backgroundTint="@color/inout_text_hint_color"
         android:textColorHint="@color/inout_text_hint_color"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/start_date_input"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_start_date_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trip_dialog_title" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_trip_dialog_title" />
 
     <TextView
-        android:id="@+id/start_date_title"
+        android:id="@+id/edit_trip_start_date_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start date"
         android:textColor="@color/text_messages_color"
-        app:layout_constraintBottom_toTopOf="@+id/start_date_input"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_start_date_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.235"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/start_date_input"
+        android:id="@+id/edit_trip_start_date_input"
         style="?android:spinnerStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,24 +54,24 @@
         android:ems="8"
         android:textColor="@color/text_messages_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/end_date_input"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_end_date_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trip_title_input" />
 
     <TextView
-        android:id="@+id/end_date_title"
+        android:id="@+id/edit_trip_end_date_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="End date"
         android:textColor="@color/text_messages_color"
-        app:layout_constraintBottom_toTopOf="@+id/end_date_input"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_end_date_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.228"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/end_date_input"
+        android:id="@+id/edit_trip_end_date_input"
         style="?android:spinnerStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,24 +79,22 @@
         android:ems="8"
         android:textColor="@color/text_messages_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/create_trip_button"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_create_trip_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_date_input" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_trip_start_date_input" />
 
     <Button
-        android:id="@+id/create_trip_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/edit_trip_create_trip_button"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="Create Trip"
-        android:textSize="16sp"
+        android:text="Save changes"
         android:background="@drawable/button_background"
         android:textColor="@color/buttons_and_app_bar_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/end_date_input" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_trip_end_date_input" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

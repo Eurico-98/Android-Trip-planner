@@ -48,6 +48,15 @@ public class DAO_helper{
 
 
     // ------------------------------------------ Methods for registration ------------------------------------------------------------
+
+    /**
+     * check username name when registering new account
+     * @param username
+     * @param email
+     * @param password
+     * @param dao
+     * @param fg
+     */
     public void check_inserted_username(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
@@ -77,6 +86,14 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
+    /**
+     * check email inserted when registering new account
+     * @param username
+     * @param email
+     * @param password
+     * @param dao
+     * @param fg
+     */
     public void check_inserted_email(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference emailRef = databaseReference.child("Users"); //.child(username).child("email");
@@ -116,6 +133,15 @@ public class DAO_helper{
         emailRef.addListenerForSingleValueEvent(mailEventListener);
     }
 
+    /**
+     * add user account to firebase
+     * @param username
+     * @param password
+     * @param email
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public Task<Void> add_new_user_account(String username, String password, String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         // encrypt password
@@ -133,6 +159,12 @@ public class DAO_helper{
 
 
     // ------------------------------------------ Methods for login -------------------------------------------------------------------
+    /**
+     * check user credentials
+     * @param username
+     * @param password
+     * @param fg
+     */
     public void check_credentials(String username, String password, Frag_Login fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
@@ -183,6 +215,11 @@ public class DAO_helper{
 
 
     // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
+    /**
+     * get user trips from firebase
+     * @param username
+     * @param fg
+     */
     public void get_user_trips(String username, Frag_List_My_Trips fg){
 
 
@@ -212,7 +249,13 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
-    public void add_trips(String username, Frag_Create_Trip fg, Trip new_trip){
+    /**
+     * add new trips to firebase or update existing trips
+     * @param username
+     * @param fg
+     * @param new_trip
+     */
+    public void add_or_update_trips(String username, Frag_Create_Trip fg, Trip new_trip, boolean update, int trip_to_update){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -229,7 +272,15 @@ public class DAO_helper{
                     my_trips = (List<Trip>) dataSnapshot.getValue();
                 }
 
-                my_trips.add(new_trip);
+                // add new trip
+                if(!update){
+                    my_trips.add(new_trip);
+                }
+
+                // update trip
+                else {
+                    my_trips.set(trip_to_update, new_trip);
+                }
 
                 // return task that has a on success listener
                 fg.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));

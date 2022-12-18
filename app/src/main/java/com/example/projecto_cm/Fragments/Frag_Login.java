@@ -119,7 +119,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
         else {
 
             // send username to get it in home screen
-            model.send_username(username);
+            model.send_data(username);
 
             Frag_Home_Screen home_screen = new Frag_Home_Screen();
             fcl.replaceFragment(home_screen, "no");

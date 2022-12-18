@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,16 +54,21 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Interface_Card_Location, Interface_Card_Search_Result {
 
     private Shared_View_Model model;
+    private ExecutorService service;
+    private Handler handler;
     private Interface_Frag_Change_Listener fcl; // to change fragment
     private String username;
     private MapView mapView;
@@ -92,6 +99,10 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
     private Dialog loading_animation_dialog;
 
+    private boolean editing_trip = false; // only used when user is coming from the list trip fragment
+    private String star_date_from_model_view, end_date_from_model_view, trip_title_from_model_view;
+    private int trip_to_update;
+
     /**
      *  onCreateView of create trip fragment
      *  load layout and toolbar and get username from shared model view
@@ -105,7 +116,36 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
         // get activity to get shared view model
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
-        model.get_username().observe(getViewLifecycleOwner(), item -> username = (String) item);
+
+        // get data from shared view model
+        model.get_data().observe(getViewLifecycleOwner(), item -> {
+
+            // if the user selected create trip from home screen
+            try{
+                username = (String) item;
+            }
+
+            // if user is coming from list trips fragment
+            catch (Exception e){
+                String[] data = (String[]) item;
+
+                editing_trip = true;
+                username = data[0];
+
+                trip_title_from_model_view = data[1].split("title=")[1].split(",")[0];
+                end_date_from_model_view = data[1].split("end_date=")[1].split(",")[0];
+                star_date_from_model_view = data[1].split("start_date=")[1].split(",")[0].replace("}", "");
+
+                String[] locations_from_model_view = data[1].split("locations=\\[")[1].split("]")[0].split(", ");
+                trip_locations_list.addAll(Arrays.asList(locations_from_model_view));
+
+                trip_to_update = Integer.parseInt(data[2]);
+            }
+        });
+
+        // create 1 thread so execute searches with google maps
+        service = Executors.newFixedThreadPool(1);
+        handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.fragment_create_trip_layout, container, false);
@@ -160,7 +200,15 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
         // search locations functions
         search_button = requireActivity().findViewById(R.id.search_button);
-        search_button.setOnClickListener(v -> showSearchResults());
+        search_button.setOnClickListener(v -> {
+
+            // dismiss keyboard
+            location_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+            loading_animation_dialog.show();
+
+            showSearchResults();
+        });
 
         // add location button
         add_location_button = requireActivity().findViewById(R.id.add_location);
@@ -261,63 +309,70 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
      */
     public void showSearchResults() {
 
-        // dismiss keyboard
-        location_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
-
         // clear previous markers
         google_Map.clear();
 
         // get inserted location
         location = location_input.getText().toString();
 
-        geocoder = new Geocoder(requireActivity(), Locale.getDefault());
-        try {
+        service.execute(() -> {
+            geocoder = new Geocoder(requireActivity(), Locale.getDefault());
+            try {
 
-            // get results for the search
-            listAddress = geocoder.getFromLocationName(location, 5);
+                // get results for the search
+                listAddress = geocoder.getFromLocationName(location, 5);
+                handler.post(() -> {
 
-            // if inserted location exists
-            if(listAddress.size() > 0){
+                    // if inserted location exists
+                    if(listAddress.size() > 0){
 
-                // add markers for each result
-                for(int i = 0; i < listAddress.size(); i++){
+                        // add markers for each result
+                        for(int i = 0; i < listAddress.size(); i++){
 
-                    // to get coordinates of inserted location
-                    latLng = new LatLng(listAddress.get(i).getLatitude(), listAddress.get(i).getLongitude());
+                            // to get coordinates of inserted location
+                            latLng = new LatLng(listAddress.get(i).getLatitude(), listAddress.get(i).getLongitude());
 
-                    // put a marker marker on the selected location
-                    markerOptions.position(latLng);
-                    google_Map.addMarker(markerOptions);
+                            // put a marker marker on the selected location
+                            markerOptions.position(latLng);
+                            google_Map.addMarker(markerOptions);
 
-                    // zoom level
-                    // level 1 - world
-                    // level 5 - continent
-                    // level 10 - city
-                    // level 15 - street level
-                    // lever 20 - building
+                            // zoom level
+                            // level 1 - world
+                            // level 5 - continent
+                            // level 10 - city
+                            // level 15 - street level
+                            // lever 20 - building
 
-                    // automatically zoom to the inserted location if there is only one result
-                    if(listAddress.size() == 1){
-                        Toast.makeText(requireActivity(), "Found 1 location!", Toast.LENGTH_SHORT).show();
-                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-                        google_Map.animateCamera(cameraUpdate);
+                            // automatically zoom to the inserted location if there is only one result
+                            if(listAddress.size() == 1){
+                                Toast.makeText(requireActivity(), "Found 1 location!", Toast.LENGTH_SHORT).show();
+                                cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                                google_Map.animateCamera(cameraUpdate);
+                            }
+
+                            // zoom in only to level 5 in case of multiple results
+                            else if(i == listAddress.size()-1){
+                                Toast.makeText(requireActivity(), "Found "+ listAddress.size() + " locations!", Toast.LENGTH_SHORT).show();
+                                cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 3);
+                                google_Map.animateCamera(cameraUpdate);
+                            }
+
+                            loading_animation_dialog.dismiss();
+                        }
                     }
-
-                    // zoom in only to level 5 in case of multiple results
-                    else if(i == listAddress.size()-1){
-                        Toast.makeText(requireActivity(), "Found "+ listAddress.size() + " locations!", Toast.LENGTH_SHORT).show();
-                        cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 3);
-                        google_Map.animateCamera(cameraUpdate);
+                    else {
+                        Toast.makeText(requireActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
+                        loading_animation_dialog.dismiss();
                     }
-                }
-            }
-            else {
-                Toast.makeText(requireActivity(), "Location not found!", Toast.LENGTH_SHORT).show();
-            }
+                });
 
-        } catch (IOException e) {
-            Toast.makeText(requireActivity(), "Could not execute search!", Toast.LENGTH_SHORT).show();
-        }
+            } catch (IOException e) {
+                handler.post(() -> {
+                    Toast.makeText(requireActivity(), "Could not execute search!", Toast.LENGTH_SHORT).show();
+                    loading_animation_dialog.dismiss();
+                });
+            }
+        });
     }
 
     /**
@@ -443,20 +498,32 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
         //Binding dialog elements
         start_date_input = complete_trip_data_dialog.findViewById(R.id.start_date_input);
-        start_date_input.setText(getTodaysDate());
         start_date_input.setOnClickListener(v -> {
             type_of_date = "start";
             datePickerDialog.show();
         });
 
         end_date_input = complete_trip_data_dialog.findViewById(R.id.end_date_input);
-        end_date_input.setText(getTodaysDate());
         end_date_input.setOnClickListener(v -> {
             type_of_date = "end";
             datePickerDialog.show();
         });
 
         trip_title_input = complete_trip_data_dialog.findViewById(R.id.trip_title_input);
+
+        // if user is coming from home screen it is creating a new trip
+        if(!editing_trip){
+            start_date_input.setText(getTodaysDate());
+            end_date_input.setText(getTodaysDate());
+        }
+
+        // if user is coming from list trip it is editing an existing trip
+        // set dates and title with the values from model view
+        else {
+            trip_title_input.setText(trip_title_from_model_view);
+            start_date_input.setText(star_date_from_model_view);
+            end_date_input.setText(end_date_from_model_view);
+        }
 
         create_trip_button = complete_trip_data_dialog.findViewById(R.id.create_trip_button);
         create_trip_button.setOnClickListener(v -> saveTripToFireBase());
@@ -598,7 +665,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
             Trip new_trip = new Trip(trip_title_input.getText().toString(), start_date_input.getText().toString(), end_date_input.getText().toString(), trip_locations_list);
             DAO_helper dao = new DAO_helper();
-            dao.add_trips(username, this, new_trip);
+            dao.add_or_update_trips(username, this, new_trip, editing_trip, trip_to_update);
         }
         else {
             Toast.makeText(requireActivity(), "Insert Trip title!",Toast.LENGTH_SHORT).show();
@@ -618,16 +685,19 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
             Toast.makeText(requireActivity(), "Trip saved successfully!",Toast.LENGTH_SHORT).show();
 
-            // don't keep Frag_create_trip in back stack
-            Frag_Home_Screen frag_home_screen = new Frag_Home_Screen();
-            fcl.replaceFragment(frag_home_screen, "no");
-        }).addOnFailureListener(er ->{
+            if(!editing_trip){
+                // don't keep Frag_create_trip in back stack
+                Frag_Home_Screen frag_home_screen = new Frag_Home_Screen();
+                fcl.replaceFragment(frag_home_screen, "no");
+            }
+            else {
+                model.send_data(username);
+                getParentFragmentManager().popBackStack(); // take create trip fragment from stack and go back to list trip fragment
+            }
 
+        }).addOnFailureListener(er ->{
             Toast.makeText(requireActivity(), "Error while saving Trip in Database!",Toast.LENGTH_SHORT).show();
             Toast.makeText(requireActivity(), "Try again later!",Toast.LENGTH_SHORT).show();
-
-            // cancel loading animation and go back to home screen
-
         });
     }
 

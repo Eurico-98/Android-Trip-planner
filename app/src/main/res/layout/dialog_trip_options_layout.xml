@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@+id/trip_options_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/text_messages_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--view trip rout button-->
+    <RelativeLayout
+        android:id="@+id/view_trip_route_relativeLayout"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/invite_friends_relativeLayout"
+        app:layout_constraintEnd_toStartOf="@+id/edit_trip_relativeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title">
+
+        <ImageButton
+            android:id="@+id/view_trip_route_image_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background"
+            android:src="@drawable/trip_route" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:text="View route"
+            android:textColor="@color/text_messages_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <!--Edit trip settings-->
+    <RelativeLayout
+        android:id="@+id/edit_trip_relativeLayout"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/start_election_relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_trip_route_relativeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title">
+
+        <ImageButton
+            android:id="@+id/edit_trip_image_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background"
+            android:src="@drawable/edit_trip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:text="Edit Trip"
+            android:textColor="@color/text_messages_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <!--Invite friends to trip-->
+    <RelativeLayout
+        android:id="@+id/invite_friends_relativeLayout"
+        android:layout_width="90dp"
+        android:layout_height="95dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/view_weather_relativeLayout"
+        app:layout_constraintEnd_toStartOf="@+id/start_election_relativeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_trip_route_relativeLayout">
+
+        <ImageButton
+            android:id="@+id/invite_friends_image_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background"
+            android:src="@drawable/add_friend" />
+
+        <TextView
+            android:layout_width="85dp"
+            android:layout_height="37dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="1dp"
+            android:gravity="center"
+            android:text="Invite Friends"
+            android:textColor="@color/text_messages_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <!--Start election-->
+    <RelativeLayout
+        android:id="@+id/start_election_relativeLayout"
+        android:layout_width="90dp"
+        android:layout_height="95dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/view_weather_relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/invite_friends_relativeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/edit_trip_relativeLayout">
+
+        <ImageButton
+            android:id="@+id/start_election_image_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background"
+            android:src="@drawable/location_election" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:text="Location election"
+            android:textColor="@color/text_messages_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <!--check weather in location-->
+    <RelativeLayout
+        android:id="@+id/view_weather_relativeLayout"
+        android:layout_width="90dp"
+        android:layout_height="95dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageButton
+            android:id="@+id/view_weather_image_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background"
+            android:src="@drawable/weather_forecast" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:text="Weather Forecast"
+            android:textColor="@color/text_messages_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
