@@ -63,7 +63,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Interface_Card_Location, Interface_Card_Search_Result {
 
     private Shared_View_Model model;
@@ -99,7 +98,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
     private Dialog loading_animation_dialog;
 
-    private boolean editing_trip = false; // only used when user is coming from the list trip fragment
+    private String editing_trip = "add"; // only used when user is coming from the list trip fragment
     private String star_date_from_model_view, end_date_from_model_view, trip_title_from_model_view;
     private int trip_to_update;
 
@@ -129,7 +128,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
             catch (Exception e){
                 String[] data = (String[]) item;
 
-                editing_trip = true;
+                editing_trip = "update";
                 username = data[0];
 
                 trip_title_from_model_view = data[1].split("title=")[1].split(",")[0];
@@ -140,6 +139,10 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
                 trip_locations_list.addAll(Arrays.asList(locations_from_model_view));
 
                 trip_to_update = Integer.parseInt(data[2]);
+
+                // put username back into model view to be obtainable in other fragments
+                // this will trigger the observer callback again but it is ok because it only gets the username again
+                model.send_data(username);
             }
         });
 
@@ -512,7 +515,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         trip_title_input = complete_trip_data_dialog.findViewById(R.id.trip_title_input);
 
         // if user is coming from home screen it is creating a new trip
-        if(!editing_trip){
+        if(Objects.equals(editing_trip, "add")){
             start_date_input.setText(getTodaysDate());
             end_date_input.setText(getTodaysDate());
         }
@@ -665,7 +668,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
             Trip new_trip = new Trip(trip_title_input.getText().toString(), start_date_input.getText().toString(), end_date_input.getText().toString(), trip_locations_list);
             DAO_helper dao = new DAO_helper();
-            dao.add_or_update_trips(username, this, new_trip, editing_trip, trip_to_update);
+            dao.add_or_update_or_delete_trip(username, this, null, new_trip, editing_trip, trip_to_update);
         }
         else {
             Toast.makeText(requireActivity(), "Insert Trip title!",Toast.LENGTH_SHORT).show();
@@ -673,7 +676,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
     }
 
     /**
-     * show result message after saving newly created trip database
+     * show result message after saving (creating or updating) trip database
      * cancel loading animation and return to home screen
      */
     public void getDAOResultMessage(Task<Void> add_trip) {
@@ -685,20 +688,16 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
             Toast.makeText(requireActivity(), "Trip saved successfully!",Toast.LENGTH_SHORT).show();
 
-            if(!editing_trip){
+            if(Objects.equals(editing_trip, "add")){
                 // don't keep Frag_create_trip in back stack
                 Frag_Home_Screen frag_home_screen = new Frag_Home_Screen();
                 fcl.replaceFragment(frag_home_screen, "no");
             }
             else {
-                model.send_data(username);
                 getParentFragmentManager().popBackStack(); // take create trip fragment from stack and go back to list trip fragment
             }
 
-        }).addOnFailureListener(er ->{
-            Toast.makeText(requireActivity(), "Error while saving Trip in Database!",Toast.LENGTH_SHORT).show();
-            Toast.makeText(requireActivity(), "Try again later!",Toast.LENGTH_SHORT).show();
-        });
+        }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while saving Trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());
     }
 
     // ------------------------------------------------------------- METHODS REQUIRED FOR MAP VIEW LIFECYCLE --------------------------------------------------------

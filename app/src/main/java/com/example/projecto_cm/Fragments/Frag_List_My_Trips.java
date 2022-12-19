@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,9 +24,9 @@ import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Observer;
 
 public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Trip {
 
@@ -35,7 +34,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     private Interface_Frag_Change_Listener fcl; // to change fragment
     private Adapter_List_My_Trips adapter_list_my_trips;
     private RecyclerView my_trips_recycler_view;
-    private ArrayList<String > my_trips_list = new ArrayList<>();
+    private ArrayList<String> my_trips_list = new ArrayList<>();
     private DAO_helper dao;
     private View view;
     private Dialog loading_animation_dialog;
@@ -87,6 +86,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
             // this fucking observer will catch the second callback when the user clicks on one of the options of a trip and that will cause an error this way it won't
             try {
+
                 username = (String) item;
 
                 // get list of trips
@@ -158,6 +158,33 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             fcl.replaceFragment(frag_create_trip, "yes");
         });
 
+        ImageButton delete_trip_button = show_trip_options_dialog.findViewById(R.id.delete_trip_image_button);
+        delete_trip_button.setOnClickListener(v -> {
+            show_trip_options_dialog.dismiss();
+            loading_animation_dialog.show();
+            dao.add_or_update_or_delete_trip(username, null, this, null, "delete", trip_position_in_list);
+            my_trips_list.remove(trip_position_in_list);
+        });
+
         show_trip_options_dialog.show();
+    }
+
+    /**
+     * show result message after deleating trip database
+     * cancel loading animation and return to home screen
+     */
+    public void getDAOResultMessage(Task<Void> delete_trip) {
+
+        // cancel loading animation and go back to home screen
+        loading_animation_dialog.dismiss();
+
+        delete_trip.addOnSuccessListener(suc -> {
+            if(my_trips_list.size() == 0){
+                my_trips_list.add("You don't have trips created!");
+            }
+            adapter_list_my_trips.setMy_trips(my_trips_list);
+            my_trips_recycler_view.setAdapter(adapter_list_my_trips);
+            Toast.makeText(requireActivity(), "Trip deleted successfully!",Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while deleting trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());
     }
 }

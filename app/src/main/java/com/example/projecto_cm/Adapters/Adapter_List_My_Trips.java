@@ -29,6 +29,8 @@ public class Adapter_List_My_Trips extends RecyclerView.Adapter<Adapter_List_My_
         this.listener = listener;
     }
 
+    public void setMy_trips(ArrayList my_trips) { this.my_trips = my_trips; }
+
     // inflate layout for the title notes inside recycler view
     @NonNull
     @Override

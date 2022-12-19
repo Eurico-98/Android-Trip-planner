@@ -222,7 +222,6 @@ public class DAO_helper{
      */
     public void get_user_trips(String username, Frag_List_My_Trips fg){
 
-
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
         // check if username is already registered
@@ -252,10 +251,10 @@ public class DAO_helper{
     /**
      * add new trips to firebase or update existing trips
      * @param username
-     * @param fg
-     * @param new_trip
+     * @param fg_create
+     * @param trip_to_edit
      */
-    public void add_or_update_trips(String username, Frag_Create_Trip fg, Trip new_trip, boolean update, int trip_to_update){
+    public void add_or_update_or_delete_trip(String username, Frag_Create_Trip fg_create, Frag_List_My_Trips fg_list, Trip trip_to_edit, String operation, int position){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -273,17 +272,25 @@ public class DAO_helper{
                 }
 
                 // add new trip
-                if(!update){
-                    my_trips.add(new_trip);
+                if(Objects.equals(operation, "add")){
+                    my_trips.add(trip_to_edit);
                 }
 
                 // update trip
+                else if(Objects.equals(operation, "update")){
+                    my_trips.set(position, trip_to_edit);
+                }
                 else {
-                    my_trips.set(trip_to_update, new_trip);
+                    my_trips.remove(position);
                 }
 
                 // return task that has a on success listener
-                fg.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
+                if(fg_create != null){
+                    fg_create.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
+                }
+                else if(fg_list != null) {
+                    fg_list.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
+                }
             }
 
             @Override

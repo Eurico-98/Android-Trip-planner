@@ -11,4 +11,5 @@
     <string name="normal_map">Normal map</string>
     <string name="satellite_map">Satellite map</string>
     <string name="add_location">Add location</string>
+    <string name="weather_forecast">Weather Forecast</string>
 </resources>
