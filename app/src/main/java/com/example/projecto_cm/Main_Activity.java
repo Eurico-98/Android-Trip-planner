@@ -33,7 +33,7 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
      * @param fragment
      */
     public void replaceFragment(Fragment fragment, String keep_frag_in_stack) {
-        FragmentManager fragmentManager = getSupportFragmentManager();;
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.activity_login_register_container, fragment);
         if(Objects.equals(keep_frag_in_stack, "yes")){

@@ -141,6 +141,23 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         TextView trip_options_title = show_trip_options_dialog.findViewById(R.id.trip_options_dialog_title);
         trip_options_title.setText(my_trips_list.get(trip_position_in_list).split("title=")[1].split(",")[0]);
 
+        ImageButton view_trip_route = show_trip_options_dialog.findViewById(R.id.view_trip_route_image_button);
+        view_trip_route.setOnClickListener(v -> {
+
+            model.send_data(new String[]{username, my_trips_list.get(trip_position_in_list)});
+
+            show_trip_options_dialog.dismiss();
+
+            // hide list trips layout while next create trip fragment loads to prevent user from clicking in other buttons while it loads
+            view.setVisibility(View.GONE);
+
+            my_trips_list.clear(); // clear list to avoid getting the old trips and the updated trips when the user returns from the create trip fragment
+
+            Frag_Show_Trip_Route frag_show_trip_route = new Frag_Show_Trip_Route();
+            fcl.replaceFragment(frag_show_trip_route, "yes");
+        });
+
+
         ImageButton edit_trip_button = show_trip_options_dialog.findViewById(R.id.edit_trip_image_button);
         edit_trip_button.setOnClickListener(v -> {
 
@@ -157,6 +174,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
             fcl.replaceFragment(frag_create_trip, "yes");
         });
+
 
         ImageButton delete_trip_button = show_trip_options_dialog.findViewById(R.id.delete_trip_image_button);
         delete_trip_button.setOnClickListener(v -> {

@@ -687,15 +687,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         add_trip.addOnSuccessListener(suc -> {
 
             Toast.makeText(requireActivity(), "Trip saved successfully!",Toast.LENGTH_SHORT).show();
-
-            if(Objects.equals(editing_trip, "add")){
-                // don't keep Frag_create_trip in back stack
-                Frag_Home_Screen frag_home_screen = new Frag_Home_Screen();
-                fcl.replaceFragment(frag_home_screen, "no");
-            }
-            else {
-                getParentFragmentManager().popBackStack(); // take create trip fragment from stack and go back to list trip fragment
-            }
+            getParentFragmentManager().popBackStack(); // take create trip fragment from stack and go back to list trip fragment
 
         }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while saving Trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());
     }
