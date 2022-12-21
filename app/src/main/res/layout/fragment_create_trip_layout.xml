@@ -29,25 +29,26 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <!--input field for location-->
+
     <EditText
         android:id="@+id/location_input_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:autofillHints="Location"
+        android:backgroundTint="@color/inout_text_hint_color"
         android:ems="10"
-        android:inputType="text"
-        android:imeOptions="actionDone"
         android:gravity="center"
         android:hint="location"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:textColor="@color/text_messages_color"
-        android:backgroundTint="@color/inout_text_hint_color"
         android:textColorHint="@color/inout_text_hint_color"
-        app:layout_constraintBottom_toTopOf="@+id/location_list_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_location"
         app:layout_constraintStart_toEndOf="@+id/search_button"
         app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/add_location"
@@ -82,37 +83,23 @@
         android:layout_height="wrap_content"
         android:text="My Trip"
         android:textColor="@color/text_messages_color"
-        app:layout_constraintBottom_toTopOf="@+id/trip_location_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_input_field"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trip_location_list"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        app:layout_constraintBottom_toTopOf="@+id/save_trip_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_list_title" />
-
-    <Button
-        android:id="@+id/save_trip_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
-        android:textColor="@color/buttons_and_app_bar_text_color"
-        android:textAllCaps="false"
-        android:text="Save Trip"
-        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trip_location_list" />
+        app:layout_constraintTop_toBottomOf="@+id/location_input_field"
+        app:layout_constraintVertical_bias="0.050000012" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trip_location_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_list_title"
+        app:layout_constraintVertical_bias="0.9" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

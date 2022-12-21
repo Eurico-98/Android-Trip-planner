@@ -225,17 +225,6 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
                 Toast.makeText(requireActivity(), "Search locations first!", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // confirm trip button
-        save_trip_button = requireActivity().findViewById(R.id.save_trip_button);
-        save_trip_button.setOnClickListener(v -> {
-            if(trip_locations_list.size() > 0){
-                trip_Title_Start_End_date();
-            }
-            else {
-                Toast.makeText(requireActivity(), "Add locations first!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /**
@@ -269,6 +258,14 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         }
         else if(item.getItemId() == R.id.satellite_map){
             google_Map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+        else if(item.getItemId() == R.id.save_trip){
+            if(trip_locations_list.size() > 0){
+                trip_Title_Start_End_date();
+            }
+            else {
+                Toast.makeText(requireActivity(), "Add locations first!", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,8 +1,9 @@
 package com.example.projecto_cm.Map_Route_Helpers;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.projecto_cm.Fragments.Frag_Show_Trip_Route;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,15 +14,16 @@ import java.net.URL;
 
 public class FetchURL extends AsyncTask<String, Void, String> {
 
-    Context mContext;
+    Frag_Show_Trip_Route mContext;
     String directionMode = "driving";
 
-    public FetchURL(Context mContext) {
+    public FetchURL(Frag_Show_Trip_Route mContext) {
         this.mContext = mContext;
     }
 
     /**
      * For storing data from web service
+     * this is the second step in getting the trip route
      * @param strings
      * @return
      */
@@ -33,20 +35,17 @@ public class FetchURL extends AsyncTask<String, Void, String> {
         directionMode = strings[1];
 
         try {
-
             // Fetching the data from web service
             data = downloadUrl(strings[0]);
-            Log.d("mylog", "Background task data " + data);
 
-        } catch (Exception e) {
-            Log.d("Background Task", e.toString());
-        }
+        } catch (Exception ignored) {}
 
         return data;
     }
 
     /**
      * Invokes the thread for parsing the JSON data
+     * this is the third step in getting the trip route it calls PointsParser class
      * @param s
      */
     @Override
@@ -59,6 +58,7 @@ public class FetchURL extends AsyncTask<String, Void, String> {
 
     /**
      * to downaload URL
+     * this is the first step in getting the trip route
      * @param strUrl
      * @return
      * @throws IOException
@@ -91,12 +91,10 @@ public class FetchURL extends AsyncTask<String, Void, String> {
             }
 
             data = sb.toString();
-            Log.d("mylog", "Downloaded URL: " + data);
             br.close();
 
-        } catch (Exception e) {
-            Log.d("mylog", "Exception downloading URL: " + e);
-        } finally {
+        } catch (Exception ignored) {}
+        finally {
             iStream.close();
             urlConnection.disconnect();
         }

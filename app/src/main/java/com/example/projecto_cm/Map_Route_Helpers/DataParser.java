@@ -14,6 +14,7 @@ public class DataParser {
 
     /**
      * parses locations into routes legs and steps
+     * from here it returns to PointsParser class
      * @param jObject
      * @return
      */
@@ -65,6 +66,7 @@ public class DataParser {
 
     /**
      * decode polyline points
+     * called from inside DataParser class during parsing process
      */
     private List<LatLng> decodePoly(String encoded) {
 

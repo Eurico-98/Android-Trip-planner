@@ -3,15 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/save_trip"
+        android:title="@string/save_trip"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/reorder_locations"
+        android:title="@string/reorder_locations"
+        android:icon="@drawable/ic_reorder"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/normal_map"
         android:title="@string/normal_map"
         android:icon="@drawable/ic_normal_map"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/satellite_map"
         android:title="@string/satellite_map"
         android:icon="@drawable/ic_satellite_map"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

@@ -1,10 +1,9 @@
 package com.example.projecto_cm.Map_Route_Helpers;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.example.projecto_cm.Fragments.Frag_Show_Trip_Route;
 import com.example.projecto_cm.Interfaces.Interface_On_Trip_Route_Ready;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -12,6 +11,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -21,13 +21,15 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
     Interface_On_Trip_Route_Ready taskCallback;
     String directionMode;
 
-    public PointsParser(Context mContext, String directionMode) {
-        this.taskCallback = (Interface_On_Trip_Route_Ready) mContext;
+    public PointsParser(Frag_Show_Trip_Route mContext, String directionMode) {
+        this.taskCallback = mContext;
         this.directionMode = directionMode;
     }
 
     /**
      * Parsing the data in non-ui thread
+     * this than calls DataParser class
+     * and after that it calls onPostExecute from this class
      * @param jsonData
      * @return
      */
@@ -38,20 +40,14 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         List<List<HashMap<String, String>>> routes = null;
 
         try {
-
             jObject = new JSONObject(jsonData[0]);
-            Log.d("mylog", jsonData[0]);
 
             DataParser parser = new DataParser();
-            Log.d("mylog", parser.toString());
 
             // Starts parsing data
             routes = parser.parse(jObject);
-            Log.d("mylog", "Executing routes");
-            Log.d("mylog", routes.toString());
 
         } catch (Exception e) {
-            Log.d("mylog", e.toString());
             e.printStackTrace();
         }
 
@@ -60,6 +56,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 
     /**
      * Executes in UI thread, after the parsing process
+     * this is executed after DataParser class executes its methods
      * @param result
      */
     @Override
@@ -91,26 +88,17 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 
             // Adding all the points in the route to LineOptions
             lineOptions.addAll(points);
-
-            if (directionMode.equalsIgnoreCase("walking")) {
-                lineOptions.width(10);
-                lineOptions.color(Color.MAGENTA);
-            }
-            else {
-                lineOptions.width(20);
-                lineOptions.color(Color.BLUE);
-            }
-
-            Log.d("mylog", "onPostExecute lineoptions decoded");
+            lineOptions.width(20);
+            lineOptions.color(Color.BLUE);
         }
 
-        // Drawing polyline in the Google Map for the i-th route
+        // Drawing polyline in the Google Map for the i-th route if points inserted are able to be connected
         if (lineOptions != null) {
-            //mMap.addPolyline(lineOptions);
-            taskCallback.show_route(lineOptions);
+            taskCallback.show_route("", lineOptions);
         }
+
         else {
-            Log.d("mylog", "without Polylines drawn");
+            taskCallback.show_route("Unable to show route! Try reordering locations.", (Object) null);
         }
     }
 }

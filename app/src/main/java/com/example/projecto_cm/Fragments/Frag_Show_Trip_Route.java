@@ -1,6 +1,8 @@
 package com.example.projecto_cm.Fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,6 +40,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback, Interface_On_Trip_Route_Ready {
 
@@ -124,6 +128,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
         loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
+        loading_animation_dialog.show();
 
         mapView = requireActivity().findViewById(R.id.map_view_route); // bind map view
 
@@ -165,9 +170,11 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.normal_map){
+            currentPolyline.setColor(Color.BLUE);
             google_Map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
         else if(item.getItemId() == R.id.satellite_map){
+            currentPolyline.setColor(Color.GREEN);
             google_Map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         }
 
@@ -214,16 +221,10 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
      */
     private void set_location_markers_in_map() {
 
-        // Origin and destination of route
-        String origin = "";
-        String dest = "";
-        String waypoints = "";
+        String origin = "", dest, waypoints = "", parameters = "";
 
         // transportation Mode
         String mode = "mode=driving";
-
-        // Building the parameters to the web service
-        String parameters = "";
 
         for(int i = 0; i < marker.size(); i++){
 
@@ -233,26 +234,24 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
             else if(i == marker.size()-1){
                 dest = "destination=" + marker.get(i).getPosition().latitude + "," + marker.get(i).getPosition().longitude;
 
-                parameters += origin + "&" + dest;
+                parameters += origin + "&" + dest + "&" + mode;
 
                 if(marker.size() > 2){
                     waypoints = waypoints.substring(0, waypoints.length() - 1);  // remove last comma
                     parameters += "&waypoints=[" + waypoints + "]";
                 }
-
-                parameters += "&" + mode;
             }
 
             // add waypoints
             else if(marker.size() > 2){
-                waypoints += "{location=" + marker.get(i).getPosition().latitude + "," + marker.get(i).getPosition().longitude + "},";
+                waypoints += "{location=" + marker.get(i).getTitle() + "},";
             }
 
             google_Map.addMarker(marker.get(i));
         }
 
         // prepare URL
-        new FetchURL(requireActivity()).execute("https://maps.googleapis.com/maps/api/directions/json?" + parameters + "&key=" + getString(R.string.Directions_API), "driving");
+        new FetchURL(this).execute("https://maps.googleapis.com/maps/api/directions/json?" + parameters + "&key=" + getString(R.string.Directions_API), "driving");
     }
 
     /**
@@ -260,10 +259,28 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
      * @param values
      */
     @Override
-    public void show_route(Object... values) {
-        if (currentPolyline != null)
-            currentPolyline.remove();
-        currentPolyline = google_Map.addPolyline((PolylineOptions) values[0]);
+    public void show_route(String message, Object... values) {
+
+        // if route is created
+        if(values[0] != null){
+
+            if (currentPolyline != null) {
+                currentPolyline.remove();
+            }
+
+            currentPolyline = google_Map.addPolyline((PolylineOptions) values[0]);
+
+            // zoom camera on first location
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPolyline.getPoints().get(0), 8);
+            google_Map.animateCamera(cameraUpdate);
+        }
+
+        // if route could not be created
+        else {
+            Toast.makeText(requireActivity(), message,Toast.LENGTH_SHORT).show();
+        }
+
+        loading_animation_dialog.dismiss();
     }
 
 
