@@ -64,6 +64,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
 
         // prepare loading animation
         loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);

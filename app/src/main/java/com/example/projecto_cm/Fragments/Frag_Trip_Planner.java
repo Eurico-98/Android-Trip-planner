@@ -28,17 +28,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_Search_Results_List;
-import com.example.projecto_cm.Adapters.Adapter_Trip_Locations_List;
+import com.example.projecto_cm.Adapters.Adapter_Trip_Planner_Search_Results_List;
+import com.example.projecto_cm.Adapters.Adapter_Trip_Planner_Trip_Locations_List;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.DB_entities.Trip;
-import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result;
-import com.example.projecto_cm.Interfaces.Interface_Card_Location;
-import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
-import com.example.projecto_cm.Main_Activity;
+import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result_In_Create_Trip;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.common.ConnectionResult;
@@ -56,6 +54,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,43 +62,46 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, Interface_Card_Location, Interface_Card_Search_Result {
+public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, Interface_Card_Search_Result_In_Create_Trip {
 
     private Shared_View_Model model;
     private ExecutorService service;
     private Handler handler;
-    private Interface_Frag_Change_Listener fcl; // to change fragment
-    private String username;
+
+    // editing_trip
+    // star_date_from_model_view
+    // end_date_from_model_view
+    // trip_title_from_model_view
+    //  '-> these 4 variables are only used when user is coming from the list trip fragment they hold the values to update
+    private String username, location, type_of_date, editing_trip = "add", star_date_from_model_view, end_date_from_model_view, trip_title_from_model_view;
+
+    // map related variables
     private MapView mapView;
     private GoogleMap google_Map;
     private Geocoder geocoder;
     private CameraUpdate cameraUpdate;
-    private ImageButton search_button, add_location_button;
-
-    private String location;
     private LatLng latLng;
     private MarkerOptions markerOptions;
-    private List<Address> listAddress; // list with search results ass addresses
+    private List<Address> listAddress; // list with search results as addresses
+
     private RecyclerView trip_locations_recyclerView;
-    private Button save_trip_button, start_date_input, end_date_input, create_trip_button;
-    private EditText location_input;
-    private ArrayList<String> trip_locations_list = new ArrayList<>(); // this is what will stay in the database
-    private Adapter_Trip_Locations_List adapter_trip_locations_list;
+    private Button start_date_input, end_date_input;
+    private EditText location_input, trip_title_input;
 
-    private ArrayList<String> search_results_list = new ArrayList<>(); // for searches with multiple results - show list in dialog to select only one of them to add to trip
-    private Adapter_Search_Results_List adapter_search_results_list;
-    private Dialog select_location_dialog; // dialog to select one result when a search returns several results
+    // trip_locations_list -> this is what will stay in the database
+    // search_results_list -> for searches with multiple results - show list in dialog to select only one of them to add to trip
+    private ArrayList<String> trip_locations_list = new ArrayList<>(), search_results_list = new ArrayList<>();
 
-    private Dialog complete_trip_data_dialog;
+    private Adapter_Trip_Planner_Trip_Locations_List adapter_trip_planner_trip_locations_list;
+
+    // select_location_dialog -> to select one result when a search returns several results
+    // complete_trip_data_dialog -> to insert trip title and start and end date before saving the trip to the database
+    // interface_hints_dialog -> to show dialog with hints on how to delete and reorder locations of a trip
+    private Dialog select_location_dialog, complete_trip_data_dialog, interface_hints_dialog, loading_animation_dialog;
+
     private DatePickerDialog datePickerDialog;
-    private String type_of_date;
     private Date start_date_for_comparison;
-    private EditText trip_title_input;
 
-    private Dialog loading_animation_dialog;
-
-    private String editing_trip = "add"; // only used when user is coming from the list trip fragment
-    private String star_date_from_model_view, end_date_from_model_view, trip_title_from_model_view;
     private int trip_to_update;
 
     /**
@@ -126,6 +128,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
             // if user is coming from list trips fragment
             catch (Exception e){
+
                 String[] data = (String[]) item;
 
                 editing_trip = "update";
@@ -151,8 +154,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_create_trip_layout, container, false);
-        fcl = (Main_Activity) inflater.getContext(); // to change fragments
+        View view = inflater.inflate(R.layout.fragment_trip_planner_layout, container, false);
 
         // load toolbar of this fragment
         Toolbar toolbar = view.findViewById(R.id.create_trip_app_bar);
@@ -176,21 +178,32 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
         // prepare loading animation
         loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
 
+        // prepare dialog with layout hints
+        interface_hints_dialog = new Dialog(requireActivity());
+        interface_hints_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        interface_hints_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        interface_hints_dialog.setCanceledOnTouchOutside(true);
+        interface_hints_dialog.setContentView(R.layout.dialog_show_trip_planner_help_layout);
+
         mapView = requireActivity().findViewById(R.id.map_view); // bind map view
-        trip_locations_recyclerView = requireActivity().findViewById(R.id.trip_location_list);
+        trip_locations_recyclerView = requireActivity().findViewById(R.id.trip_location_list); // to show list of locations selected
         location_input = requireActivity().findViewById(R.id.location_input_field);
         markerOptions = new MarkerOptions(); // to mark locations on the map
 
 
         // set up list of locations
-        adapter_trip_locations_list = new Adapter_Trip_Locations_List(requireActivity(), this, trip_locations_list);
-        trip_locations_recyclerView.setAdapter(adapter_trip_locations_list);
+        adapter_trip_planner_trip_locations_list = new Adapter_Trip_Planner_Trip_Locations_List(requireActivity(), trip_locations_list);
+        trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
         trip_locations_recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
+        // attach callback for drag and drop to recycler view to reorder and delete locations from trip
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(trip_locations_recyclerView);
 
         // check if google play services are available to use map api
         if(checkGooglePlayServices()){
@@ -202,7 +215,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         }
 
         // search locations functions
-        search_button = requireActivity().findViewById(R.id.search_button);
+        ImageButton search_button = requireActivity().findViewById(R.id.search_button);
         search_button.setOnClickListener(v -> {
 
             // dismiss keyboard
@@ -214,7 +227,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         });
 
         // add location button
-        add_location_button = requireActivity().findViewById(R.id.add_location);
+        ImageButton add_location_button = requireActivity().findViewById(R.id.add_location);
         add_location_button.setOnClickListener(v -> {
 
             // only add location if search was successful
@@ -234,12 +247,12 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
      */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.create_trip_actions, menu);
+        inflater.inflate(R.menu.plan_trip_actions, menu);
 
         // change app bar title
         ActionBar ab = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         assert ab != null;
-        ab.setTitle("Create Trip");
+        ab.setTitle("Trip Planner");
 
         super.onCreateOptionsMenu(menu,inflater);
     }
@@ -266,6 +279,9 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
             else {
                 Toast.makeText(requireActivity(), "Add locations first!", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if(item.getItemId() == R.id.interface_hints){
+            interface_hints_dialog.show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -321,6 +337,7 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
 
                 // get results for the search
                 listAddress = geocoder.getFromLocationName(location, 5);
+
                 handler.post(() -> {
 
                     // if inserted location exists
@@ -407,8 +424,8 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
             }
 
             // set up list of locations
-            adapter_search_results_list = new Adapter_Search_Results_List(requireActivity(), this, search_results_list);
-            results_recycler_view.setAdapter(adapter_search_results_list);
+            Adapter_Trip_Planner_Search_Results_List adapter_trip_planner_search_results_list = new Adapter_Trip_Planner_Search_Results_List(requireActivity(), this, search_results_list);
+            results_recycler_view.setAdapter(adapter_trip_planner_search_results_list);
             results_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
             select_location_dialog.show();
@@ -416,15 +433,31 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
     }
 
     /**
-     * delte a location from the trip location list
-     * @param position
+     * instantiate callback class to execute drag and drop operation
+     * long click allows to reorder the list
+     * swipe left deletes a location
      */
-    @Override
-    public void onDeleteClick(int position) {
-        trip_locations_list.remove(position);
-        adapter_trip_locations_list.setLocationsList(trip_locations_list);
-        trip_locations_recyclerView.setAdapter(adapter_trip_locations_list);
-    }
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(trip_locations_list, fromPosition, toPosition);
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            trip_locations_list.remove(viewHolder.getAdapterPosition());
+            adapter_trip_planner_trip_locations_list.setLocationsList(trip_locations_list);
+            trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
+            Toast.makeText(requireActivity(), "Location deleted!", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     /**
      * function to control check boxes in dialog that show results when a search returns several results and only one must be selected
@@ -465,8 +498,8 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
         temp += "_#_" + listAddress.get(pos).getLatitude() + "_#_" +  listAddress.get(pos).getLongitude();
 
         trip_locations_list.add(temp);
-        adapter_trip_locations_list.setLocationsList(trip_locations_list);
-        trip_locations_recyclerView.setAdapter(adapter_trip_locations_list);
+        adapter_trip_planner_trip_locations_list.setLocationsList(trip_locations_list);
+        trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
 
         // clear input, list of address, list of results of search thar returned several results, and clear markers from map
         search_results_list.clear();
@@ -517,16 +550,15 @@ public class Frag_Create_Trip extends Fragment implements OnMapReadyCallback, In
             end_date_input.setText(getTodaysDate());
         }
 
-        // if user is coming from list trip it is editing an existing trip
-        // set dates and title with the values from model view
+        // if user is coming from list trip it is editing an existing trip set dates and title with the values from model view
         else {
             trip_title_input.setText(trip_title_from_model_view);
             start_date_input.setText(star_date_from_model_view);
             end_date_input.setText(end_date_from_model_view);
         }
 
-        create_trip_button = complete_trip_data_dialog.findViewById(R.id.create_trip_button);
-        create_trip_button.setOnClickListener(v -> saveTripToFireBase());
+        Button save_trip_button = complete_trip_data_dialog.findViewById(R.id.save_trip_button);
+        save_trip_button.setOnClickListener(v -> saveTripToFireBase());
 
         complete_trip_data_dialog.show();
     }

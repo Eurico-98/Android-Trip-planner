@@ -29,12 +29,10 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <!--input field for location-->
-
     <EditText
         android:id="@+id/location_input_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:autofillHints="Location"
         android:backgroundTint="@color/inout_text_hint_color"
         android:ems="10"
@@ -44,38 +42,44 @@
         android:inputType="text"
         android:textColor="@color/text_messages_color"
         android:textColorHint="@color/inout_text_hint_color"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/space1_for_create_trip_layout"
         app:layout_constraintEnd_toStartOf="@+id/add_location"
         app:layout_constraintStart_toEndOf="@+id/search_button"
-        app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/map_view" />
 
     <ImageButton
         android:id="@+id/add_location"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="27dp"
         android:background="@drawable/button_background"
         android:text="@string/add_location"
-        app:srcCompat="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@+id/location_list_title"
+        app:layout_constraintBottom_toBottomOf="@+id/location_input_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/location_input_field"
         app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.0" />
+        app:srcCompat="@drawable/ic_add" />
 
     <ImageButton
         android:id="@+id/search_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="27dp"
         android:background="@drawable/button_background"
-        app:srcCompat="@drawable/ic_search"
-        app:layout_constraintBottom_toTopOf="@+id/location_list_title"
+        app:layout_constraintBottom_toBottomOf="@+id/location_input_field"
         app:layout_constraintEnd_toStartOf="@+id/location_input_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map_view"
-        app:layout_constraintVertical_bias="0.0" />
+        app:srcCompat="@drawable/ic_search" />
+
+    <Space
+        android:id="@+id/space1_for_create_trip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/location_list_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_input_field" />
 
     <TextView
         android:id="@+id/location_list_title"
@@ -83,23 +87,28 @@
         android:layout_height="wrap_content"
         android:text="My Trip"
         android:textColor="@color/text_messages_color"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/space2_for_create_trip_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_input_field"
-        app:layout_constraintVertical_bias="0.050000012" />
+        app:layout_constraintTop_toBottomOf="@+id/space1_for_create_trip_layout" />
+
+    <Space
+        android:id="@+id/space2_for_create_trip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/trip_location_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_list_title" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trip_location_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_list_title"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/space2_for_create_trip_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

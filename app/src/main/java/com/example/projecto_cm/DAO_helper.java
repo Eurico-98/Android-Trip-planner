@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.projecto_cm.DB_entities.MyUser;
 import com.example.projecto_cm.DB_entities.Trip;
-import com.example.projecto_cm.Fragments.Frag_Create_Trip;
+import com.example.projecto_cm.Fragments.Frag_Trip_Planner;
 import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
 import com.example.projecto_cm.Fragments.Frag_Login;
 import com.example.projecto_cm.Fragments.Frag_Register;
@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -255,7 +254,7 @@ public class DAO_helper{
      * @param fg_create
      * @param trip_to_edit
      */
-    public void add_or_update_or_delete_trip(String username, Frag_Create_Trip fg_create, Frag_List_My_Trips fg_list, Trip trip_to_edit, String operation, int position){
+    public void add_or_update_or_delete_trip(String username, Frag_Trip_Planner fg_create, Frag_List_My_Trips fg_list, Trip trip_to_edit, String operation, int position){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 

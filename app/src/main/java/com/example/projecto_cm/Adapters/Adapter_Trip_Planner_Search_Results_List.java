@@ -11,20 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Fragments.Frag_Create_Trip;
-import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result;
+import com.example.projecto_cm.Fragments.Frag_Trip_Planner;
+import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result_In_Create_Trip;
 import com.example.projecto_cm.R;
 
 import java.util.ArrayList;
 
-public class Adapter_Search_Results_List extends RecyclerView.Adapter<Adapter_Search_Results_List.MyViewHolder> {
+public class Adapter_Trip_Planner_Search_Results_List extends RecyclerView.Adapter<Adapter_Trip_Planner_Search_Results_List.MyViewHolder> {
 
     private Context context;
     private ArrayList results;
-    Interface_Card_Search_Result listener;
+    Interface_Card_Search_Result_In_Create_Trip listener;
 
     // constructor
-    public Adapter_Search_Results_List(Context context, Frag_Create_Trip listener, ArrayList results){
+    public Adapter_Trip_Planner_Search_Results_List(Context context, Frag_Trip_Planner listener, ArrayList results){
         this.context = context;
         this.results = results;
         this.listener = listener;

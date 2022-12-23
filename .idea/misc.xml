@@ -28,9 +28,10 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_search_result_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_get_trip_title_star_end_dates_layout.xml" value="0.297554347826087" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_select_location_result_layout.xml" value="0.29393115942028986" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_trip_planner_help_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_trip_options_layout.xml" value="0.33" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/element_trip_button_layout.xml" value="0.33" />
-        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_create_trip_layout.xml" value="0.33229166666666665" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_create_trip_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_home_screen_layout.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_list_my_trips_layout.xml" value="0.3016304347826087" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_login_layout.xml" value="0.286231884057971" />
@@ -41,6 +42,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/create_trip_actions.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/home_screen_actions.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/no_actions_appbar.xml" value="0.33229166666666665" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/plan_trip_actions.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/show_trip_route_actions.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.295" />
       </map>

@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.Adapters.Adapter_List_My_Trips;
 import com.example.projecto_cm.DAO_helper;
-import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip;
+import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip_In_Trip_List;
 import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
@@ -28,7 +28,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
-public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Trip {
+public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Trip_In_Trip_List {
 
     private Shared_View_Model model;
     private Interface_Frag_Change_Listener fcl; // to change fragment
@@ -76,6 +76,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
         // prepare loading animation
         loading_animation_dialog = new Dialog(requireActivity());
+        loading_animation_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
@@ -171,8 +172,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
             my_trips_list.clear(); // clear list to avoid getting the old trips and the updated trips when the user returns from the create trip fragment
 
-            Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
-            fcl.replaceFragment(frag_create_trip, "yes");
+            Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
+            fcl.replaceFragment(frag_trip_planner, "yes");
         });
 
 

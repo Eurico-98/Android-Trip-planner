@@ -11,7 +11,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -65,40 +64,39 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;
 
-        // Traversing through all the routes
-        for (int i = 0; i < result.size(); i++) {
+        if(result != null){
 
-            points = new ArrayList<>();
-            lineOptions = new PolylineOptions();
+            // Traversing through all the routes
+            for (int i = 0; i < result.size(); i++) {
 
-            // Fetching i-th route
-            List<HashMap<String, String>> path = result.get(i);
+                points = new ArrayList<>();
+                lineOptions = new PolylineOptions();
 
-            // Fetching all the points in i-th route
-            for (int j = 0; j < path.size(); j++) {
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
 
-                HashMap<String, String> point = path.get(j);
-                double lat = Double.parseDouble(Objects.requireNonNull(point.get("lat")));
-                double lng = Double.parseDouble(Objects.requireNonNull(point.get("lng")));
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
 
-                LatLng position = new LatLng(lat, lng);
+                    HashMap<String, String> point = path.get(j);
+                    double lat = Double.parseDouble(Objects.requireNonNull(point.get("lat")));
+                    double lng = Double.parseDouble(Objects.requireNonNull(point.get("lng")));
 
-                points.add(position);
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(20);
+                lineOptions.color(Color.BLUE);
             }
-
-            // Adding all the points in the route to LineOptions
-            lineOptions.addAll(points);
-            lineOptions.width(20);
-            lineOptions.color(Color.BLUE);
         }
 
         // Drawing polyline in the Google Map for the i-th route if points inserted are able to be connected
         if (lineOptions != null) {
-            taskCallback.show_route("", lineOptions);
-        }
-
-        else {
-            taskCallback.show_route("Unable to show route! Try reordering locations.", (Object) null);
+            taskCallback.show_route(lineOptions);
         }
     }
 }

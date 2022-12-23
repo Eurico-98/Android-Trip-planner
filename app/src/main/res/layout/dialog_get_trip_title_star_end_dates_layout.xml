@@ -79,17 +79,17 @@
         android:ems="8"
         android:textColor="@color/text_messages_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/create_trip_button"
+        app:layout_constraintBottom_toTopOf="@+id/save_trip_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/start_date_input" />
 
     <Button
-        android:id="@+id/create_trip_button"
+        android:id="@+id/save_trip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:text="Create Trip"
+        android:text="Save Trip"
         android:textSize="16sp"
         android:background="@drawable/button_background"
         android:textColor="@color/buttons_and_app_bar_text_color"

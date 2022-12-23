@@ -79,8 +79,8 @@ public class Frag_Home_Screen extends Fragment {
             // hide home screen layout while next fragment loads to prevent user from clicking in other buttons while next fragment loads
             view.setVisibility(View.GONE);
 
-            Frag_Create_Trip frag_create_trip = new Frag_Create_Trip();
-            fcl.replaceFragment(frag_create_trip, "yes");
+            Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
+            fcl.replaceFragment(frag_trip_planner, "yes");
         });
 
 

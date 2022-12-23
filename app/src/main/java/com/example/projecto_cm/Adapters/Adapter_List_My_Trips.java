@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
-import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip;
+import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip_In_Trip_List;
 import com.example.projecto_cm.R;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class Adapter_List_My_Trips extends RecyclerView.Adapter<Adapter_List_My_
 
     private Context context;
     private ArrayList my_trips;
-    Interface_Card_My_Trip listener;
+    Interface_Card_My_Trip_In_Trip_List listener;
 
     // constructor
     public Adapter_List_My_Trips(Context context, Frag_List_My_Trips listener, ArrayList my_trips){
