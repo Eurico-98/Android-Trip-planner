@@ -44,12 +44,12 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     private String username;
     private MapView mapView;
     private GoogleMap google_Map;
-    private Polyline currentPolyline;
+    private ArrayList<Polyline> currentPolylines = new ArrayList<>();
     private CameraUpdate cameraUpdate;
-    ArrayList<MarkerOptions> marker = new ArrayList<>();
+    private ArrayList<MarkerOptions> marker = new ArrayList<>();
     private Dialog loading_animation_dialog;
-    ArrayList<String> all_locations = new ArrayList<>();
-    List<List<String>> all_location_combinations;
+    private ArrayList<String> all_locations = new ArrayList<>();
+    private List<List<String>> all_location_combinations;
     private int combination_iterator = 0;
 
     /**
@@ -222,11 +222,17 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.normal_map){
-            currentPolyline.setColor(Color.BLUE);
+            for (Polyline polyline : currentPolylines) {
+                polyline.setColor(Color.BLUE);
+            }
+
             google_Map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
         else if(item.getItemId() == R.id.satellite_map){
-            currentPolyline.setColor(Color.GREEN);
+            for (Polyline polyline : currentPolylines) {
+                polyline.setColor(Color.GREEN);
+            }
+
             google_Map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         }
 
@@ -273,8 +279,10 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
         Toast.makeText(requireActivity(), "Calculating optimal route",Toast.LENGTH_SHORT).show();
 
         // clear poly lines from map
-        if (currentPolyline != null) {
-            currentPolyline.remove();
+        if (currentPolylines.size() > 0) {
+            for (Polyline polyline : currentPolylines) {
+                polyline.remove();
+            }
         }
 
         set_markers_in_map_and_calculate_route(all_location_combinations.get(combination_iterator));
@@ -321,23 +329,20 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
 
         // if route is created
         if(values[0] != null){
-            //System.out.println("---------------------------------------------------calculou a rota "+combination_iterator);
-            currentPolyline = google_Map.addPolyline((PolylineOptions) values[0]);
-            currentPolyline.setWidth(10);
+
+            currentPolylines.add(google_Map.addPolyline((PolylineOptions) values[0]));
+            currentPolylines.get(currentPolylines.size()-1).setWidth(10);
 
             // stop calculation if a route with all locations was successfully computed
             // or if a route was computed with only one location not included this is for the case where one island is included for example:
             // lisboa coimbra porto e madeira  a route is possible between lisboa coimbra e porto but it madeira cant be included
             if(combination_iterator == all_location_combinations.size()-1 || combination_iterator == all_location_combinations.size()-2 || all_locations.size() == 3){
                 combination_iterator = -1;
-                //System.out.println("------------------------------------------------------CONSEGUIU UMA ROTA A PRIMEIRA OU SEGUNDA");
             }
 
             // if the previous two cases are not true and a route with two or more locations less is computed, than remove from the list of all combinations
             // the combinations of locations that include the locations already present in the most recent computed route
             else if(combination_iterator == all_location_combinations.size()-3){
-
-                //System.out.println("------------------------------------------------------COMBOS TODOS 1:\n"+all_location_combinations);
 
                 // Get the locations in the most recent computed route
                 List<String> computedRouteLocations = all_location_combinations.get(combination_iterator);
@@ -363,8 +368,6 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
                         i--; // Decrement the counter to account for the removed element
                     }
                 }
-
-                //System.out.println("------------------------------------------------------COMBOS TODOS 2:\n"+all_location_combinations);
             }
         }
 
@@ -377,7 +380,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
             Toast.makeText(requireActivity(), "Zooming on Start location.",Toast.LENGTH_SHORT).show();
 
             // zoom camera on first location
-            cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPolyline.getPoints().get(0), 8);
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPolylines.get(currentPolylines.size()-1).getPoints().get(0), 8);
             google_Map.animateCamera(cameraUpdate);
             loading_animation_dialog.dismiss();
         }

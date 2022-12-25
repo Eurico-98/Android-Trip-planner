@@ -3,6 +3,7 @@ package com.example.projecto_cm.Fragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -26,13 +27,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_Trip_Planner_Search_Results_List;
+import com.example.projecto_cm.Adapters.Adapter_Search_Functionality_Results_List;
 import com.example.projecto_cm.Adapters.Adapter_Trip_Planner_Trip_Locations_List;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.DB_entities.Trip;
@@ -413,7 +415,6 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
             select_location_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             select_location_dialog.setCanceledOnTouchOutside(false);
 
-            //Ability to cancel the dialog by clicking outside the dialog
             select_location_dialog.setContentView(R.layout.dialog_select_location_result_layout);
 
             //Binding dialog elements
@@ -424,8 +425,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
             }
 
             // set up list of locations
-            Adapter_Trip_Planner_Search_Results_List adapter_trip_planner_search_results_list = new Adapter_Trip_Planner_Search_Results_List(requireActivity(), this, search_results_list);
-            results_recycler_view.setAdapter(adapter_trip_planner_search_results_list);
+            Adapter_Search_Functionality_Results_List adapter_search_functionality_results_list = new Adapter_Search_Functionality_Results_List(requireActivity(), this, null, search_results_list);
+            results_recycler_view.setAdapter(adapter_search_functionality_results_list);
             results_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
             select_location_dialog.show();
@@ -460,10 +461,10 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     };
 
     /**
-     * function to control check boxes in dialog that show results when a search returns several results and only one must be selected
+     * function to control selected result in dialog that show results when a search returns several results and only one must be selected
      */
     @Override
-    public void onToggle(int position) {
+    public void onSelectResult(int position) {
         select_location_dialog.dismiss();
         addLocationToTrip(position, 2);
     }
@@ -474,14 +475,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     private void addLocationToTrip(int pos, int type){
 
         // process string to save
-        String temp;
-        try{
-            temp = location_input.getText().toString().substring(0, 1).toUpperCase()
-                    + location_input.getText().toString().substring(1).toLowerCase();
-
-        }catch (Exception e){
-            temp = location_input.getText().toString();
-        }
+        String temp = listAddress.get(0).getAddressLine(0);
 
         // if type == 2 add locality to name to distinguish from other results
         if(type == 2){

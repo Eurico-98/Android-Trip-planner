@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search_trip"
+        android:title="@string/search_trip"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/interface_hints"
+        android:title="@string/interface_hints"
+        android:icon="@drawable/ic_help"
+        app:showAsAction="ifRoom" />
+
+</menu>

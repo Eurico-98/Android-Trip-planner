@@ -4,9 +4,6 @@
     <string name="Geocoding_API">AIzaSyBkioxrxvd-UX_QYF_jzrKKOfRpzpTxQr8</string>
     <string name="TimeZone_API">AIzaSyBLU95wi8EvwmfPhXQHXqmbHcktBWeLEUI</string>
     <string name="app_name">CM_Project</string>
-    <string name="username" />
-    <string name="password" />
-    <string name="email" />
     <string name="add_friends">Add friends</string>
     <string name="log_out">Log out</string>
     <string name="view_profile">My Profile</string>
@@ -17,4 +14,5 @@
     <string name="add_location">Add location</string>
     <string name="weather_forecast">Weather Forecast</string>
     <string name="interface_hints">Help</string>
+    <string name="search_trip">Search</string>
 </resources>

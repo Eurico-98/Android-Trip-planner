@@ -26,21 +26,13 @@
             android:layout_gravity="start"
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="0dp"
             android:textAllCaps="false"
             android:gravity="center_horizontal|center_vertical"
             android:textColor="@color/text_messages_color"
             android:textSize="16sp" />
 
-        <CheckBox
-            android:id="@+id/result_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp" />
 
     </androidx.cardview.widget.CardView>
 

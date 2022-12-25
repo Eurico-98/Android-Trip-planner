@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@+id/search_trips_or_users_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/text_messages_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/space1_search_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Space
+        android:id="@+id/space1_search_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/trip_title_or_username_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_trips_or_users_title" />
+
+    <EditText
+        android:id="@+id/trip_title_or_username_input"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:autofillHints="Trip title|username"
+        android:ems="15"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        app:layout_constraintBottom_toTopOf="@+id/space2_search_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space1_search_dialog" />
+
+    <Space
+        android:id="@+id/space2_search_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/trips_users_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trip_title_or_username_input" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trips_users_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/space3_search_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space2_search_dialog" />
+
+    <Space
+        android:id="@+id/space3_search_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/execute_trip_or_username_search_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/trips_users_recycler_view" />
+
+    <Button
+        android:id="@+id/execute_trip_or_username_search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textAllCaps="false"
+        android:text="Search"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/space4_search_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space3_search_dialog" />
+
+    <Space
+        android:id="@+id/space4_search_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/execute_trip_or_username_search_button" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

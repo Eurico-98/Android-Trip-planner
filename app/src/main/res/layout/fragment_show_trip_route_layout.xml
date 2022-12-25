@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/widget_bar_background"
+        android:theme="@style/AppBarTheme"
         app:layout_constraintBottom_toTopOf="@+id/map_view_route"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
