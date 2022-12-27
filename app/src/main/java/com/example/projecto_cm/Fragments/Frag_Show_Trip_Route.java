@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback, Interface_On_Trip_Route_Ready {
 
@@ -379,8 +380,15 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
         else {
             Toast.makeText(requireActivity(), "Zooming on Start location.",Toast.LENGTH_SHORT).show();
 
-            // zoom camera on first location
-            cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPolylines.get(currentPolylines.size()-1).getPoints().get(0), 8);
+            // if a route was computed zoom on first location of the first route computed
+            try{
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPolylines.get(currentPolylines.size()-1).getPoints().get(0), 8);
+            }
+            // if a route was not computed use first location of markers to zomm
+            catch (Exception e) {
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.get(0).getPosition(), 8);
+            }
+
             google_Map.animateCamera(cameraUpdate);
             loading_animation_dialog.dismiss();
         }

@@ -36,7 +36,7 @@ public class Adapter_List_My_Trips extends RecyclerView.Adapter<Adapter_List_My_
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.element_trip_button_layout, parent, false);
+        View view = inflater.inflate(R.layout.card_trip_button_layout, parent, false);
         return new MyViewHolder(view);
     }
 

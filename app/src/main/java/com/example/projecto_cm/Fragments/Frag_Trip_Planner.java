@@ -475,7 +475,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     private void addLocationToTrip(int pos, int type){
 
         // process string to save
-        String temp = listAddress.get(0).getAddressLine(0);
+        String temp = listAddress.get(pos).getAddressLine(0);
 
         // if type == 2 add locality to name to distinguish from other results
         if(type == 2){
@@ -488,6 +488,9 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
                 temp = listAddress.get(pos).getAddressLine(0);
             }
         }
+
+        // remove commas from location title
+        temp = temp.replaceAll(",", "");
 
         temp += "_#_" + listAddress.get(pos).getLatitude() + "_#_" +  listAddress.get(pos).getLongitude();
 

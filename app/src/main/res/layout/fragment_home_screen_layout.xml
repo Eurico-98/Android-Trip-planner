@@ -9,7 +9,7 @@
     <!--app bar-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/home_screen_app_bar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/widget_bar_background"
         android:theme="@style/AppBarTheme"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/add_friends"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/home_screen_app_bar" />
 
     <ImageButton
         android:id="@+id/add_friends"
