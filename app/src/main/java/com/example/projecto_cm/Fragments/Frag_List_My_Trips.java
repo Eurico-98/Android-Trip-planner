@@ -374,6 +374,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         TextView trip_options_title = show_trip_options_dialog.findViewById(R.id.trip_options_dialog_title);
         trip_options_title.setText(my_trips_list.get(finalTrip_position_in_list).split("title=")[1].split(",")[0]);
 
+
         ImageButton view_trip_route = show_trip_options_dialog.findViewById(R.id.view_trip_route_image_button);
         view_trip_route.setOnClickListener(v -> {
 
@@ -406,6 +407,12 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
             Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
             fcl.replaceFragment(frag_trip_planner, "yes");
+        });
+
+
+        ImageButton weather_forecast = show_trip_options_dialog.findViewById(R.id.view_weather_image_button);
+        weather_forecast.setOnClickListener(v -> {
+
         });
 
         show_trip_options_dialog.show();

@@ -15,4 +15,9 @@
     <string name="weather_forecast">Weather Forecast</string>
     <string name="interface_hints">Help</string>
     <string name="search_trip">Search</string>
+    <string name="view_route_button">View route</string>
+    <string name="invite_friends_button">Invite Friends to Trip</string>
+    <string name="location_election_button">Allow friends to vote on locations for the trip</string>
+    <string name="weather_forecast_button">Weather Forecast</string>
+    <string name="edit_trip_button">Edit Trip</string>
 </resources>
