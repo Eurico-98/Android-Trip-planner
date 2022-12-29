@@ -16,14 +16,14 @@ import com.example.projecto_cm.R;
 
 import java.util.ArrayList;
 
-public class Adapter_List_My_Trips extends RecyclerView.Adapter<Adapter_List_My_Trips.MyViewHolder> {
+public class Adapter_For_Listing_Trips extends RecyclerView.Adapter<Adapter_For_Listing_Trips.MyViewHolder> {
 
     private Context context;
     private ArrayList my_trips;
     Interface_Card_My_Trip_In_Trip_List listener;
 
     // constructor
-    public Adapter_List_My_Trips(Context context, Frag_List_My_Trips listener, ArrayList my_trips){
+    public Adapter_For_Listing_Trips(Context context, Frag_List_My_Trips listener, ArrayList my_trips){
         this.context = context;
         this.my_trips = my_trips;
         this.listener = listener;

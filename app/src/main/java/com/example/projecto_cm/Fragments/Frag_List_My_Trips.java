@@ -2,7 +2,6 @@ package com.example.projecto_cm.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,8 +30,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_List_My_Trips;
-import com.example.projecto_cm.Adapters.Adapter_Search_Functionality_Results_List;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trips;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Search_Results;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip_In_Trip_List;
 import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result_In_Create_Trip;
@@ -40,22 +39,19 @@ import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Objects;
 
 public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Trip_In_Trip_List, Interface_Card_Search_Result_In_Create_Trip {
 
     private Shared_View_Model model;
     private Interface_Frag_Change_Listener fcl; // to change fragment
-    private Adapter_List_My_Trips adapter_list_my_trips;
-    private Adapter_Search_Functionality_Results_List adapter_search_functionality_results_list;
+    private Adapter_For_Listing_Trips adapter_for_listing_trips;
+    private Adapter_For_Listing_Search_Results adapter_for_listing_search_results;
     private RecyclerView my_trips_recycler_view, search_trips_results_recycler_view;
-    private ArrayList<String> my_trips_list = new ArrayList<>(), search_results = new ArrayList<>();;
+    private ArrayList<String> my_trips_list = new ArrayList<>(), search_results = new ArrayList<>();
     private DAO_helper dao;
     private View view;
     private Dialog loading_animation_dialog, interface_hints_dialog, search_dialog;
@@ -66,9 +62,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     private Drawable frameDrawable;
 
     /**
-     * load shared view model and get username from shared view model
-     * load layout
-     * initialize DAO_helper variable
+     * load shared view model and get username from shared view model, load layout, initialize DAO_helper variable
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -77,13 +71,13 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // get activity to get shared view model
+        // load shared view model to get username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
 
         dao = new DAO_helper();
 
         // load login fragment layout
-        view = inflater.inflate(R.layout.fragment_list_my_trips_layout, container, false);
+        view = inflater.inflate(R.layout.frag_list_my_trips_layout, container, false);
         fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         this_fragment = this;
@@ -97,8 +91,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     }
 
     /**
-     * call function to get list of trips from database
-     * set list do adapter
+     * call function to get list of trips from database, prepare list of trips, dialogs of loading, hints, trip options and search function
      * @param view
      * @param savedInstanceState
      */
@@ -113,6 +106,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         loading_animation_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
+        loading_animation_dialog.show();
 
         // prepare dialog with layout hints
         interface_hints_dialog = new Dialog(requireActivity());
@@ -128,12 +122,12 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         search_dialog.setCanceledOnTouchOutside(true);
         search_dialog.setContentView(R.layout.dialog_search_trips_or_users_layout);
 
-        // recycler view
+        // recycler view of search function
         search_trips_results_recycler_view = search_dialog.findViewById(R.id.trips_users_recycler_view);
 
         // prepare recycler view for results list inside search dialog
-        adapter_search_functionality_results_list = new Adapter_Search_Functionality_Results_List(requireActivity(), null, this, search_results);
-        search_trips_results_recycler_view.setAdapter(adapter_search_functionality_results_list);
+        adapter_for_listing_search_results = new Adapter_For_Listing_Search_Results(requireActivity(), null, this, search_results);
+        search_trips_results_recycler_view.setAdapter(adapter_for_listing_search_results);
         search_trips_results_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // for frame around result list - just a nice touch
@@ -172,20 +166,14 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             }
         });
 
-        loading_animation_dialog.show();
-
+        // get username to fetch list of trips from firebase database
         model.get_data().observe(getViewLifecycleOwner(), item -> {
+            username = (String) item;
 
-            // this fucking observer will catch the second callback when the user clicks on one of the options of a trip and that will cause an error this way it won't
-            try {
+            // get list of trips
+            dao.get_user_trips(username, this);
 
-                username = (String) item;
-
-                // get list of trips
-                dao.get_user_trips(username, this);
-
-                my_trips_recycler_view = view.findViewById(R.id.recyclerView_my_trips_list);
-            } catch (Exception ignored){}
+            my_trips_recycler_view = view.findViewById(R.id.recyclerView_my_trips_list);
         });
     }
 
@@ -224,8 +212,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             search_trips_results_recycler_view.setForeground(frameDrawable);
 
             // update recycler view of list of results
-            adapter_search_functionality_results_list.setResultsList(search_results);
-            search_trips_results_recycler_view.setAdapter(adapter_search_functionality_results_list);
+            adapter_for_listing_search_results.setResultsList(search_results);
+            search_trips_results_recycler_view.setAdapter(adapter_for_listing_search_results);
 
             // clear input field
             trip_title_or_username_input.setText("");
@@ -299,8 +287,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         }
 
         // set up list of locations
-        adapter_list_my_trips = new Adapter_List_My_Trips(requireActivity(), this, my_trips_list);
-        my_trips_recycler_view.setAdapter(adapter_list_my_trips);
+        adapter_for_listing_trips = new Adapter_For_Listing_Trips(requireActivity(), this, my_trips_list);
+        my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
         my_trips_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // attach callback for drag and drop to recycler view to reorder and delete locations from trip
@@ -327,8 +315,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
                 dao.add_or_update_or_delete_trip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
 
                 my_trips_list.remove(viewHolder.getAdapterPosition());
-                adapter_list_my_trips.setMy_trips(my_trips_list);
-                my_trips_recycler_view.setAdapter(adapter_list_my_trips);
+                adapter_for_listing_trips.setMy_trips(my_trips_list);
+                my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
             }
         }
     };
@@ -378,16 +366,19 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         ImageButton view_trip_route = show_trip_options_dialog.findViewById(R.id.view_trip_route_image_button);
         view_trip_route.setOnClickListener(v -> {
 
-            model.send_data(new String[]{username, my_trips_list.get(finalTrip_position_in_list)});
+            // pass list of locations to next fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("locations", my_trips_list.get(finalTrip_position_in_list));
 
             show_trip_options_dialog.dismiss();
 
             // hide list trips layout while next create trip fragment loads to prevent user from clicking in other buttons while it loads
             view.setVisibility(View.GONE);
 
-            my_trips_list.clear(); // clear list to avoid getting the old trips and the updated trips when the user returns from the create trip fragment
+            my_trips_list.clear(); // clear list to avoid getting duplicates when the user return to this fragment
 
             Frag_Show_Trip_Route frag_show_trip_route = new Frag_Show_Trip_Route();
+            frag_show_trip_route.setArguments(bundle);
             fcl.replaceFragment(frag_show_trip_route, "yes");
         });
 
@@ -395,8 +386,10 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         ImageButton edit_trip_button = show_trip_options_dialog.findViewById(R.id.edit_trip_image_button);
         edit_trip_button.setOnClickListener(v -> {
 
-            // call create trip method but pass selected trip and username
-            model.send_data(new String[]{username, my_trips_list.get(finalTrip_position_in_list), String.valueOf(finalTrip_position_in_list)});
+            // pass list of locations to next fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("locations", my_trips_list.get(finalTrip_position_in_list));
+            bundle.putString("trip_to_edit", String.valueOf(finalTrip_position_in_list));
 
             show_trip_options_dialog.dismiss();
 
@@ -406,6 +399,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             my_trips_list.clear(); // clear list to avoid getting the old trips and the updated trips when the user returns from the create trip fragment
 
             Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
+            frag_trip_planner.setArguments(bundle);
             fcl.replaceFragment(frag_trip_planner, "yes");
         });
 
@@ -413,6 +407,20 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         ImageButton weather_forecast = show_trip_options_dialog.findViewById(R.id.view_weather_image_button);
         weather_forecast.setOnClickListener(v -> {
 
+            // pass list of locations to next fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("locations", my_trips_list.get(finalTrip_position_in_list));
+
+            show_trip_options_dialog.dismiss();
+
+            // hide list trips layout while next create trip fragment loads to prevent user from clicking in other buttons while it loads
+            view.setVisibility(View.GONE);
+
+            my_trips_list.clear(); // clear list to avoid getting duplicates when the user return to this fragment
+
+            Frag_Weather_Forecast frag_show_weather_forecast = new Frag_Weather_Forecast();
+            frag_show_weather_forecast.setArguments(bundle);
+            fcl.replaceFragment(frag_show_weather_forecast, "yes");
         });
 
         show_trip_options_dialog.show();
@@ -433,8 +441,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             }
 
             // update recycler vie of list of trips
-            adapter_list_my_trips.setMy_trips(my_trips_list);
-            my_trips_recycler_view.setAdapter(adapter_list_my_trips);
+            adapter_for_listing_trips.setMy_trips(my_trips_list);
+            my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
 
             Toast.makeText(requireActivity(), "Trip deleted successfully!",Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while deleting trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());

@@ -18,12 +18,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.projecto_cm.Interfaces.Interface_On_Trip_Route_Ready;
 import com.example.projecto_cm.Map_Route_Helpers.FetchURL;
 import com.example.projecto_cm.R;
-import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -37,12 +35,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback, Interface_On_Trip_Route_Ready {
 
-    private Shared_View_Model model;
-    private String username;
     private MapView mapView;
     private GoogleMap google_Map;
     private ArrayList<Polyline> currentPolylines = new ArrayList<>();
@@ -54,8 +49,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     private int combination_iterator = 0;
 
     /**
-     * load fragment to show trip route
-     * load model view and app bar menu
+     * load fragment to show trip route, get data from bundle
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -64,50 +58,29 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // get activity to get shared view model
-        model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
+        // get locations and prepare markers
+        String[] locations_from_model_view = getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ");
+        String location;
+        double lat, lon;
+        for(String s : locations_from_model_view){
 
-        // get data from shared view model
-        model.get_data().observe(getViewLifecycleOwner(), item -> {
+            all_locations.add(s);
 
-            try{
-                username = (String) item;
-            }
+            location = s.split("_#_")[0];
+            lat  = Double.parseDouble(s.split("_#_")[1]);
+            lon = Double.parseDouble(s.split("_#_")[2]);
 
-            // if user is coming from list trips fragment
-            catch (Exception e) {
-                String[] data = (String[]) item;
-                username = data[0];
+            marker.add(new MarkerOptions().position(new LatLng(lat, lon)).title(location));
+        }
 
-                // get locations and prepare markers
-                String[] locations_from_model_view = data[1].split("locations=\\[")[1].split("]")[0].split(", ");
-                String location;
-                double lat, lon;
-                for(String s : locations_from_model_view){
+        all_location_combinations = getAllCombinations(all_locations);
 
-                    all_locations.add(s);
-
-                    location = s.split("_#_")[0];
-                    lat  = Double.parseDouble(s.split("_#_")[1]);
-                    lon = Double.parseDouble(s.split("_#_")[2]);
-
-                    marker.add(new MarkerOptions().position(new LatLng(lat, lon)).title(location));
-                }
-
-                all_location_combinations = getAllCombinations(all_locations);
-
-                // make route calculation star with the biggest combo in the list because i want to include as much locations in the route as possible
-                // if it is not possible try the other smaller combinations to get sub routes possible
-                combination_iterator = all_location_combinations.size()-1;
-
-                // put username back into model view to be obtainable in other fragments
-                // this will trigger the observer callback again but it is ok because it only gets the username again
-                model.send_data(username);
-            }
-        });
+        // make route calculation star with the biggest combo in the list because i want to include as much locations in the route as possible
+        // if it is not possible try the other smaller combinations to get sub routes possible
+        combination_iterator = all_location_combinations.size()-1;
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_show_trip_route_layout, container, false);
+        View view = inflater.inflate(R.layout.frag_show_trip_route_layout, container, false);
 
         // load toolbar of this fragment
         Toolbar toolbar = view.findViewById(R.id.view_trip_route_app_bar);

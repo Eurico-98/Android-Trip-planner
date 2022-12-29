@@ -3,7 +3,6 @@ package com.example.projecto_cm.Fragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -27,15 +26,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_Search_Functionality_Results_List;
-import com.example.projecto_cm.Adapters.Adapter_Trip_Planner_Trip_Locations_List;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Search_Results;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trip_Locations;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.DB_entities.Trip;
 import com.example.projecto_cm.Interfaces.Interface_Card_Search_Result_In_Create_Trip;
@@ -94,7 +92,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     // search_results_list -> for searches with multiple results - show list in dialog to select only one of them to add to trip
     private ArrayList<String> trip_locations_list = new ArrayList<>(), search_results_list = new ArrayList<>();
 
-    private Adapter_Trip_Planner_Trip_Locations_List adapter_trip_planner_trip_locations_list;
+    private Adapter_For_Listing_Trip_Locations adapter_for_listing_trip_locations;
 
     // select_location_dialog -> to select one result when a search returns several results
     // complete_trip_data_dialog -> to insert trip title and start and end date before saving the trip to the database
@@ -117,46 +115,31 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // get activity to get shared view model
+        // get data username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
+        model.get_data().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
-        // get data from shared view model
-        model.get_data().observe(getViewLifecycleOwner(), item -> {
+        // if the user is editing a trip get trip data from bundle
+        try{
+            trip_to_update = Integer.parseInt(getArguments().getString("trip_to_edit")); // if this is empty it means the user is creating a new trip
 
-            // if the user selected create trip from home screen
-            try{
-                username = (String) item;
-            }
+            editing_trip = "update";
 
-            // if user is coming from list trips fragment
-            catch (Exception e){
+            getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ");
+            trip_title_from_model_view = getArguments().getString("locations").split("title=")[1].split(",")[0];
+            end_date_from_model_view = getArguments().getString("locations").split("end_date=")[1].split(",")[0];
+            star_date_from_model_view = getArguments().getString("locations").split("start_date=")[1].split(",")[0].replace("}", "");
 
-                String[] data = (String[]) item;
-
-                editing_trip = "update";
-                username = data[0];
-
-                trip_title_from_model_view = data[1].split("title=")[1].split(",")[0];
-                end_date_from_model_view = data[1].split("end_date=")[1].split(",")[0];
-                star_date_from_model_view = data[1].split("start_date=")[1].split(",")[0].replace("}", "");
-
-                String[] locations_from_model_view = data[1].split("locations=\\[")[1].split("]")[0].split(", ");
-                trip_locations_list.addAll(Arrays.asList(locations_from_model_view));
-
-                trip_to_update = Integer.parseInt(data[2]);
-
-                // put username back into model view to be obtainable in other fragments
-                // this will trigger the observer callback again but it is ok because it only gets the username again
-                model.send_data(username);
-            }
-        });
+            trip_locations_list.addAll(Arrays.asList(getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ")));
+        }
+        catch (Exception ignored){}
 
         // create 1 thread so execute searches with google maps
         service = Executors.newFixedThreadPool(1);
         handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_trip_planner_layout, container, false);
+        View view = inflater.inflate(R.layout.frag_trip_planner_layout, container, false);
 
         // load toolbar of this fragment
         Toolbar toolbar = view.findViewById(R.id.create_trip_app_bar);
@@ -199,8 +182,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
 
 
         // set up list of locations
-        adapter_trip_planner_trip_locations_list = new Adapter_Trip_Planner_Trip_Locations_List(requireActivity(), trip_locations_list);
-        trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
+        adapter_for_listing_trip_locations = new Adapter_For_Listing_Trip_Locations(requireActivity(), trip_locations_list, "list of locations", null);
+        trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_locations);
         trip_locations_recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // attach callback for drag and drop to recycler view to reorder and delete locations from trip
@@ -425,8 +408,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
             }
 
             // set up list of locations
-            Adapter_Search_Functionality_Results_List adapter_search_functionality_results_list = new Adapter_Search_Functionality_Results_List(requireActivity(), this, null, search_results_list);
-            results_recycler_view.setAdapter(adapter_search_functionality_results_list);
+            Adapter_For_Listing_Search_Results adapter_for_listing_search_results = new Adapter_For_Listing_Search_Results(requireActivity(), this, null, search_results_list);
+            results_recycler_view.setAdapter(adapter_for_listing_search_results);
             results_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
             select_location_dialog.show();
@@ -454,8 +437,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             trip_locations_list.remove(viewHolder.getAdapterPosition());
-            adapter_trip_planner_trip_locations_list.setLocationsList(trip_locations_list);
-            trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
+            adapter_for_listing_trip_locations.setLocationsList(trip_locations_list);
+            trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_locations);
             Toast.makeText(requireActivity(), "Location deleted!", Toast.LENGTH_SHORT).show();
         }
     };
@@ -495,8 +478,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
         temp += "_#_" + listAddress.get(pos).getLatitude() + "_#_" +  listAddress.get(pos).getLongitude();
 
         trip_locations_list.add(temp);
-        adapter_trip_planner_trip_locations_list.setLocationsList(trip_locations_list);
-        trip_locations_recyclerView.setAdapter(adapter_trip_planner_trip_locations_list);
+        adapter_for_listing_trip_locations.setLocationsList(trip_locations_list);
+        trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_locations);
 
         // clear input, list of address, list of results of search thar returned several results, and clear markers from map
         search_results_list.clear();

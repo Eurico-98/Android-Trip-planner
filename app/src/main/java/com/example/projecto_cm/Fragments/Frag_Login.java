@@ -46,7 +46,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_login_layout, container, false);
+        View view = inflater.inflate(R.layout.frag_login_layout, container, false);
         fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         return view;

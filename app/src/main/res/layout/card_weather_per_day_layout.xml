@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp">
+
+    <ImageButton
+        android:id="@+id/weather_forecast_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/weather_forecast"
+        app:layout_constraintBottom_toTopOf="@+id/weather_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/weather_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:text="Weather:"
+        app:layout_constraintBottom_toTopOf="@+id/temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_forecast_image"/>
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:text="Temperature:"
+        app:layout_constraintBottom_toTopOf="@+id/feels_like_temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_description"/>
+
+    <TextView
+        android:id="@+id/feels_like_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:text="Feels like:"
+        app:layout_constraintBottom_toTopOf="@+id/humidity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temperature"/>
+
+    <TextView
+        android:id="@+id/humidity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:text="Humidity:"
+        app:layout_constraintBottom_toTopOf="@+id/rain_prob"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feels_like_temperature"/>
+
+    <TextView
+        android:id="@+id/rain_prob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:text="Chance of rain:\n(within 3h)"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/humidity"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

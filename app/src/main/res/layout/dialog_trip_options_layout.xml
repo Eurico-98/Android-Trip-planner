@@ -22,128 +22,78 @@
 
 
     <!--view trip rout button-->
-    <RelativeLayout
-        android:id="@+id/view_trip_route_relativeLayout"
+    <ImageButton
+        android:id="@+id/view_trip_route_image_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/button_background"
-        app:layout_constraintBottom_toTopOf="@+id/invite_friends_relativeLayout"
-        app:layout_constraintEnd_toStartOf="@+id/view_weather_relativeLayout"
+        android:contentDescription="@string/view_route_button"
+        android:src="@drawable/trip_route"
+        app:layout_constraintBottom_toTopOf="@+id/invite_friends_image_button"
+        app:layout_constraintEnd_toStartOf="@+id/view_weather_image_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title">
-
-        <ImageButton
-            android:id="@+id/view_trip_route_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_background"
-            android:src="@drawable/trip_route"
-            android:contentDescription="@string/view_route_button"/>
-
-    </RelativeLayout>
+        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title" />
 
     <!--check weather in location-->
-    <RelativeLayout
-        android:id="@+id/view_weather_relativeLayout"
+    <ImageButton
+        android:id="@+id/view_weather_image_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/button_background"
-        app:layout_constraintBottom_toTopOf="@+id/start_election_relativeLayout"
+        android:contentDescription="@string/weather_forecast_button"
+        android:src="@drawable/weather_forecast"
+        app:layout_constraintBottom_toTopOf="@+id/start_election_image_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/view_trip_route_relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title">
-
-        <ImageButton
-            android:id="@+id/view_weather_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_background"
-            android:contentDescription="@string/weather_forecast_button"
-            android:src="@drawable/weather_forecast" />
-
-    </RelativeLayout>
+        app:layout_constraintStart_toEndOf="@+id/view_trip_route_image_button"
+        app:layout_constraintTop_toBottomOf="@+id/trip_options_dialog_title"/>
 
 
     <!--Invite friends to trip-->
-    <RelativeLayout
-        android:id="@+id/invite_friends_relativeLayout"
+    <ImageButton
+        android:id="@+id/invite_friends_image_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/button_background"
-        app:layout_constraintBottom_toTopOf="@+id/edit_trip_relativeLayout"
-        app:layout_constraintEnd_toStartOf="@+id/start_election_relativeLayout"
+        android:src="@drawable/add_friend"
+        android:contentDescription="@string/invite_friends_button"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_image_button"
+        app:layout_constraintEnd_toStartOf="@+id/start_election_image_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_trip_route_relativeLayout">
-
-        <ImageButton
-            android:id="@+id/invite_friends_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_background"
-            android:src="@drawable/add_friend"
-            android:contentDescription="@string/invite_friends_button"/>
-
-    </RelativeLayout>
+        app:layout_constraintTop_toBottomOf="@+id/view_trip_route_image_button"/>
 
     <!--Start election-->
-    <RelativeLayout
-        android:id="@+id/start_election_relativeLayout"
+    <ImageButton
+        android:id="@+id/start_election_image_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/button_background"
-        app:layout_constraintBottom_toTopOf="@+id/edit_trip_relativeLayout"
+        android:src="@drawable/location_election"
+        android:contentDescription="@string/location_election_button"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_image_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/invite_friends_relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/view_weather_relativeLayout">
-
-        <ImageButton
-            android:id="@+id/start_election_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_background"
-            android:src="@drawable/location_election"
-            android:contentDescription="@string/location_election_button"/>
-
-    </RelativeLayout>
+        app:layout_constraintStart_toEndOf="@+id/invite_friends_image_button"
+        app:layout_constraintTop_toBottomOf="@+id/view_weather_image_button"/>
 
     <Space
         android:id="@+id/space_trip_options_layout"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_trip_relativeLayout"
+        app:layout_constraintBottom_toTopOf="@+id/edit_trip_image_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_election_relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/start_election_image_button" />
 
     <!--Edit trip settings-->
-    <RelativeLayout
-        android:id="@+id/edit_trip_relativeLayout"
+    <ImageButton
+        android:id="@+id/edit_trip_image_button"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/button_background"
+        android:src="@drawable/edit_trip"
+        android:contentDescription="@string/edit_trip_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space_trip_options_layout">
-
-        <ImageButton
-            android:id="@+id/edit_trip_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_background"
-            android:src="@drawable/edit_trip"
-            android:contentDescription="@string/edit_trip_button"/>
-
-    </RelativeLayout>
+        app:layout_constraintTop_toBottomOf="@+id/space_trip_options_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,7 +40,7 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // load login fragment layout
-        View view = inflater.inflate(R.layout.fragment_register_layout, container, false);
+        View view = inflater.inflate(R.layout.frag_register_layout, container, false);
         fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         return view;

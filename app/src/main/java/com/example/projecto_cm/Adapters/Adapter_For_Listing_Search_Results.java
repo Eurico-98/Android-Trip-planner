@@ -18,7 +18,7 @@ import com.example.projecto_cm.R;
 
 import java.util.ArrayList;
 
-public class Adapter_Search_Functionality_Results_List extends RecyclerView.Adapter<Adapter_Search_Functionality_Results_List.MyViewHolder> {
+public class Adapter_For_Listing_Search_Results extends RecyclerView.Adapter<Adapter_For_Listing_Search_Results.MyViewHolder> {
 
     private Context context;
     private ArrayList results;
@@ -26,7 +26,7 @@ public class Adapter_Search_Functionality_Results_List extends RecyclerView.Adap
     Interface_Card_My_Trip_In_Trip_List listener_trip_list_fg = null;
 
     // constructor
-    public Adapter_Search_Functionality_Results_List(Context context, Frag_Trip_Planner listener_fg_planner, Frag_List_My_Trips listener_fg_list, ArrayList results){
+    public Adapter_For_Listing_Search_Results(Context context, Frag_Trip_Planner listener_fg_planner, Frag_List_My_Trips listener_fg_list, ArrayList results){
         this.context = context;
         this.results = results;
 
