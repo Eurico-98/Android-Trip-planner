@@ -21,6 +21,5 @@
     <string name="location_election_button">Allow friends to vote on locations for the trip</string>
     <string name="weather_forecast_button">Weather Forecast</string>
     <string name="edit_trip_button">Edit Trip</string>
-    <string name="humidity">Humidity</string>
-    <string name="temperature">Temperature</string>
+    <string name="info">Information</string>
 </resources>

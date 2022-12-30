@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trip_Locations;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Weather_Data;
 import com.example.projecto_cm.R;
 
 import org.json.JSONArray;
@@ -34,8 +37,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,12 +48,11 @@ public class Frag_Weather_Forecast extends Fragment {
 
     private ExecutorService service;
     private Handler handler;
+    private Dialog loading_animation_dialog, interface_hints_dialog;
     private RecyclerView list_of_locations_recycler_view;
-    private ArrayList<RecyclerView> locations_weather_recycler_view = new ArrayList<>(); // this list contains the forecast recycler views for each location of the trip
-    private ArrayList<String> weather_forecast_per_location = new ArrayList<>(); // keys are locations values are the json result from the api request
-    private View view;
-    private Dialog loading_animation_dialog;
+    private ArrayList<String> locations = new ArrayList<>();
     private Adapter_For_Listing_Trip_Locations adapter_for_listing_trip_locations;
+    private ArrayList<Adapter_For_Listing_Weather_Data> list_of_weather_adapters_of_locations = new ArrayList<>();
 
     /**
      * load shared view model and get username from shared view model, load layout
@@ -61,7 +65,7 @@ public class Frag_Weather_Forecast extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
        // load login fragment layout
-       view = inflater.inflate(R.layout.frag_weather_forecast_layout, container, false);
+       View view = inflater.inflate(R.layout.frag_weather_forecast_layout, container, false);
 
        // create 1 thread to execute requests to openweather api
        service = Executors.newFixedThreadPool(1);
@@ -102,11 +106,10 @@ public class Frag_Weather_Forecast extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId() == R.id.humidity){
-
-        }
-        else if(item.getItemId() == R.id.temperature){
-
+        if(item.getItemId() == R.id.interface_hints){
+            TextView hint = interface_hints_dialog.findViewById(R.id.hint_text);
+            hint.setText("\nInfo\n\nForecast period is the next 5 days in a 3 hour window from the current time.\n");
+            interface_hints_dialog.show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -131,43 +134,67 @@ public class Frag_Weather_Forecast extends Fragment {
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
         loading_animation_dialog.show();
 
+        // prepare dialog with layout hints
+        interface_hints_dialog = new Dialog(requireActivity());
+        interface_hints_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        interface_hints_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        interface_hints_dialog.setCanceledOnTouchOutside(true);
+        interface_hints_dialog.setContentView(R.layout.dialog_show_hints_layout);
+
         service.execute(() -> {
 
+            String result = "";
             try {
-                get_weather_forecast();
-
-                /*
-                // set list adapter
-                list_of_locations_recycler_view = requireActivity().findViewById(R.id.recyclerView_locations_weather_list); // to show list of locations selected
-                adapter_for_listing_trip_locations = new Adapter_For_Listing_Trip_Locations(requireActivity(), weather_forecast_per_location, "list of weather forecasts");
-                list_of_locations_recycler_view.setAdapter(adapter_for_listing_trip_locations);
-                list_of_locations_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));*/
-            } catch (IOException e) {
+                // get weather forecast and prepare adapters
+                locations.addAll(Arrays.asList(getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ")));
+                result = get_weather_forecast();
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
+            String finalResult = result;
             handler.post(() -> {
+
+                // set list adapter of locations list
+                if(finalResult.equals("Forecast successful!")){
+                    list_of_locations_recycler_view = requireActivity().findViewById(R.id.recyclerView_locations_weather_list); // to show list of locations selected
+                    adapter_for_listing_trip_locations = new Adapter_For_Listing_Trip_Locations(requireActivity(), locations, list_of_weather_adapters_of_locations, "list of weather forecasts");
+                    list_of_locations_recycler_view.setAdapter(adapter_for_listing_trip_locations);
+                    list_of_locations_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                }
+                else {
+                    Toast.makeText(requireActivity(), finalResult,Toast.LENGTH_SHORT).show();
+                }
+
                 loading_animation_dialog.dismiss();
             });
         });
     }
 
     /**
-     * get locations from bundle, send request to openweather api to get weather forecast for next 5 days starting from the present day if present day is within trip period
+     * send weather forecast request of up to 5 days for each location of the trip, process all that data creating all the adapters necessary - one adapter for the list of locations, and one adapter for the weather data set of each location
      */
-    private void get_weather_forecast() throws IOException {
+    private String get_weather_forecast() throws IOException {
 
-        // send request with the location forecast
+        // request weather forecast for next 5 days for each location of the trip
         URL url;
         HttpURLConnection connection;
         BufferedReader in;
         StringBuilder response;
         String line;
-        DecimalFormat df = new DecimalFormat("#.##");
-        for(String location_data : getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ")){
+        DecimalFormat df = new DecimalFormat("#");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM");
+
+        for(String location_data : locations){
 
             try {
-                url = new URL("https://api.openweathermap.org/data/2.5/forecast?lat=" + location_data.split("_#_")[1] + "&lon=" + location_data.split("_#_")[2] + "&appid=" + getString(R.string.OpenWeather_API));
+                url = new URL("https://api.openweathermap.org/data/2.5/forecast?" +
+                        "lat=" + location_data.split("_#_")[1] +
+                        "&lon=" + location_data.split("_#_")[2] +
+                        "&cnt=" + 40 + // 40 intervals of 3 hours equals to 5 days of weather forecast
+                        "&units=metric" +
+                        "&appid=" + getString(R.string.OpenWeather_API));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
@@ -179,42 +206,50 @@ public class Frag_Weather_Forecast extends Fragment {
                 in.close();
                 connection.disconnect();
 
-
+                // convert response to json
                 JSONObject json = new JSONObject(response.toString());
 
                 // Get list of weather forecasts
                 JSONArray forecasts = json.getJSONArray("list");
 
-                // Iterate through list of weather forecasts for 5 days
-                for (int i = 0; i < 5; i++) {
+                // list of weather data for next 5 days for current location
+                ArrayList<String> current_location_weather_data = new ArrayList<>();
+
+                // get data for the 5 days
+                for (int i = 0; i < forecasts.length(); i+=40) {
+
                     // Get weather forecast for current day
-                    JSONObject forecast = forecasts.getJSONObject(i);
+                    JSONObject day = forecasts.getJSONObject(i);
+                    System.out.println("--------------------------------------------\n"+day.toString());
 
-                    ArrayList<String> location_weather_data = new ArrayList<>();
-
+                    // get the date/time of the forecast
+                    Date date = new Date(day.getLong("dt") * 1000L);
 
                     // Get temperature, humidity, and probability of rain from weather forecast
-                    location_weather_data.add("Weather: " + forecast.getJSONArray("weather").getJSONObject(0).getString("description"));
-                    location_weather_data.add("Temperature: " +df.format(forecast.getJSONObject("main").getDouble("temp") - 273.15)); // value comes in kelvin
-                    location_weather_data.add(df.format(forecast.getJSONObject("main").getDouble("feels_like") - 273.15));
-                    location_weather_data.add(df.format(forecast.getJSONObject("main").getDouble("humidity")));
-                    location_weather_data.add(df.format(forecast.getJSONObject("rain").optDouble("3h", 0)));
+                    current_location_weather_data.add(dateFormat.format(date));
+                    current_location_weather_data.add(day.getJSONArray("weather").getJSONObject(0).getString("description"));
+                    current_location_weather_data.add(df.format(day.getJSONObject("main").getDouble("temp")) + "ºC");
+                    current_location_weather_data.add("Feels like: " + df.format(day.getJSONObject("main").getDouble("feels_like")) + "ºC");
+                    current_location_weather_data.add("Humidity: " + df.format(day.getJSONObject("main").getDouble("humidity")) + "%");
 
-
-                    /*System.out.println("Weather: " + description);
-                    System.out.println("Temperature: " + df.format(temperature) + "Cº");
-                    System.out.println("Feels like: " + df.format(feelsLike) + "Cº");
-                    System.out.println("Humidity: " + humidity + "%");
-                    System.out.println("Chance of rain:\\n(within 3h) " + rainProbability + "%");
-
-
-                    // set adapters for weather data of each day
-                    Adapter_For_Weather_data_per_day adapter_for_weather_data_per_day = new Adapter_For_Weather_data_per_day(requireActivity(), );*/
+                    // rain might be null
+                    JSONObject rain = day.optJSONObject("rain");
+                    double probabilityOfRain = rain != null ? rain.optDouble("3h") : 0;
+                    current_location_weather_data.add("Chance of rain: " + df.format(probabilityOfRain) + "%");
                 }
 
-            } catch (Exception e) {
+                System.out.println("--------------------------------------------\n"+current_location_weather_data.toString());
+
+                // set adapter for weather data for the 5 days for the current location
+                list_of_weather_adapters_of_locations.add(new Adapter_For_Listing_Weather_Data(requireActivity(), current_location_weather_data));
+
+            }
+            catch (Exception e) {
                 e.printStackTrace();
+                return "Network error while getting weather forecast!";
             }
         }
+
+        return "Forecast successful!";
     }
 }

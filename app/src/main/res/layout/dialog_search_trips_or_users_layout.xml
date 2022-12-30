@@ -14,19 +14,11 @@
         android:gravity="center_vertical|center_horizontal"
         android:textColor="@color/text_messages_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/space1_search_dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Space
-        android:id="@+id/space1_search_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/trip_title_or_username_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_trips_or_users_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/trip_title_or_username_input"
@@ -34,44 +26,31 @@
         android:layout_height="50dp"
         android:autofillHints="Trip title|username"
         android:ems="15"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:inputType="textPersonName"
         android:textColor="@color/text_messages_color"
         android:textColorHint="@color/input_text_hint_color"
         android:background="@null"
         android:imeOptions="actionDone"
-        app:layout_constraintBottom_toTopOf="@+id/space2_search_dialog"
+        app:layout_constraintBottom_toTopOf="@+id/search_results_stub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space1_search_dialog" />
+        app:layout_constraintTop_toBottomOf="@+id/search_trips_or_users_title" />
 
-    <Space
-        android:id="@+id/space2_search_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/trips_users_recycler_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trip_title_or_username_input" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trips_users_recycler_view"
+    <!-- ViewStub to include the search results view -->
+    <ViewStub
+        android:id="@+id/search_results_stub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/space3_search_dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space2_search_dialog" />
-
-    <Space
-        android:id="@+id/space3_search_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:inflatedId="@+id/search_results_view"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/execute_trip_or_username_search_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trips_users_recycler_view" />
+        app:layout_constraintTop_toBottomOf="@+id/trip_title_or_username_input"/>
 
     <Button
         android:id="@+id/execute_trip_or_username_search_button"
@@ -82,19 +61,11 @@
         android:textAllCaps="false"
         android:text="Search"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/space4_search_dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space3_search_dialog" />
-
-    <Space
-        android:id="@+id/space4_search_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/execute_trip_or_username_search_button" />
-
+        app:layout_constraintTop_toBottomOf="@+id/search_results_stub" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

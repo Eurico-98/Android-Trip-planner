@@ -19,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,7 +65,6 @@ import java.util.concurrent.Executors;
 
 public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, Interface_Card_Search_Result_In_Create_Trip {
 
-    private Shared_View_Model model;
     private ExecutorService service;
     private Handler handler;
 
@@ -116,7 +116,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // get data username
-        model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
+        Shared_View_Model model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
         model.get_data().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // if the user is editing a trip get trip data from bundle
@@ -173,7 +173,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
         interface_hints_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         interface_hints_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         interface_hints_dialog.setCanceledOnTouchOutside(true);
-        interface_hints_dialog.setContentView(R.layout.dialog_show_trip_planner_help_layout);
+        interface_hints_dialog.setContentView(R.layout.dialog_show_hints_layout);
 
         mapView = requireActivity().findViewById(R.id.map_view); // bind map view
         trip_locations_recyclerView = requireActivity().findViewById(R.id.trip_location_list); // to show list of locations selected
@@ -182,7 +182,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
 
 
         // set up list of locations
-        adapter_for_listing_trip_locations = new Adapter_For_Listing_Trip_Locations(requireActivity(), trip_locations_list, "list of locations", null);
+        adapter_for_listing_trip_locations = new Adapter_For_Listing_Trip_Locations(requireActivity(), trip_locations_list, null, "list of locations");
         trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_locations);
         trip_locations_recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
@@ -266,6 +266,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
             }
         }
         else if(item.getItemId() == R.id.interface_hints){
+            TextView hint = interface_hints_dialog.findViewById(R.id.hint_text);
+            hint.setText("\nHints\n\nSwipe left to delete a location.\n\nPress and hold to reorder locations.\n");
             interface_hints_dialog.show();
         }
 

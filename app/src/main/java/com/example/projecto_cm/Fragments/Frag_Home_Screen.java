@@ -26,8 +26,6 @@ import com.example.projecto_cm.Shared_View_Model;
 public class Frag_Home_Screen extends Fragment {
 
     private Interface_Frag_Change_Listener fcl; // to change fragment
-    private String username;
-    private View view;
 
     /**
      *  onCreateView of home screen fragment
@@ -41,7 +39,7 @@ public class Frag_Home_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // load login fragment layout
-        view = inflater.inflate(R.layout.frag_home_screen_layout, container, false);
+        View view = inflater.inflate(R.layout.frag_home_screen_layout, container, false);
         fcl = (Main_Activity) inflater.getContext(); // to change fragments
 
         // load toolbar of this fragment

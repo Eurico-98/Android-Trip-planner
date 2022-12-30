@@ -21,15 +21,15 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
 
     private Context context;
     private ArrayList locations;
+    private ArrayList<Adapter_For_Listing_Weather_Data> list_of_weather_adapters_of_locations;
     private String type_of_list;
-    private FragmentActivity requireActivity;
 
     // constructor
-    public Adapter_For_Listing_Trip_Locations(Context context, ArrayList locations, String type_of_list, FragmentActivity requireActivity){
+    public Adapter_For_Listing_Trip_Locations(Context context, ArrayList locations, ArrayList<Adapter_For_Listing_Weather_Data> list_of_weather_adapters_of_locations, String type_of_list){
         this.context = context;
         this.locations = locations;
         this.type_of_list = type_of_list;
-        this.requireActivity = requireActivity;
+        this.list_of_weather_adapters_of_locations = list_of_weather_adapters_of_locations;
     }
 
     public void setLocationsList(ArrayList locations) {
@@ -66,11 +66,11 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
             holder.location_title.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
         }
 
-        // set location list of weather forecast for the maximum number of days possible
+        // set location title and list of weather data for 5 days
         else {
             holder.location_title_weather_forecast.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
-            holder.recyclerView_weather_forecast.setAdapter(aqui passo o adpater que tera de vir numa lista de adapters do fragmento);
-            holder.recyclerView_weather_forecast.setLayoutManager(new LinearLayoutManager(requireActivity));
+            holder.recyclerView_weather_forecast.setAdapter(list_of_weather_adapters_of_locations.get(position));
+            holder.recyclerView_weather_forecast.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         }
     }
 
@@ -79,7 +79,6 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
 
     // to bind views with layout objects
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-
 
         TextView location_title, location_title_weather_forecast;
         RecyclerView recyclerView_weather_forecast;

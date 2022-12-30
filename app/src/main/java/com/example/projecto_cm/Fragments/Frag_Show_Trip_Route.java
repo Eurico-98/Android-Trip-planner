@@ -250,7 +250,6 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
             google_Map.addMarker(marker.get(i));
         }
 
-        Toast.makeText(requireActivity(), "Calculating optimal route",Toast.LENGTH_SHORT).show();
 
         // clear poly lines from map
         if (currentPolylines.size() > 0) {
@@ -259,7 +258,14 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
             }
         }
 
-        set_markers_in_map_and_calculate_route(all_location_combinations.get(combination_iterator));
+        if(combination_iterator > -1){
+            Toast.makeText(requireActivity(), "Calculating optimal route",Toast.LENGTH_SHORT).show();
+            set_markers_in_map_and_calculate_route(all_location_combinations.get(combination_iterator));
+        }
+        else{
+            loading_animation_dialog.dismiss();
+            Toast.makeText(requireActivity(), "Add more locations to view a route!",Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

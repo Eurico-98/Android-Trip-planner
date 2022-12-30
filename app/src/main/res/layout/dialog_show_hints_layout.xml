@@ -8,13 +8,12 @@
     android:background="@drawable/dialog_background">
 
     <TextView
-        android:id="@+id/trip_planner_interface_hints"
+        android:id="@+id/hint_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:gravity="center_vertical|center_horizontal"
-        android:text="\nHint\n\nSwipe left to delete a trip.\n\nSelect a trip for more options.\n"
         android:textColor="@color/hint_text_messages_color"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

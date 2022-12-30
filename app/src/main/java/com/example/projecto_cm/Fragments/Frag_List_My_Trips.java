@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -55,6 +56,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     private DAO_helper dao;
     private View view;
     private Dialog loading_animation_dialog, interface_hints_dialog, search_dialog;
+    private ViewStub searchResultsStub; // to load dialog item view dynamically according to what is needed in this frag
     private String username;
     private Frag_List_My_Trips this_fragment;
     private EditText trip_title_or_username_input;
@@ -113,7 +115,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         interface_hints_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         interface_hints_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         interface_hints_dialog.setCanceledOnTouchOutside(true);
-        interface_hints_dialog.setContentView(R.layout.dialog_show_list_trip_help_layout);
+        interface_hints_dialog.setContentView(R.layout.dialog_show_hints_layout);
 
         // prepare search dialog
         search_dialog = new Dialog(requireActivity());
@@ -122,8 +124,10 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         search_dialog.setCanceledOnTouchOutside(true);
         search_dialog.setContentView(R.layout.dialog_search_trips_or_users_layout);
 
-        // recycler view of search function
-        search_trips_results_recycler_view = search_dialog.findViewById(R.id.trips_users_recycler_view);
+        // Inflate the recycler view of search function and add it to the layout
+        searchResultsStub = search_dialog.findViewById(R.id.search_results_stub);
+        searchResultsStub.setLayoutResource(R.layout.search_trips_results_layout);
+        search_trips_results_recycler_view = (RecyclerView) searchResultsStub.inflate();
 
         // prepare recycler view for results list inside search dialog
         adapter_for_listing_search_results = new Adapter_For_Listing_Search_Results(requireActivity(), null, this, search_results);
@@ -268,6 +272,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             }
         }
         else if(item.getItemId() == R.id.interface_hints){
+            TextView hint = interface_hints_dialog.findViewById(R.id.hint_text);
+            hint.setText("\nHint\n\nSwipe left to delete a trip.\n\nSelect a trip for more options.\n");
             interface_hints_dialog.show();
         }
 
