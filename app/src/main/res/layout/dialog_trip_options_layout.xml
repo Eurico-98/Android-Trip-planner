@@ -74,15 +74,6 @@
         app:layout_constraintStart_toEndOf="@+id/invite_friends_image_button"
         app:layout_constraintTop_toBottomOf="@+id/view_weather_image_button"/>
 
-    <Space
-        android:id="@+id/space_trip_options_layout"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/edit_trip_image_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_election_image_button" />
-
     <!--Edit trip settings-->
     <ImageButton
         android:id="@+id/edit_trip_image_button"
@@ -92,8 +83,20 @@
         android:src="@drawable/edit_trip"
         android:contentDescription="@string/edit_trip_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/take_photo_image_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space_trip_options_layout"/>
+        app:layout_constraintTop_toBottomOf="@+id/invite_friends_image_button"/>
+
+    <ImageButton
+        android:id="@+id/take_photo_image_button"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/button_background"
+        android:src="@drawable/camera"
+        android:contentDescription="@string/edit_trip_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_trip_image_button"
+        app:layout_constraintTop_toBottomOf="@+id/start_election_image_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
