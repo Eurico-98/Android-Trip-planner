@@ -31,7 +31,12 @@ public class Adapter_For_Listing_Trips extends RecyclerView.Adapter<Adapter_For_
 
     public void setMy_trips(ArrayList my_trips) { this.my_trips = my_trips; }
 
-    // inflate layout for the title notes inside recycler view
+    /**
+     * inflate correct card layout
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,15 +45,18 @@ public class Adapter_For_Listing_Trips extends RecyclerView.Adapter<Adapter_For_
         return new MyViewHolder(view);
     }
 
-    // to send the note id from the first fragment to the second fragment
+    /**
+     * obtain trip title from trip data string -
+     * string has:
+     * start and end date,
+     * title,
+     * list of locations where each location has latitude and longitude
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        // obtain trip title from trip data string
-        // string has:
-        // star and end date
-        // title
-        // list of locations where each location has latitude and longitude
         try {
             holder.trip_button.setText(String.valueOf(my_trips.get(position)).split("title=")[1].split(",")[0]);
             holder.trip_button.setOnClickListener(v -> listener.onTripClick(position));

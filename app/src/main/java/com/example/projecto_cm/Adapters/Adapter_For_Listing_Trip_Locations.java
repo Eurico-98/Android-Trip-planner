@@ -36,7 +36,12 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
         this.locations = locations;
     }
 
-    // inflate layout for the title notes inside recycler view or weather forecast
+    /**
+     * inflate correct card layout
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,7 +62,12 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
         return new MyViewHolder(view);
     }
 
-    // to send the note id from the first fragment to the second fragment
+    /**
+     * show list of locations if user creating or editing a trip in trip planner fragment,
+     * show list of forecasts for each location of the trip if user is in weather forecast fragment
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 

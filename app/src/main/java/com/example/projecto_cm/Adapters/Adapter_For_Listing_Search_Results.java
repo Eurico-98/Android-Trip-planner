@@ -43,7 +43,12 @@ public class Adapter_For_Listing_Search_Results extends RecyclerView.Adapter<Ada
         this.results = results;
     }
 
-    // inflate layout for the title notes inside recycler view
+    /**
+     * inflate correct card layout
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,7 +57,12 @@ public class Adapter_For_Listing_Search_Results extends RecyclerView.Adapter<Ada
         return new MyViewHolder(view);
     }
 
-    // to send the note id from the first fragment to the second fragment
+    /**
+     * set listeners for result returned by the map in the trip planner fragment (when a location search in the map returns more than one location)
+     * set listener for trip click if user is search for a trip in the liss my trips fragment
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 

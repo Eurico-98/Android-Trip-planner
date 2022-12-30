@@ -108,7 +108,7 @@ public class Frag_Weather_Forecast extends Fragment {
 
         if(item.getItemId() == R.id.interface_hints){
             TextView hint = interface_hints_dialog.findViewById(R.id.hint_text);
-            hint.setText("\nInfo\n\nForecast period is the next 5 days in a 3 hour window from the current time.\n");
+            hint.setText("\nInfo\n\nThe weather forecast given is for a 3 hour window starting from the current time.\n");
             interface_hints_dialog.show();
         }
 
@@ -216,33 +216,31 @@ public class Frag_Weather_Forecast extends Fragment {
                 ArrayList<String> current_location_weather_data = new ArrayList<>();
 
                 // get data for the 5 days
-                for (int i = 0; i < forecasts.length(); i+=40) {
+                for (int i = 0; i < forecasts.length(); i+=8) {
 
                     // Get weather forecast for current day
                     JSONObject day = forecasts.getJSONObject(i);
-                    System.out.println("--------------------------------------------\n"+day.toString());
 
                     // get the date/time of the forecast
                     Date date = new Date(day.getLong("dt") * 1000L);
 
-                    // Get temperature, humidity, and probability of rain from weather forecast
-                    current_location_weather_data.add(dateFormat.format(date));
-                    current_location_weather_data.add(day.getJSONArray("weather").getJSONObject(0).getString("description"));
-                    current_location_weather_data.add(df.format(day.getJSONObject("main").getDouble("temp")) + "ºC");
-                    current_location_weather_data.add("Feels like: " + df.format(day.getJSONObject("main").getDouble("feels_like")) + "ºC");
-                    current_location_weather_data.add("Humidity: " + df.format(day.getJSONObject("main").getDouble("humidity")) + "%");
-
                     // rain might be null
                     JSONObject rain = day.optJSONObject("rain");
                     double probabilityOfRain = rain != null ? rain.optDouble("3h") : 0;
-                    current_location_weather_data.add("Chance of rain: " + df.format(probabilityOfRain) + "%");
-                }
 
-                System.out.println("--------------------------------------------\n"+current_location_weather_data.toString());
+                    // Get temperature, humidity, and probability of rain from weather forecast
+                    String data = dateFormat.format(date) + "|" +
+                            day.getJSONArray("weather").getJSONObject(0).getString("description") + "|" +
+                            df.format(day.getJSONObject("main").getDouble("temp")) + "ºC|" +
+                            "Feels like: " + df.format(day.getJSONObject("main").getDouble("feels_like")) + "ºC|" +
+                            "Humidity: " + df.format(day.getJSONObject("main").getDouble("humidity")) + "%|" +
+                            "Chance of rain: " + df.format(probabilityOfRain) + "%";
+
+                    current_location_weather_data.add(data);
+                }
 
                 // set adapter for weather data for the 5 days for the current location
                 list_of_weather_adapters_of_locations.add(new Adapter_For_Listing_Weather_Data(requireActivity(), current_location_weather_data));
-
             }
             catch (Exception e) {
                 e.printStackTrace();

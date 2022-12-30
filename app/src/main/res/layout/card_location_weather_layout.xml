@@ -6,15 +6,13 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
+    android:padding="5dp"
     android:foreground="@drawable/recycler_view_frame_2">
 
     <TextView
         android:id="@+id/location_title_weather_forecast"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:gravity="center_horizontal|center_vertical"
         android:textAllCaps="false"
         android:textColor="@color/buttons_and_app_bar_text_color"
@@ -28,10 +26,7 @@
         android:id="@+id/recyclerView_weather_forecast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

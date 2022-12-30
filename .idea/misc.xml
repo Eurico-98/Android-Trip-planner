@@ -21,6 +21,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_search.xml" value="0.2155" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/recycler_view_frame.xml" value="0.401" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/recycler_view_frame_2.xml" value="0.3915" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/weather_forecast_background.xml" value="0.397" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/widget_bar_background.xml" value="0.2825" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_function1.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_function2.xml" value="0.33229166666666665" />
@@ -42,6 +43,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_trip_planner_help_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_trip_options_layout.xml" value="0.33" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/element_trip_button_layout.xml" value="0.3381686310063463" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_show_trip_route_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_create_trip_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_for_listing_items_layout.xml" value="0.39619220308250225" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_home_screen_layout.xml" value="0.5013440860215054" />

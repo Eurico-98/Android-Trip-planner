@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/weather_forecast"
-        android:title="@string/weather_forecast"
-        android:icon="@drawable/weather_forecast"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/normal_map"
         android:title="@string/normal_map"
         android:icon="@drawable/ic_normal_map"
