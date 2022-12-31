@@ -159,7 +159,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
                 loading_animation_dialog.show();
 
-                show_search_results();
+                showSearchResults();
             }
             else {
 
@@ -171,11 +171,11 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         });
 
         // get username to fetch list of trips from firebase database
-        model.get_data().observe(getViewLifecycleOwner(), item -> {
+        model.getData().observe(getViewLifecycleOwner(), item -> {
             username = (String) item;
 
             // get list of trips
-            dao.get_user_trips(username, this);
+            dao.getUserTrips(username, this);
 
             my_trips_recycler_view = view.findViewById(R.id.recyclerView_my_trips_list);
         });
@@ -184,7 +184,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
     /**
      * show search results of trips or usernames
      */
-    private void show_search_results() {
+    private void showSearchResults() {
 
         String inserted_string = trip_title_or_username_input.getText().toString();
 
@@ -318,7 +318,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             if(!my_trips_list.get(0).equals("You don't have trips created!")){
 
                 loading_animation_dialog.show();
-                dao.add_or_update_or_delete_trip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
+                dao.addOrUpdateOrDeleteTrip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
 
                 my_trips_list.remove(viewHolder.getAdapterPosition());
                 adapter_for_listing_trips.setMy_trips(my_trips_list);

@@ -147,7 +147,7 @@ public class Frag_Weather_Forecast extends Fragment {
             try {
                 // get weather forecast and prepare adapters
                 locations.addAll(Arrays.asList(getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ")));
-                result = get_weather_forecast();
+                result = getWeatherForecast();
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -175,7 +175,7 @@ public class Frag_Weather_Forecast extends Fragment {
     /**
      * send weather forecast request of up to 5 days for each location of the trip, process all that data creating all the adapters necessary - one adapter for the list of locations, and one adapter for the weather data set of each location
      */
-    private String get_weather_forecast() throws IOException {
+    private String getWeatherForecast() throws IOException {
 
         // request weather forecast for next 5 days for each location of the trip
         URL url;

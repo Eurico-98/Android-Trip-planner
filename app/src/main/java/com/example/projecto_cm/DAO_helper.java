@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.projecto_cm.DB_entities.MyUser;
 import com.example.projecto_cm.DB_entities.Trip;
+import com.example.projecto_cm.Fragments.Frag_Home_Screen;
 import com.example.projecto_cm.Fragments.Frag_Trip_Planner;
 import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
 import com.example.projecto_cm.Fragments.Frag_Login;
@@ -21,6 +22,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.crypto.SecretKeyFactory;
@@ -50,33 +52,28 @@ public class DAO_helper{
     // ------------------------------------------ Methods for registration ------------------------------------------------------------
 
     /**
-     * check username name when registering new account
+     * check username name when registering new account - also used to edit username
      * @param username
      * @param email
      * @param password
      * @param dao
      * @param fg
      */
-    public void check_inserted_username(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
+    public void checkInsertedUsername(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
-
-        System.out.println("------------------------------- aqui 1");
 
         // check if username is already registered
         ValueEventListener userNameEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                System.out.println("------------------------------- aqui 1.5 - " + dataSnapshot.getValue());
-
                 // if username is not registered call method of Frag_Register to check if email is registered
                 if(!dataSnapshot.exists()) {
-                    System.out.println("------------------------------- aqui 2");
-                    fg.check_mail(username, email, password, dao, 0);
+                    fg.checkMail(username, email, password, dao, 0);
                 }
                 else{
-                    fg.check_mail(username, email, password, dao, 1);
+                    fg.checkMail(username, email, password, dao, 1);
                 }
             }
 
@@ -86,6 +83,8 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
+
+
     /**
      * check email inserted when registering new account
      * @param username
@@ -94,7 +93,7 @@ public class DAO_helper{
      * @param dao
      * @param fg
      */
-    public void check_inserted_email(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
+    public void checkInsertedEmail(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference emailRef = databaseReference.child("Users"); //.child(username).child("email");
 
@@ -120,10 +119,10 @@ public class DAO_helper{
                 }
 
                 if(mail_exists == 0){
-                    fg.create_new_account(username, email, password, dao, 0);
+                    fg.createNewAccount(username, email, password, dao, 0);
                 }
                 else {
-                    fg.create_new_account(username, email, password, dao, 1);
+                    fg.createNewAccount(username, email, password, dao, 1);
                 }
             }
 
@@ -142,14 +141,12 @@ public class DAO_helper{
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */
-    public Task<Void> add_new_user_account(String username, String password, String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public Task<Void> addNewUserAccount(String username, String password, String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         // encrypt password
         String hashedPass = generateStrongPasswordHash(password);
 
         MyUser new_user = new MyUser(username, email, hashedPass);
-
-        System.out.println("------------------------------- aqui 7");
 
         // insert new user (child) into the Users reference tree
         return databaseReference.child("Users").child(username).setValue(new_user);
@@ -165,7 +162,7 @@ public class DAO_helper{
      * @param password
      * @param fg
      */
-    public void check_credentials(String username, String password, Frag_Login fg) {
+    public void checkCredentials(String username, String password, Frag_Login fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
 
@@ -220,7 +217,7 @@ public class DAO_helper{
      * @param username
      * @param fg
      */
-    public void get_user_trips(String username, Frag_List_My_Trips fg){
+    public void getUserTrips(String username, Frag_List_My_Trips fg){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -254,7 +251,7 @@ public class DAO_helper{
      * @param fg_create
      * @param trip_to_edit
      */
-    public void add_or_update_or_delete_trip(String username, Frag_Trip_Planner fg_create, Frag_List_My_Trips fg_list, Trip trip_to_edit, String operation, int position){
+    public void addOrUpdateOrDeleteTrip(String username, Frag_Trip_Planner fg_create, Frag_List_My_Trips fg_list, Trip trip_to_edit, String operation, int position){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -299,6 +296,82 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
     // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
+
+
+    // ------------------------------------------ Methods to edit user profile -----------------------------------------------------
+    public void editUserProfile(String username, Frag_Home_Screen fhs, String new_username, String new_email, String new_password, String new_fullname) {
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // if username is not registered call method of Frag_Register to check if email is registered
+                if(!dataSnapshot.exists()) {
+
+                    // convert data to user entity to update values
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    MyUser updated_user = new MyUser((String) map.get("username"), (String) map.get("email"), (String) map.get("password"));
+
+                    // edit username if inserted
+                    if(new_username != "")
+                        updated_user.setUsername(username);
+
+                    // edit email if inserted
+                    if(new_email != "")
+                        updated_user.setUsername(new_email);
+
+                    // edit password if inserted
+                    if(new_password != "") {
+                        try {
+                            updated_user.setUsername(generateStrongPasswordHash(new_password));
+                        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // add trips if they exists
+                    try{
+                        List<Trip> my_trips = (List<Trip>) map.get("my_trips");
+                        updated_user.setMy_trips(my_trips);
+                    } catch (Exception ignored) {}
+
+
+                    // add fullname
+                    try {
+                        String fullname = (String) map.get("fullName");
+                        updated_user.setFullName(fullname);
+                    } catch (Exception ignored) {}
+
+                    // if it was updated change it
+                    if(new_fullname != "")
+                        updated_user.setFullName(new_fullname);
+
+
+                    // ------------------------------------- FALTA A PORRA DA FOTO
+
+                    // ------------------------- vai faltar a lista de amigos
+
+                    // remove old entry of user
+                    userNameRef.removeValue();
+
+                    // add updated user
+                    fhs.showResultMessage(databaseReference.child("Users").child(new_username).setValue(updated_user));
+                }
+                else{
+                    fhs.showResultMessage("Username already exists!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+    // ------------------------------------------ Methods to edit user profile -----------------------------------------------------
+
 
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------

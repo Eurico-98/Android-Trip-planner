@@ -260,7 +260,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
 
         if(combination_iterator > -1){
             Toast.makeText(requireActivity(), "Calculating optimal route",Toast.LENGTH_SHORT).show();
-            set_markers_in_map_and_calculate_route(all_location_combinations.get(combination_iterator));
+            calculateRoute(all_location_combinations.get(combination_iterator));
         }
         else{
             loading_animation_dialog.dismiss();
@@ -271,7 +271,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
     /**
      * to preparer route
      */
-    private void set_markers_in_map_and_calculate_route(List combo)  {
+    private void calculateRoute(List combo)  {
 
         String origin = "", dest, waypoints = "", parameters = "", mode = "mode=driving";
 
@@ -305,7 +305,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
      * @param values
      */
     @Override
-    public void show_route(Object... values) {
+    public void showRoute(Object... values) {
 
         // if route is created
         if(values[0] != null){
@@ -354,7 +354,7 @@ public class Frag_Show_Trip_Route extends Fragment implements OnMapReadyCallback
         combination_iterator--;
 
         if(combination_iterator >= 0){
-            set_markers_in_map_and_calculate_route(all_location_combinations.get(combination_iterator));
+            calculateRoute(all_location_combinations.get(combination_iterator));
         }
         else {
             Toast.makeText(requireActivity(), "Zooming on Start location.",Toast.LENGTH_SHORT).show();

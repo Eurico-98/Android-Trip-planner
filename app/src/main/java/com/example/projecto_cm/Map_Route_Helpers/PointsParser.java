@@ -96,7 +96,7 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
 
         // Drawing polyline in the Google Map for the i-th route if points inserted are able to be connected
         if (lineOptions != null) {
-            taskCallback.show_route(lineOptions);
+            taskCallback.showRoute(lineOptions);
         }
     }
 }

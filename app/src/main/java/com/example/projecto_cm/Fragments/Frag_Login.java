@@ -96,7 +96,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
 
                 // check if username and email are valid
                 DAO_helper dao = new DAO_helper();
-                dao.check_credentials(username.getText().toString(), password.getText().toString(), this);
+                dao.checkCredentials(username.getText().toString(), password.getText().toString(), this);
             }
             else {
                 Toast.makeText(requireActivity(), "Insert username and password!", Toast.LENGTH_SHORT).show();
@@ -120,7 +120,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
         else {
 
             // send username to get it in home screen
-            model.send_data(username);
+            model.sendData(username);
 
             Frag_Home_Screen home_screen = new Frag_Home_Screen();
             fcl.replaceFragment(home_screen, "no");

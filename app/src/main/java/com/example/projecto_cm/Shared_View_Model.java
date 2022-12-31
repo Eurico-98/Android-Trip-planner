@@ -11,11 +11,11 @@ public class Shared_View_Model extends ViewModel {
      * function to send username
      * @param username_
      */
-    public void send_data(Object data_) { data.setValue(data_); }
+    public void sendData(Object data_) { data.setValue(data_); }
 
     /**
      * function to get username
      * @return username
      */
-    public LiveData<Object> get_data() { return data; }
+    public LiveData<Object> getData() { return data; }
 }

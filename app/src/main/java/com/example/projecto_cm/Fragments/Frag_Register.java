@@ -75,7 +75,7 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
         register_new_account_button.setOnClickListener(v -> {
 
             // execute only if all inputs fields have text
-            if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !password.getText().toString().equals("")){
+            if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !password.getText().toString().equals("") && !username.getText().toString().contains(" ") && !email.getText().toString().contains(" ") && !password.getText().toString().contains(" ")){
 
                 // hide login layout and show loading animation
                 loading_animation_dialog.show();
@@ -84,10 +84,10 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
                 DAO_helper dao = new DAO_helper();
 
                 // check if username and mail already exist
-                dao.check_inserted_username(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
+                dao.checkInsertedUsername(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
             }
             else {
-                Toast.makeText(requireActivity(), "Fill fields first!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -101,7 +101,7 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
         });
     }
 
-    public void check_mail(String username, String email, String password, DAO_helper dao, int username_exists) {
+    public void checkMail(String username, String email, String password, DAO_helper dao, int username_exists) {
 
         System.out.println("------------------------------- aqui 3");
 
@@ -110,12 +110,12 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
             Toast.makeText(requireActivity(), "Username already registered!", Toast.LENGTH_SHORT).show();
         }
         else {
-            dao.check_inserted_email(username, email, password, dao, this);
+            dao.checkInsertedEmail(username, email, password, dao, this);
         }
     }
 
     // method to check if username and mail are already registered and if not -> create new account
-    public void create_new_account(String username, String email, String password, DAO_helper dao, int mail_exists) {
+    public void createNewAccount(String username, String email, String password, DAO_helper dao, int mail_exists) {
 
         System.out.println("------------------------------- aqui 6");
 
@@ -125,7 +125,7 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
 
             // this return a task that can have a on-success-listener
             try {
-                dao.add_new_user_account(username, password, email).addOnSuccessListener(suc -> {
+                dao.addNewUserAccount(username, password, email).addOnSuccessListener(suc -> {
 
                     Toast.makeText(requireActivity(), "Account created Successfully!", Toast.LENGTH_SHORT).show();
 

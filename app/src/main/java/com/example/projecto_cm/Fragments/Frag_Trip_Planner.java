@@ -115,9 +115,9 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // get data username
+        // get username
         Shared_View_Model model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
-        model.get_data().observe(getViewLifecycleOwner(), item -> username = (String) item);
+        model.getData().observe(getViewLifecycleOwner(), item -> username = (String) item);
 
         // if the user is editing a trip get trip data from bundle
         try{
@@ -259,7 +259,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
         }
         else if(item.getItemId() == R.id.save_trip){
             if(trip_locations_list.size() > 0){
-                trip_Title_Start_End_date();
+                tripTitleStartEndDate();
             }
             else {
                 Toast.makeText(requireActivity(), "Add locations first!", Toast.LENGTH_SHORT).show();
@@ -493,7 +493,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
     /**
      * show dialog to insert trip title and insert star and end dates
      */
-    private void trip_Title_Start_End_date() {
+    private void tripTitleStartEndDate() {
 
         complete_trip_data_dialog = new Dialog(requireActivity());
         complete_trip_data_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -679,7 +679,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
 
             Trip new_trip = new Trip(trip_title_input.getText().toString(), start_date_input.getText().toString(), end_date_input.getText().toString(), trip_locations_list);
             DAO_helper dao = new DAO_helper();
-            dao.add_or_update_or_delete_trip(username, this, null, new_trip, editing_trip, trip_to_update);
+            dao.addOrUpdateOrDeleteTrip(username, this, null, new_trip, editing_trip, trip_to_update);
         }
         else {
             Toast.makeText(requireActivity(), "Insert Trip title!",Toast.LENGTH_SHORT).show();

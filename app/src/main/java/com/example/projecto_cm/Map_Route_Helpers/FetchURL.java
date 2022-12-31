@@ -74,7 +74,7 @@ public class FetchURL extends AsyncTask<String, Void, String> {
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-        mContext.show_route((Object) null);
+        mContext.showRoute((Object) null);
     }
 
     /**

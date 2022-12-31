@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@+id/edit_profile_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/text_messages_color"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="My profile"
+        app:layout_constraintBottom_toTopOf="@+id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        app:srcCompat="@drawable/profile_pic_template"
+        android:foreground="@drawable/recycler_view_frame"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/change_user_full_name_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_title" />
+
+    <ImageView
+        android:id="@+id/change_profile_picture"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/button_background"
+        app:srcCompat="@drawable/camera"
+        app:layout_constraintBottom_toTopOf="@+id/change_user_full_name_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.721"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.929" />
+
+    <EditText
+        android:id="@+id/change_user_full_name_input"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:autofillHints="name"
+        android:ems="15"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        android:hint="full name"
+        app:layout_constraintBottom_toTopOf="@+id/change_username_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+    <EditText
+        android:id="@+id/change_username_input"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:autofillHints="username"
+        android:ems="15"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        android:hint="username"
+        app:layout_constraintBottom_toTopOf="@+id/change_mail_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_user_full_name_input" />
+
+    <EditText
+        android:id="@+id/change_mail_input"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:autofillHints="email"
+        android:ems="15"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        android:hint="email"
+        app:layout_constraintBottom_toTopOf="@+id/change_pass_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_username_input" />
+
+    <EditText
+        android:id="@+id/change_pass_input"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:autofillHints="password"
+        android:ems="15"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        android:hint="password"
+        app:layout_constraintBottom_toTopOf="@+id/save_profile_changes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_mail_input" />
+
+    <Button
+        android:id="@+id/save_profile_changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textAllCaps="false"
+        android:text="Save changes"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_pass_input" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
