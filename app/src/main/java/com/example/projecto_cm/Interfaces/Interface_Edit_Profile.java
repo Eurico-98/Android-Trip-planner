@@ -1,5 +1,9 @@
 package com.example.projecto_cm.Interfaces;
 
+import com.google.android.gms.tasks.Task;
+
 public interface Interface_Edit_Profile {
-    void showResultMessage(Object result);
+    void showResultMessage(String result);
+    void changePassResult(String result);
+    void deleteAccountResult(String result);
 }

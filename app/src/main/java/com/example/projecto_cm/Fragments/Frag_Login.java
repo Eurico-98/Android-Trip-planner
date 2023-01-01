@@ -95,7 +95,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
                 loading_animation_dialog.show();
 
                 // check if username and email are valid
-                DAO_helper dao = new DAO_helper();
+                DAO_helper dao = new DAO_helper(requireActivity());
                 dao.checkCredentials(username.getText().toString(), password.getText().toString(), this);
             }
             else {

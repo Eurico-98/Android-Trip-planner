@@ -1,7 +1,13 @@
 package com.example.projecto_cm.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,19 +39,26 @@ import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.tasks.Task;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile {
 
-    private Interface_Frag_Change_Listener fcl; // to change fragment
-    private Dialog edit_profile_dialog;
-    private Button create_trip, view_my_trips, save_profile_changes;
-    private ImageButton add_friend;
-    private ImageView edit_profile_pic;
-    private EditText edit_username_input, edit_email_input, edit_pass_input, edit_fullname;
-    private DAO_helper dao = new DAO_helper();
-    private String username;
+    private ExecutorService service;
+    private Handler handler;
     private Shared_View_Model model;
-    private boolean edited_username = false;
-    private Dialog loading_animation_dialog;
+    private Interface_Frag_Change_Listener fcl; // to change fragment
+    private DAO_helper dao;
+    private String username, reset_username, original_fullname;
+    private Button create_trip, view_my_trips, save_profile_changes, save_password_button, yes_delete_button, no_delete_button;
+    private ImageButton add_friend;
+    private ImageView edit_profile_pic, delete_account_button;
+    private Dialog loading_animation_dialog, edit_profile_dialog, change_password_dialog, delete_account_dialog;
+    private EditText edit_username_input, edit_pass_input, edit_fullname;
+    private TextView change_pass_button;
+
 
     /**
      *  onCreateView of home screen fragment
@@ -60,6 +74,11 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         // get username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
         model.getData().observe(getViewLifecycleOwner(), item -> username = (String) item);
+        dao = new DAO_helper(requireActivity());
+
+        // create 1 thread so execute searches with google maps
+        service = Executors.newFixedThreadPool(1);
+        handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.frag_home_screen_layout, container, false);
@@ -93,7 +112,9 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         loading_animation_dialog.setCanceledOnTouchOutside(false);
         loading_animation_dialog.setContentView(R.layout.loading_animation_layout);
 
-        // prepare edit profile dialog
+
+
+        // --------------------------------------------------------------------- prepare edit profile dialog
         edit_profile_dialog = new Dialog(requireActivity());
         edit_profile_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         edit_profile_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -103,11 +124,99 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         edit_profile_pic = edit_profile_dialog.findViewById(R.id.change_profile_picture);
         edit_fullname = edit_profile_dialog.findViewById(R.id.change_user_full_name_input);
         edit_username_input = edit_profile_dialog.findViewById(R.id.change_username_input);
-        edit_email_input = edit_profile_dialog.findViewById(R.id.change_mail_input);
-        edit_pass_input = edit_profile_dialog.findViewById(R.id.change_pass_input);
         save_profile_changes = edit_profile_dialog.findViewById(R.id.save_profile_changes);
+        change_pass_button = edit_profile_dialog.findViewById(R.id.change_pass_button);
+        delete_account_button = edit_profile_dialog.findViewById(R.id.delete_account_button);
 
+        // show button if text was changed
+        edit_fullname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                // Show button if there is text in the EditText
+                if (s.toString().trim().length() > 0)
+                    save_profile_changes.setVisibility(View.VISIBLE);
+
+                // hide button if both username and full name remain the same as their original values
+                if(s.toString().trim().equals(original_fullname))
+                    save_profile_changes.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // show button if text was changed
+        edit_username_input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                // Show button if there is text in the EditText
+                if (s.toString().trim().length() > 0)
+                    save_profile_changes.setVisibility(View.VISIBLE);
+
+                // hide button if both username and full name remain the same as their original values
+                if(s.toString().trim().equals(username))
+                    save_profile_changes.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // button listener
         save_profile_changes.setOnClickListener(v -> editProfile());
+
+        delete_account_button.setOnClickListener(v -> delete_account_dialog.show());
+
+        
+        // --------------------------------------------------------------------- prepare edit profile dialog
+
+
+
+
+
+        // --------------------------------------------------------------------- prepare delete account dialog
+        delete_account_dialog = new Dialog(requireActivity());
+        delete_account_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        delete_account_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        delete_account_dialog.setCanceledOnTouchOutside(true);
+        delete_account_dialog.setContentView(R.layout.dialog_confirm_delete_account_layout);
+
+        yes_delete_button = delete_account_dialog.findViewById(R.id.yes_delete_account_button);
+        yes_delete_button.setOnClickListener(v -> deleteAccount());
+
+        no_delete_button = delete_account_dialog.findViewById(R.id.no_delete_account_button);
+        no_delete_button.setOnClickListener(v -> delete_account_dialog.dismiss());
+        // --------------------------------------------------------------------- prepare delete account dialog
+
+
+
+
+
+        // --------------------------------------------------------------------- prepare change password dialog
+        change_password_dialog = new Dialog(requireActivity());
+        change_password_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        change_password_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        change_password_dialog.setCanceledOnTouchOutside(true);
+        change_password_dialog.setContentView(R.layout.dialog_edit_password_layout);
+
+        edit_pass_input = change_password_dialog.findViewById(R.id.change_pass_input);
+        save_password_button = change_password_dialog.findViewById(R.id.save_password_button);
+        save_password_button.setOnClickListener(v -> changePassword());
+
+
+        change_pass_button.setOnClickListener(v -> change_password_dialog.show());
+        // --------------------------------------------------------------------- prepare change password dialog
+
+
+
 
         create_trip = view.findViewById(R.id.plan_trip);
         create_trip.setOnClickListener(view1 -> {
@@ -132,52 +241,75 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     }
 
     /**
-     * function to edit user profile
+     * delete user account from firebase and sqlite
+     */
+    private void deleteAccount() {
+        delete_account_dialog.dismiss();
+        edit_profile_dialog.dismiss();
+        loading_animation_dialog.show();
+        dao.deleteUserAccount(username, this);
+    }
+
+    /**
+     * delete account result
+     * @param result
+     */
+    @Override
+    public void deleteAccountResult(String result) {
+        loading_animation_dialog.dismiss();
+        Frag_Login frag_login = new Frag_Login();
+        fcl.replaceFragment(frag_login, "no");
+        Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
+    }
+
+
+    /**
+     * function to edit user full name and username
      */
     private void editProfile() {
 
         loading_animation_dialog.show();
 
         // get inserted values if any
-        String username_inserted = "", email = "", pass = "", fullname = "";
+        String new_fullname = edit_fullname.getText().toString();
+        String new_username = edit_username_input.getText().toString();
+        reset_username = username;
 
-        if(!edit_username_input.getText().toString().equals("") && !edit_username_input.getText().toString().contains(" ")){
+        edit_username_input.onEditorAction(EditorInfo.IME_ACTION_DONE); // dismiss keyboard
 
-            // dismiss keyboard
-            edit_username_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            username_inserted = edit_username_input.getText().toString();
-            username = username_inserted;
-            edited_username = true;
-        }
-
-        if(!edit_email_input.getText().toString().equals("") && !edit_email_input.getText().toString().contains(" ")){
-
-            // dismiss keyboard
-            edit_email_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            email = edit_email_input.getText().toString();
-        }
-
-        if(!edit_pass_input.getText().toString().equals("") && !edit_pass_input.getText().toString().contains(" ")){
-
-            // dismiss keyboard
-            edit_pass_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            pass = edit_pass_input.getText().toString();
-        }
-
-        if(!edit_fullname.getText().toString().equals("") && !edit_fullname.getText().toString().contains(" ")){
-
-            // dismiss keyboard
-            edit_fullname.onEditorAction(EditorInfo.IME_ACTION_DONE);
-            fullname = edit_fullname.getText().toString();
-        }
-
-        if(username_inserted.equals("") && email.equals("") && pass.equals("") && fullname.equals("")){
+        if(new_username.equals("") || new_fullname.equals("")){
             loading_animation_dialog.dismiss();
-            Toast.makeText(requireActivity(), "Edit at least one field!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Fields must not be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if(new_username.contains(" ")){
+            loading_animation_dialog.dismiss();
+            Toast.makeText(requireActivity(), "Spaces not allowed in username!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        dao.editUserProfile(username, this, username_inserted, email, pass, fullname);
+        dao.editUserProfile(username, this, new_username, new_fullname);
+
+        username = new_username; // change username global variable - if new_username is not already registered it will stay in the model view
+    }
+
+    /**
+     * to change password
+     */
+    private void changePassword(){
+
+        String new_password = edit_pass_input.getText().toString();
+
+        edit_pass_input.onEditorAction(EditorInfo.IME_ACTION_DONE); // dismiss keyboard
+
+        if(new_password.contains(" ")){
+            loading_animation_dialog.dismiss();
+            Toast.makeText(requireActivity(), "Pass can't have spaces!", Toast.LENGTH_SHORT).show();
+        }
+        else if(!new_password.equals("")){
+            loading_animation_dialog.show();
+            dao.changeUserPassword(username, this, new_password);
+        }
     }
 
     /**
@@ -185,34 +317,36 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      * @param result
      */
     @Override
-    public void showResultMessage(Object result) {
+    public void showResultMessage(String result) {
 
         loading_animation_dialog.dismiss();
 
-        try {
-            // is inserted value is invalid
-            String message = (String) result;
-            Toast.makeText(requireActivity(), message,Toast.LENGTH_SHORT).show();
+        // change username global variable back to original value
+        if(result.contains(" already exists!")){
+            username = reset_username;
+            Toast.makeText(requireActivity(), result,Toast.LENGTH_SHORT).show();
         }
-        // if inserted value is valid
-        catch (Exception e){
-
-            Task<Void> firebase_result = (Task<Void>) result;
-            assert firebase_result != null;
-            firebase_result.addOnSuccessListener(suc -> {
-                Toast.makeText(requireActivity(), "Profile edited Successfully!", Toast.LENGTH_SHORT).show();
-
-                // change username in shared view model
-                if(edited_username){
-                    model.sendData(username);
-                    edited_username = false;
-                }
-
-            }).addOnFailureListener(er ->
-                    Toast.makeText(requireActivity(), "Failed to edit profile due to network error!", Toast.LENGTH_SHORT).show()
-            );
+        else {
+            Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
+            // change username in shared view model
+            model.sendData(username);
+            save_profile_changes.setVisibility(View.INVISIBLE);
         }
     }
+
+    /**
+     * result of password change
+     * @param result
+     */
+    @Override
+    public void changePassResult(String result){
+        change_password_dialog.dismiss();
+        loading_animation_dialog.dismiss();
+        edit_pass_input.setText("");
+        Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
+    }
+
+
 
     /**
      * app bar menu set up change title to home screen
@@ -237,13 +371,30 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      * @param item
      * @return
      */
+    @SuppressLint("SetTextI18n")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.view_profile){
-            edit_profile_dialog.show();
+
+            // get user profile data from sqlite database
+            service.execute(() -> {
+                Cursor cursor = dao.getUserData(username);
+                while (cursor.moveToNext()){
+                    edit_username_input.setText(cursor.getString(1));
+                    original_fullname = cursor.getString(3);
+                    edit_fullname.setText(original_fullname);
+                    //System.out.println(cursor.getString(4)); // photo
+                }
+
+                // hide button and only show save changes button if data was changed
+                save_profile_changes.setVisibility(View.INVISIBLE);
+
+                handler.post(() -> edit_profile_dialog.show());
+            });
         }
         else if(item.getItemId() == R.id.log_out){
+            dao.logoutUser(username);
             Frag_Login frag_login = new Frag_Login();
             fcl.replaceFragment(frag_login, "no");
         }

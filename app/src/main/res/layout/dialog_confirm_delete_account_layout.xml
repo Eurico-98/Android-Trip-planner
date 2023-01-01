@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <TextView
+        android:id="@+id/delete_account_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/text_messages_color"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Are you sure you want to\ndelete your account?"
+        app:layout_constraintBottom_toTopOf="@+id/yes_delete_account_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/yes_delete_account_button"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textAllCaps="false"
+        android:text="Yes"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/no_delete_account_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delete_account_title" />
+
+    <Button
+        android:id="@+id/no_delete_account_button"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_background"
+        android:text="No"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/yes_delete_account_button"
+        app:layout_constraintTop_toTopOf="@+id/yes_delete_account_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/widget_bar_background"
-        app:layout_constraintBottom_toTopOf="@+id/register_username_input"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,90 +29,67 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!--input field for username-->
     <EditText
         android:id="@+id/register_username_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:background="@null"
         android:ems="15"
         android:gravity="center"
         android:hint="username"
         android:inputType="textPersonName"
         android:textColor="@color/text_messages_color"
         android:textColorHint="@color/input_text_hint_color"
-        android:background="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/register_password_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.252" />
+        app:layout_constraintTop_toBottomOf="@+id/register_toolbar" />
 
-    <!--input field for password-->
+    <!--confirm register button-->
     <EditText
         android:id="@+id/register_password_input"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:background="@null"
         android:ems="15"
         android:gravity="center"
         android:hint="password"
         android:inputType="textPassword"
         android:textColor="@color/text_messages_color"
         android:textColorHint="@color/input_text_hint_color"
-        android:background="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_register_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.418" />
+        app:layout_constraintTop_toBottomOf="@+id/register_username_input" />
 
-    <!--input field for email-->
-    <EditText
-        android:id="@+id/register_email_input"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="15"
-        android:gravity="center"
-        android:hint="email"
-        android:inputType="textWebEmailAddress"
-        android:textColor="@color/text_messages_color"
-        android:textColorHint="@color/input_text_hint_color"
-        android:background="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.575" />
+    <!--login button-->
 
-    <!--confirm register button-->
     <Button
         android:id="@+id/confirm_register_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
-        android:textColor="@color/buttons_and_app_bar_text_color"
-        android:textAllCaps="false"
         android:text="Register new account"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/login_with_existent_account_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.705" />
+        app:layout_constraintTop_toBottomOf="@+id/register_password_input" />
 
-    <!--login button-->
     <Button
         android:id="@+id/login_with_existent_account_button"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
-        android:textColor="@color/buttons_and_app_bar_text_color"
-        android:textAllCaps="false"
         android:text="I already have an account"
+        android:textAllCaps="false"
+        android:textColor="@color/buttons_and_app_bar_text_color"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.884" />
+        app:layout_constraintTop_toBottomOf="@+id/confirm_register_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

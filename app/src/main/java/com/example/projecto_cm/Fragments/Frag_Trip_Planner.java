@@ -678,7 +678,7 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
             complete_trip_data_dialog.dismiss();
 
             Trip new_trip = new Trip(trip_title_input.getText().toString(), start_date_input.getText().toString(), end_date_input.getText().toString(), trip_locations_list);
-            DAO_helper dao = new DAO_helper();
+            DAO_helper dao = new DAO_helper(requireActivity());
             dao.addOrUpdateOrDeleteTrip(username, this, null, new_trip, editing_trip, trip_to_update);
         }
         else {

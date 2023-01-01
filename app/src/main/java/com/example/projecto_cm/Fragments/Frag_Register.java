@@ -68,23 +68,22 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
         // bind input fields
         EditText username = requireView().findViewById(R.id.register_username_input);
         EditText password = requireView().findViewById(R.id.register_password_input);
-        EditText email = requireView().findViewById(R.id.register_email_input);
         Button register_new_account_button = requireView().findViewById(R.id.confirm_register_button);
 
         // set on click listener for register button
         register_new_account_button.setOnClickListener(v -> {
 
             // execute only if all inputs fields have text
-            if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !password.getText().toString().equals("") && !username.getText().toString().contains(" ") && !email.getText().toString().contains(" ") && !password.getText().toString().contains(" ")){
+            if(!username.getText().toString().equals("") && !password.getText().toString().equals("") && !username.getText().toString().contains(" ") && !password.getText().toString().contains(" ")){
 
                 // hide login layout and show loading animation
                 loading_animation_dialog.show();
 
                 // create new DAO instance for database access
-                DAO_helper dao = new DAO_helper();
+                DAO_helper dao = new DAO_helper(requireActivity());
 
                 // check if username and mail already exist
-                dao.checkInsertedUsername(username.getText().toString(), email.getText().toString(), password.getText().toString(), dao, this);
+                dao.checkInsertedUsername(username.getText().toString(), password.getText().toString(), dao, this);
             }
             else {
                 Toast.makeText(requireActivity(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
@@ -101,23 +100,8 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
         });
     }
 
-    public void checkMail(String username, String email, String password, DAO_helper dao, int username_exists) {
-
-        System.out.println("------------------------------- aqui 3");
-
-        if(username_exists == 1){
-            loading_animation_dialog.dismiss();
-            Toast.makeText(requireActivity(), "Username already registered!", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            dao.checkInsertedEmail(username, email, password, dao, this);
-        }
-    }
-
     // method to check if username and mail are already registered and if not -> create new account
-    public void createNewAccount(String username, String email, String password, DAO_helper dao, int mail_exists) {
-
-        System.out.println("------------------------------- aqui 6");
+    public void createNewAccount(String username, String password, DAO_helper dao, int mail_exists) {
 
         loading_animation_dialog.dismiss();
 
@@ -125,7 +109,7 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
 
             // this return a task that can have a on-success-listener
             try {
-                dao.addNewUserAccount(username, password, email).addOnSuccessListener(suc -> {
+                dao.addNewUserAccount(username, password).addOnSuccessListener(suc -> {
 
                     Toast.makeText(requireActivity(), "Account created Successfully!", Toast.LENGTH_SHORT).show();
 
@@ -134,15 +118,15 @@ public class Frag_Register extends Fragment implements Interface_Frag_Register {
                     fcl.replaceFragment(login_frag, "no");
 
                 }).addOnFailureListener(er ->
-                        Toast.makeText(requireActivity(), "Failed to create account \n" + er.getMessage(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity(), "Failed to create account!", Toast.LENGTH_SHORT).show()
                 );
 
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                e.printStackTrace();
+                Toast.makeText(requireActivity(), "Failed to create account!", Toast.LENGTH_SHORT).show();
             }
         }
         else {
-            Toast.makeText(requireActivity(), "Email already registered!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Username already registered!", Toast.LENGTH_SHORT).show();
         }
     }
 }

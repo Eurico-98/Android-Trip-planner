@@ -1,6 +1,16 @@
 package com.example.projecto_cm;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.projecto_cm.DB_entities.MyUser;
 import com.example.projecto_cm.DB_entities.Trip;
@@ -28,15 +38,29 @@ import java.util.Objects;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-public class DAO_helper{
+public class DAO_helper extends SQLiteOpenHelper {
 
     // get firebase database reference
     private final DatabaseReference databaseReference;
+    private Context context;
+
+    // SQLITE database
+    public static final String DATABASE_NAME = "User_Profile_data.db";
+    public static final int DATABASE_VERSION = 1;
+    public static final String TABLE_USER_PROFILE = "user_profile";
+    private static final String COLUMN_ID = "id_";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_FULLNAME = "fullName";
+    private static final String COLUMN_PHOTO = "photo";
+    private static final String COLUMN_LOGIN_CHECK = "login_control";
 
     /**
      * constructor to get fire base data base instance
      */
-    public DAO_helper() {
+    public DAO_helper(@Nullable FragmentActivity context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
 
         // since the firebase database is at the default location us-central1
         // it is necessary to pass the location of this database - in this case is https://projecto-cm-aa116-default-rtdb.europe-west1.firebasedatabase.app/
@@ -47,19 +71,35 @@ public class DAO_helper{
         databaseReference = db.getReference();
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String query1 = "CREATE TABLE " + TABLE_USER_PROFILE +
+                " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_USERNAME + " TEXT, " +
+                COLUMN_PASSWORD + " TEXT, " +
+                COLUMN_FULLNAME + " TEXT, " +
+                COLUMN_PHOTO + " BLOB, " +
+                COLUMN_LOGIN_CHECK + " INTEGER);";
+        db.execSQL(query1);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_PROFILE);
+        onCreate(db);
+    }
 
 
-    // ------------------------------------------ Methods for registration ------------------------------------------------------------
+
 
     /**
      * check username name when registering new account - also used to edit username
      * @param username
-     * @param email
      * @param password
      * @param dao
      * @param fg
      */
-    public void checkInsertedUsername(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
+    public void checkInsertedUsername(String username, String password, DAO_helper dao, Frag_Register fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
 
@@ -70,10 +110,10 @@ public class DAO_helper{
 
                 // if username is not registered call method of Frag_Register to check if email is registered
                 if(!dataSnapshot.exists()) {
-                    fg.checkMail(username, email, password, dao, 0);
+                    fg.createNewAccount(username, password, dao, 0);
                 }
                 else{
-                    fg.checkMail(username, email, password, dao, 1);
+                    fg.createNewAccount(username, password, dao, 1);
                 }
             }
 
@@ -83,81 +123,53 @@ public class DAO_helper{
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
-
-
     /**
-     * check email inserted when registering new account
-     * @param username
-     * @param email
-     * @param password
-     * @param dao
-     * @param fg
-     */
-    public void checkInsertedEmail(String username, String email, String password, DAO_helper dao, Frag_Register fg) {
-
-        DatabaseReference emailRef = databaseReference.child("Users"); //.child(username).child("email");
-
-        System.out.println("------------------------------- aqui 4");
-
-        // check if mail is already registered
-        ValueEventListener mailEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                String user_data;
-                int mail_exists = 0;
-
-                // if email is not registered call method of Frag_Register to create new account
-                for (DataSnapshot child: dataSnapshot.getChildren()) {
-                    user_data = child.getValue().toString();
-
-                    if(user_data.equals(email)) {
-                        System.out.println("------------------------------- aqui 5");
-                        mail_exists = 1;
-                        break;
-                    }
-                }
-
-                if(mail_exists == 0){
-                    fg.createNewAccount(username, email, password, dao, 0);
-                }
-                else {
-                    fg.createNewAccount(username, email, password, dao, 1);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        };
-        emailRef.addListenerForSingleValueEvent(mailEventListener);
-    }
-
-    /**
-     * add user account to firebase
+     * add user account to firebase and sqlite databases
      * @param username
      * @param password
-     * @param email
      * @return
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */
-    public Task<Void> addNewUserAccount(String username, String password, String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public Task<Void> addNewUserAccount(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         // encrypt password
         String hashedPass = generateStrongPasswordHash(password);
 
-        MyUser new_user = new MyUser(username, email, hashedPass);
+        // save data to sqlite database
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_USERNAME, username);
+        cv.put(COLUMN_FULLNAME, "Not set");
+        cv.put(COLUMN_PASSWORD, hashedPass);
+        cv.put(COLUMN_LOGIN_CHECK, 0); // user not logged in
+        db.insert(TABLE_USER_PROFILE, null, cv);
 
-        // insert new user (child) into the Users reference tree
+        // save data to firebase database
+        MyUser new_user = new MyUser(username, hashedPass, "Not Set");
         return databaseReference.child("Users").child(username).setValue(new_user);
     }
-    // ------------------------------------------ Methods for registration ------------------------------------------------------------
 
-
-
-    // ------------------------------------------ Methods for login -------------------------------------------------------------------
     /**
-     * check user credentials
+     * get user data from sqlite database
+     * @return
+     */
+    public Cursor getUserData(String username){
+        String query = "SELECT * FROM " + TABLE_USER_PROFILE + " WHERE " + COLUMN_USERNAME + " = '" + username + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(db != null){
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
+
+
+
+    /**
+     * check user credentials for login and set login check value in sqlite db to 1 if credentials are valid and correct
      * @param username
      * @param password
      * @param fg
@@ -165,6 +177,7 @@ public class DAO_helper{
     public void checkCredentials(String username, String password, Frag_Login fg) {
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // check if username exists
         ValueEventListener userNameEventListener = new ValueEventListener() {
@@ -182,6 +195,12 @@ public class DAO_helper{
                             // decrypt password in database and compare
                             try {
                                 if(validatePassword(password, Objects.requireNonNull(dataSnapshot.getValue()).toString())){
+
+                                    // change login status of user in sqlite database
+                                    ContentValues cv = new ContentValues();
+                                    cv.put(COLUMN_LOGIN_CHECK, 1);
+                                    db.update(TABLE_USER_PROFILE, cv, "username=?", new String[]{username});
+
                                     fg.result("Valid user", username);
                                 }
                                 else{
@@ -208,10 +227,20 @@ public class DAO_helper{
         };
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
-    // ------------------------------------------ Methods for login -------------------------------------------------------------------
+
+    /**
+     * to logout user from sqlite - change the status of login column
+     * @return
+     */
+    public void logoutUser(String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_LOGIN_CHECK, 0);
+        db.update(TABLE_USER_PROFILE, cv, "username=?", new String[]{username});
+    }
 
 
-    // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
+
     /**
      * get user trips from firebase
      * @param username
@@ -295,13 +324,19 @@ public class DAO_helper{
         };
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
-    // ------------------------------------------ Methods for adding trips and getting trips to user data ------------------------------
 
 
-    // ------------------------------------------ Methods to edit user profile -----------------------------------------------------
-    public void editUserProfile(String username, Frag_Home_Screen fhs, String new_username, String new_email, String new_password, String new_fullname) {
+    /**
+     * to edit username, full name of user
+     * @param username
+     * @param fhs
+     * @param new_username
+     * @param new_fullname
+     */
+    public void editUserProfile(String username, Frag_Home_Screen fhs, String new_username, String new_fullname) {
 
-        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+        DatabaseReference userNameRef = databaseReference.child("Users").child(new_username);
+        SQLiteDatabase db = this.getWritableDatabase();
 
         // check if username is already registered
         ValueEventListener userNameEventListener = new ValueEventListener() {
@@ -309,59 +344,67 @@ public class DAO_helper{
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // if username is not registered call method of Frag_Register to check if email is registered
-                if(!dataSnapshot.exists()) {
+                if(!dataSnapshot.exists() ||  (dataSnapshot.exists() && new_username.equals(username))) {
 
-                    // convert data to user entity to update values
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    MyUser updated_user = new MyUser((String) map.get("username"), (String) map.get("email"), (String) map.get("password"));
+                    // get user instance from firebase to get list of trips
+                    DatabaseReference userNameRefToDelete = databaseReference.child("Users").child(username);
 
-                    // edit username if inserted
-                    if(new_username != "")
-                        updated_user.setUsername(username);
+                    ValueEventListener userNameEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot2) {
 
-                    // edit email if inserted
-                    if(new_email != "")
-                        updated_user.setUsername(new_email);
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot2.getValue();
 
-                    // edit password if inserted
-                    if(new_password != "") {
-                        try {
-                            updated_user.setUsername(generateStrongPasswordHash(new_password));
-                        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                            e.printStackTrace();
+                            // update in firebase ----------------------------------------------------------------------------------------------
+                            MyUser updated_user = new MyUser(username, (String) map.get("password"), (String) map.get("fullName"));
+
+                            updated_user.setFullName(new_fullname);// edit fullname
+                            updated_user.setUsername(new_username);// edit username
+
+                            // add trips and friends list if they exist
+                            try {
+                                List<Trip> my_trips = (List<Trip>) map.get("my_trips");
+                                updated_user.setMy_trips(my_trips);
+                            } catch (Exception ignored) {}
+
+                            try {
+                                List<String> my_friends = (List<String>) map.get("my_friends");
+                                updated_user.setMy_friends(my_friends);
+                            } catch (Exception ignored) {}
+                            // update in firebase ----------------------------------------------------------------------------------------------
+
+                            // first try to remove old entry of user
+                            userNameRefToDelete.removeValue().addOnSuccessListener(suc ->
+
+                                    // than try to insert new entry
+                                    databaseReference.child("Users").child(new_username).setValue(updated_user).addOnSuccessListener(suc2 -> {
+
+                                        // update in sqlite ----------------------------------------------------------------------------------------------
+                                        ContentValues cv = new ContentValues();
+                                        cv.put(COLUMN_FULLNAME, new_fullname);
+                                        cv.put(COLUMN_USERNAME, new_username);
+
+                                        Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_USER_PROFILE + " WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
+                                        cursor.moveToNext();
+                                        String id = cursor.getString(0);
+
+                                        db.update(TABLE_USER_PROFILE, cv, "id_=?", new String[]{id});
+                                        // update in sqlite ----------------------------------------------------------------------------------------------
+
+                                        // send result
+                                        fhs.showResultMessage("Profile edited Successfully!");
+
+                            }).addOnFailureListener(er -> fhs.showResultMessage("Failed to edit profile due to network error! Profile delete from online server!"))).addOnFailureListener(er ->
+                                    fhs.showResultMessage("Failed to edit profile due to network error!"));
                         }
-                    }
 
-                    // add trips if they exists
-                    try{
-                        List<Trip> my_trips = (List<Trip>) map.get("my_trips");
-                        updated_user.setMy_trips(my_trips);
-                    } catch (Exception ignored) {}
-
-
-                    // add fullname
-                    try {
-                        String fullname = (String) map.get("fullName");
-                        updated_user.setFullName(fullname);
-                    } catch (Exception ignored) {}
-
-                    // if it was updated change it
-                    if(new_fullname != "")
-                        updated_user.setFullName(new_fullname);
-
-
-                    // ------------------------------------- FALTA A PORRA DA FOTO
-
-                    // ------------------------- vai faltar a lista de amigos
-
-                    // remove old entry of user
-                    userNameRef.removeValue();
-
-                    // add updated user
-                    fhs.showResultMessage(databaseReference.child("Users").child(new_username).setValue(updated_user));
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                    };
+                    userNameRefToDelete.addListenerForSingleValueEvent(userNameEventListener);
                 }
                 else{
-                    fhs.showResultMessage("Username already exists!");
+                    fhs.showResultMessage(new_username + " already exists!");
                 }
             }
 
@@ -370,7 +413,83 @@ public class DAO_helper{
         };
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
-    // ------------------------------------------ Methods to edit user profile -----------------------------------------------------
+
+    /**
+     * to change password
+     * @param username
+     * @param fhs
+     * @param new_password
+     */
+    public void changeUserPassword(String username, Frag_Home_Screen fhs, String new_password) {
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                try {
+                    String hashed = generateStrongPasswordHash(new_password);
+                    databaseReference.child("Users").child(username).child("password").setValue(hashed)
+                            .addOnSuccessListener(suc -> {
+
+                                // update in sqlite
+                                ContentValues cv = new ContentValues();
+                                Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_USER_PROFILE + " WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
+                                cursor.moveToNext();
+                                String id = cursor.getString(0);
+                                cv.put(COLUMN_PASSWORD, hashed);
+                                db.update(TABLE_USER_PROFILE, cv, "id_=?", new String[]{id});
+
+                                fhs.changePassResult("Password changed successfully!");
+
+                        }).addOnFailureListener(er -> fhs.changePassResult("Failed to change password due to network error!"));
+
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    fhs.changePassResult("Failed to change password due to encryption error!");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+
+    /**
+     * delete user account from firebase and sqlite
+     * @param username
+     */
+    public void deleteUserAccount(String username, Frag_Home_Screen fhs){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                userNameRef.removeValue().addOnSuccessListener(suc -> {
+
+                    Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_USER_PROFILE + " WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
+                    cursor.moveToNext();
+                    String id = cursor.getString(0);
+                    db.delete(TABLE_USER_PROFILE, "id_=?", new String[]{id});
+                    fhs.deleteAccountResult("Account deleted successfully!");
+
+                }).addOnFailureListener(er -> fhs.deleteAccountResult("Failed to delete account due to network error!"));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
 
 
 
@@ -434,6 +553,4 @@ public class DAO_helper{
         }
         return bytes;
     }
-    // ------------------------------------------------- password encryption methods --------------------------------------------------
-
 }

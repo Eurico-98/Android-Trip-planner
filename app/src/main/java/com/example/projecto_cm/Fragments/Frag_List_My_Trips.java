@@ -76,7 +76,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         // load shared view model to get username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
 
-        dao = new DAO_helper();
+        dao = new DAO_helper(requireActivity());
 
         // load login fragment layout
         view = inflater.inflate(R.layout.frag_list_my_trips_layout, container, false);

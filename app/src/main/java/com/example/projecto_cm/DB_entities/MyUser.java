@@ -7,13 +7,11 @@ import java.util.List;
 public class MyUser {
 
     private String username; // this is unique it is like the user ID
-    private String email;
     private String password;
-    private Uri filePath; // for the profile image location
+    private Uri photoPath; // for the profile image location
     private String fullName; // this is the user real name
     private List<Trip> my_trips;
-
-    public MyUser() {}
+    private List<String> my_friends;
 
     /**
      * constructor for user class
@@ -21,10 +19,10 @@ public class MyUser {
      * @param email
      * @param password
      */
-    public MyUser(String username, String email, String password) {
+    public MyUser(String username, String password, String fullName) {
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.fullName = fullName;
     }
 
     public String getUsername() {
@@ -35,14 +33,6 @@ public class MyUser {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -51,12 +41,12 @@ public class MyUser {
         this.password = password;
     }
 
-    public Uri getFilePath() {
-        return filePath;
+    public Uri getPhotoPath() {
+        return photoPath;
     }
 
-    public void setFilePath(Uri filePath) {
-        this.filePath = filePath;
+    public void setPhotoPath(Uri photoPath) {
+        this.photoPath = photoPath;
     }
 
     public String getFullName() { return fullName; }
@@ -66,4 +56,8 @@ public class MyUser {
     public List<Trip> getMy_trips() { return my_trips; }
 
     public void setMy_trips(List<Trip> my_trips) { this.my_trips = my_trips; }
+
+    public List<String> getMy_friends() { return my_friends; }
+
+    public void setMy_friends(List<String> my_friends) { this.my_friends = my_friends; }
 }
