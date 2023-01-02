@@ -1,11 +1,17 @@
 package com.example.projecto_cm.Fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,11 +29,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -41,6 +51,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -54,7 +65,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private String username, reset_username, original_fullname;
     private Button create_trip, view_my_trips, save_profile_changes, save_password_button, yes_delete_button, no_delete_button;
     private ImageButton add_friend;
-    private ImageView edit_profile_pic, delete_account_button;
+    private ImageView profile_pic, edit_profile_pic_button, delete_account_button;
     private Dialog loading_animation_dialog, edit_profile_dialog, change_password_dialog, delete_account_dialog;
     private EditText edit_username_input, edit_pass_input, edit_fullname;
     private TextView change_pass_button;
@@ -121,7 +132,8 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         edit_profile_dialog.setCanceledOnTouchOutside(true);
         edit_profile_dialog.setContentView(R.layout.dialog_edit_profile_layout);
 
-        edit_profile_pic = edit_profile_dialog.findViewById(R.id.change_profile_picture);
+        profile_pic = edit_profile_dialog.findViewById(R.id.profile_image);
+        edit_profile_pic_button = edit_profile_dialog.findViewById(R.id.change_profile_picture);
         edit_fullname = edit_profile_dialog.findViewById(R.id.change_user_full_name_input);
         edit_username_input = edit_profile_dialog.findViewById(R.id.change_username_input);
         save_profile_changes = edit_profile_dialog.findViewById(R.id.save_profile_changes);
@@ -175,7 +187,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
         delete_account_button.setOnClickListener(v -> delete_account_dialog.show());
 
-        
+        edit_profile_pic_button.setOnClickListener(v -> takePicture());
         // --------------------------------------------------------------------- prepare edit profile dialog
 
 
@@ -239,6 +251,54 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             fcl.replaceFragment(frag_list_my_trips, "yes");
         });
     }
+
+
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
+
+    private final ActivityResultLauncher<Intent> startCameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        // handle the result of the camera intent
+        if (result.getResultCode() == Activity.RESULT_OK) {
+
+            // get the image taken with the camera
+            Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+
+            // set the image to the image view
+            profile_pic.setImageBitmap(imageBitmap);
+        }
+    });
+
+    private void takePicture() {
+        if (requireActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+
+            // check for camera permissions
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+                // check for external storage write permissions
+                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+                    // open camera to take picture
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startCameraLauncher.launch(cameraIntent);
+                }
+                else {
+                    // request external storage write permission
+                    requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+            }
+            else {
+                // request camera permission
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+            }
+        }
+        else {
+            // display message if device does not have a camera
+            Toast.makeText(getActivity(), "This device does not have a camera", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     /**
      * delete user account from firebase and sqlite
