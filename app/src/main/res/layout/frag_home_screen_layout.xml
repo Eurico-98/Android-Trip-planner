@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background">
+
+    <!--app bar-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/home_screen_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/widget_bar_background"
+        android:theme="@style/AppBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <Button
+        android:id="@+id/plan_trip"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="Plan a trip"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/add_friends"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_screen_app_bar" />
+
+    <ImageButton
+        android:id="@+id/add_friends"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/add_friends"
+        android:src="@drawable/add_friend"
+        app:layout_constraintBottom_toTopOf="@+id/view_trips"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plan_trip" />
+
+    <Button
+        android:id="@+id/view_trips"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="View my trips"
+        app:layout_constraintBottom_toTopOf="@+id/take_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_friends" />
+
+    <Button
+        android:id="@+id/take_photo"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/buttons_and_app_bar_text_color"
+        android:text="Take photo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_trips" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

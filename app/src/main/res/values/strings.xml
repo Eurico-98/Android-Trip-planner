@@ -1,6 +1,25 @@
 <resources>
+    <string name="google_Maps_SDK_API">AIzaSyCy1jYF2HNvQbRYu-vM-HsdLbEMXeQdR2w</string>
+    <string name="Directions_API">AIzaSyCghdVlXbN9xT8kqzkMKHVGOP8z30ryesM</string>
+    <string name="Geocoding_API">AIzaSyBkioxrxvd-UX_QYF_jzrKKOfRpzpTxQr8</string>
+    <string name="TimeZone_API">AIzaSyBLU95wi8EvwmfPhXQHXqmbHcktBWeLEUI</string>
+    <string name="OpenWeather_API">787208a17330106cf9aa85d7f15789c5</string>
     <string name="app_name">CM_Project</string>
-    <string name="button1">Function 1</string>
-    <string name="button2">Function 2</string>
-    <string name="button3">Function 3</string>
+    <string name="add_friends">Add friends</string>
+    <string name="log_out">Log out</string>
+    <string name="view_profile">My Profile</string>
+    <string name="save_trip">Save</string>
+    <string name="search">Search location</string>
+    <string name="normal_map">Normal map</string>
+    <string name="satellite_map">Satellite map</string>
+    <string name="add_location">Add location</string>
+    <string name="weather_forecast">Weather Forecast</string>
+    <string name="interface_hints">Help</string>
+    <string name="search_trip">Search</string>
+    <string name="view_route_button">View route</string>
+    <string name="invite_friends_button">Invite Friends to Trip</string>
+    <string name="location_election_button">Allow friends to vote on locations for the trip</string>
+    <string name="weather_forecast_button">Weather Forecast</string>
+    <string name="edit_trip_button">Edit Trip</string>
+    <string name="info">Information</string>
 </resources>

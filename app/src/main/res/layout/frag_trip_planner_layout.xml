@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background">
+
+    <!--app bar-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/create_trip_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/widget_bar_background"
+        android:theme="@style/AppBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_trip_app_bar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <!--input field for location-->
+    <EditText
+        android:id="@+id/location_input_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="Location"
+        android:backgroundTint="@color/input_text_hint_color"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="location"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:textColor="@color/text_messages_color"
+        android:textColorHint="@color/input_text_hint_color"
+        app:layout_constraintBottom_toTopOf="@+id/space1_for_create_trip_layout"
+        app:layout_constraintEnd_toStartOf="@+id/add_location"
+        app:layout_constraintStart_toEndOf="@+id/search_button"
+        app:layout_constraintTop_toBottomOf="@+id/map_view" />
+
+    <ImageButton
+        android:id="@+id/add_location"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/button_background"
+        android:text="@string/add_location"
+        app:layout_constraintBottom_toBottomOf="@+id/location_input_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/location_input_field"
+        app:layout_constraintTop_toBottomOf="@+id/map_view"
+        app:srcCompat="@drawable/ic_add" />
+
+    <ImageButton
+        android:id="@+id/search_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toBottomOf="@+id/location_input_field"
+        app:layout_constraintEnd_toStartOf="@+id/location_input_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map_view"
+        app:srcCompat="@drawable/ic_search" />
+
+    <Space
+        android:id="@+id/space1_for_create_trip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/location_list_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_input_field" />
+
+    <TextView
+        android:id="@+id/location_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Trip"
+        android:textColor="@color/text_messages_color"
+        app:layout_constraintBottom_toTopOf="@+id/space2_for_create_trip_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space1_for_create_trip_layout" />
+
+    <Space
+        android:id="@+id/space2_for_create_trip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/trip_location_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_list_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trip_location_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:foreground="@drawable/recycler_view_frame"
+        android:padding="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space2_for_create_trip_layout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
