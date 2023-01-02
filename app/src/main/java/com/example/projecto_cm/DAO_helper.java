@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -165,6 +167,36 @@ public class DAO_helper extends SQLiteOpenHelper {
         return cursor;
     }
 
+
+    /**
+     * save picture to databases
+     */
+    public void savePicture(String username, Bitmap imageBitmap, String type_of_picture){
+
+        // save image in sqlite data base if it is a profile image
+        if(Objects.equals(type_of_picture, "profile")){
+
+            // get the database instance
+            SQLiteDatabase db = getWritableDatabase();
+
+            // convert the bitmap to a byte array
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            byte[] imageByteArray = outputStream.toByteArray();
+
+            // create a ContentValues instance to store the image data
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_PHOTO, imageByteArray);
+
+            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_USER_PROFILE + " WHERE " + COLUMN_USERNAME + " = '" + username + "'", null);
+            cursor.moveToNext();
+            String id = cursor.getString(0);
+
+            db.update(TABLE_USER_PROFILE, cv, "id_=?", new String[]{id});
+        }
+
+
+    }
 
 
 

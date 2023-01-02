@@ -8,12 +8,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +61,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -253,9 +264,14 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     }
 
 
-
+    /**
+     * permission handler
+     */
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
+    /**
+     * set profile image to the picture taken and store bitmap image in sqlite storage
+     */
     private final ActivityResultLauncher<Intent> startCameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         // handle the result of the camera intent
@@ -265,10 +281,17 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
 
             // set the image to the image view
-            profile_pic.setImageBitmap(imageBitmap);
+            roundPictureCorners(imageBitmap);
+
+            // save picture do sqlite and firebase databases
+            dao.savePicture(username, imageBitmap, "profile");
         }
     });
 
+
+    /**
+     * request permissions to open camera and to write to external storage
+     */
     private void takePicture() {
         if (requireActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
 
@@ -444,7 +467,16 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
                     edit_username_input.setText(cursor.getString(1));
                     original_fullname = cursor.getString(3);
                     edit_fullname.setText(original_fullname);
-                    //System.out.println(cursor.getString(4)); // photo
+
+                    // set profile picture
+                    try {
+                        roundPictureCorners(BitmapFactory.decodeByteArray(cursor.getBlob(4), 0, cursor.getBlob(4).length));
+                    }
+                    // if user does not have a profile picture use the default one
+                    catch (Exception e){
+                        e.printStackTrace();
+                        profile_pic.setImageResource(R.drawable.profile_pic_template);
+                    }
                 }
 
                 // hide button and only show save changes button if data was changed
@@ -460,5 +492,42 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * round picture corners and make image fit the frame
+     */
+    private void roundPictureCorners(Bitmap imageBitmap) {
+
+        // Create a new Bitmap object from the given Bitmap image
+        Bitmap roundedBitmap = Bitmap.createBitmap(imageBitmap.getWidth(), imageBitmap.getHeight(), imageBitmap.getConfig());
+
+        // Set the corner radius to the desired value
+        float cornerRadius = 15.0f;
+
+        // Create a new Canvas object to draw on the new Bitmap
+        Canvas canvas = new Canvas(roundedBitmap);
+
+        // Create a new Paint object for drawing shapes
+        Paint paint = new Paint();
+
+        // Set the paint to use anti-aliasing for smooth edges
+        paint.setAntiAlias(true);
+
+        // set the image to the canvas
+        paint.setShader(new BitmapShader(imageBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        // Create a new RectF object for the rounded rectangle
+        RectF rect = new RectF(0, 0, imageBitmap.getWidth(), imageBitmap.getHeight());
+
+        // Draw the rounded rectangle on the canvas using the paint and the RectF object
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint);
+
+        // Set the ImageView's image to the rounded Bitmap and resize image frame to the image size
+        ViewGroup.LayoutParams layoutParams = profile_pic.getLayoutParams();
+        layoutParams.width = 280; // set the width in pixels
+        layoutParams.height = 380; // set the height in pixels
+        profile_pic.setLayoutParams(layoutParams);
+        profile_pic.setImageBitmap(roundedBitmap);
     }
 }
