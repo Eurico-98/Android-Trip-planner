@@ -27,12 +27,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -524,6 +528,44 @@ public class DAO_helper extends SQLiteOpenHelper {
 
 
 
+    //-------------------------------------------------Add Friend --------------------------------
+    public void seach_friend(String username, Frag_Home_Screen fg){
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String usernames = "";
+
+                // if user has trips return them
+                if(dataSnapshot.exists()) {
+                    usernames = dataSnapshot.child("username").getValue(String.class);
+                    try {
+                        fg.searchResult(usernames);
+                    } catch (MqttException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    try {
+                        fg.searchResult("no result found");
+                    } catch (MqttException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+    public void add_friend_request(String possible_friend){
+        //databaseReference.child("Users").child(username).setValue(new_user);
+    }
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------
     private static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {

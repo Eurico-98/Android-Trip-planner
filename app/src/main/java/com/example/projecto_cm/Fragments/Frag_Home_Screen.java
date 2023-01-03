@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -47,19 +49,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Edit_Profile;
 import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
+import com.example.projecto_cm.MQTT_Helper;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
 import com.google.android.gms.tasks.Task;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -75,12 +83,20 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private Interface_Frag_Change_Listener fcl; // to change fragment
     private DAO_helper dao;
     private String username, reset_username, original_fullname;
-    private Button save_profile_changes, save_password_button, yes_delete_button, no_delete_button;
+    private Button save_profile_changes, save_password_button, yes_delete_button, no_delete_button, execute_trip_or_username_search_button;
     private ImageButton create_trip, view_my_trips, add_friend;
     private ImageView profile_pic, edit_profile_pic_button, delete_account_button;
     private Dialog loading_animation_dialog, edit_profile_dialog, change_password_dialog, delete_account_dialog;
-    private EditText edit_username_input, edit_pass_input, edit_fullname;
+    private EditText edit_username_input, edit_pass_input, edit_fullname, trip_title_or_username_input;
     private TextView change_pass_button;
+
+    private Dialog interface_hints_dialog, search_dialog;
+    private ViewStub searchResultsStub; // to load dialog item view dynamically according to what is needed in this frag
+    private TextView username_search_result;
+    private Drawable frameDrawable;
+    private Button send_friend_request;
+    private ConstraintLayout send_request_cLayout;
+    MQTT_Helper helper;
 
 
     /**
@@ -96,7 +112,12 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
         // get username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
-        model.getData().observe(getViewLifecycleOwner(), item -> username = (String) item);
+        //start mqtt
+        model.getData().observe(getViewLifecycleOwner(), item ->{
+            username = (String) item;
+            model.getActivityInstance().observe(getViewLifecycleOwner(), item_2 -> setUpTopics(username, item_2));
+
+        });
         dao = new DAO_helper(requireActivity());
 
         // create 1 thread so execute searches with google maps
@@ -111,6 +132,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         Toolbar toolbar = view.findViewById(R.id.home_screen_app_bar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
+
 
         return view;
     }
@@ -253,8 +275,61 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         });
 
 
+
+//--------------------------------------------------------------------------------------------------------------------------
         add_friend = view.findViewById(R.id.add_friends);
-        //add_friend.setOnClickListener(view1 -> );
+
+        // prepare search dialog
+        search_dialog = new Dialog(requireActivity());
+        search_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        search_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        search_dialog.setCanceledOnTouchOutside(true);
+        search_dialog.setContentView(R.layout.dialog_search_trips_or_users_layout);
+
+        //
+        searchResultsStub = search_dialog.findViewById(R.id.search_results_stub);
+        searchResultsStub.setLayoutResource(R.layout.search_users_results_layout);
+        /*send_request_cLayout = (ConstraintLayout) searchResultsStub.inflate();
+        username_search_result = (TextView) send_request_cLayout.findViewById(R.id.search_results_view);
+        send_friend_request = send_request_cLayout.findViewById(R.id.send_friend_request_button);
+        send_friend_request.setVisibility(View.INVISIBLE);*/
+        username_search_result = (TextView) searchResultsStub.inflate();
+
+        // for frame around result list - just a nice touch
+        frameDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.recycler_view_frame);
+
+        // dialog title
+        TextView search_trips_or_users_title = search_dialog.findViewById(R.id.search_trips_or_users_title);
+        search_trips_or_users_title.setText("Search Friend");
+
+        // title input
+        trip_title_or_username_input = search_dialog.findViewById(R.id.trip_title_or_username_input);
+        trip_title_or_username_input.setHint("Insert username");
+
+        // search button
+        execute_trip_or_username_search_button = search_dialog.findViewById(R.id.execute_trip_or_username_search_button);
+        execute_trip_or_username_search_button.setOnClickListener(v -> {
+
+            if(!trip_title_or_username_input.getText().toString().equals("")){
+
+
+                // dismiss keyboard
+                trip_title_or_username_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+                loading_animation_dialog.show();
+
+                //instanciate DAO helper
+                dao.seach_friend(trip_title_or_username_input.getText().toString(), this);
+
+            }
+            else {
+                Toast.makeText(requireActivity(), "Insert username!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        add_friend.setOnClickListener(view1 -> {
+            search_dialog.show();
+        });
 
 
         view_my_trips = view.findViewById(R.id.view_trips);
@@ -262,6 +337,12 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             Frag_List_My_Trips frag_list_my_trips = new Frag_List_My_Trips();
             fcl.replaceFragment(frag_list_my_trips, "yes");
         });
+
+
+
+
+
+
     }
 
 
@@ -497,6 +578,11 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             });
         }
         else if(item.getItemId() == R.id.log_out){
+            try {
+                helper.unSubscribeToTopic(username);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
             dao.logoutUser(username);
             Frag_Login frag_login = new Frag_Login();
             fcl.replaceFragment(frag_login, "no");
@@ -540,5 +626,51 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         layoutParams.height = 380; // set the height in pixels
         profile_pic.setLayoutParams(layoutParams);
         profile_pic.setImageBitmap(roundedBitmap);
+    }
+
+    /**
+     * Responsible for handling the result of the username search, if exists sends friend request, if not notifies user for unexistent username
+     * @param friendsUsername
+     */
+    public void searchResult (String friendsUsername) throws MqttException, IOException {
+        loading_animation_dialog.dismiss();
+        if (friendsUsername.equals("no result found")){
+            username_search_result.setText("User does not exist");
+            Toast.makeText(requireActivity(), "User does not exist",Toast.LENGTH_SHORT).show();
+        }else{
+            username_search_result.setText(friendsUsername);
+            Toast.makeText(requireActivity(), "Convite eviado",Toast.LENGTH_SHORT).show();
+            // usar função para mandar convite
+            //start mqtt
+            helper.addFriendRequest(username, friendsUsername);
+        }
+    }
+
+
+    void setUpTopics(String user, Main_Activity activity){
+
+        // already runs in background
+
+            // create connection to MQTT broker in the background thread
+            try {
+                helper = new MQTT_Helper(getContext(), activity);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+
+            // subscribe only if connection is OK and to the user topic
+            if(helper != null){
+                try {
+                    // subscribe to all topics in the database
+                    helper.subscribeToTopic(user);
+                }
+                catch (MqttException e){
+                    e.printStackTrace();
+                }
+            }
+
+            else {
+                handler.post(() -> Toast.makeText(requireActivity(), "Failed to connect to broker!", Toast.LENGTH_SHORT).show());
+            }
     }
 }
