@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -74,8 +75,8 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private Interface_Frag_Change_Listener fcl; // to change fragment
     private DAO_helper dao;
     private String username, reset_username, original_fullname;
-    private Button create_trip, view_my_trips, save_profile_changes, save_password_button, yes_delete_button, no_delete_button;
-    private ImageButton add_friend;
+    private Button save_profile_changes, save_password_button, yes_delete_button, no_delete_button;
+    private ImageButton create_trip, view_my_trips, add_friend;
     private ImageView profile_pic, edit_profile_pic_button, delete_account_button;
     private Dialog loading_animation_dialog, edit_profile_dialog, change_password_dialog, delete_account_dialog;
     private EditText edit_username_input, edit_pass_input, edit_fullname;
@@ -321,7 +322,17 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         }
     }
 
-
+    /**
+     * do nothing when android back button is pressed
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {}
+        });
+    }
 
     /**
      * delete user account from firebase and sqlite

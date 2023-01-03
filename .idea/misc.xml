@@ -35,7 +35,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_location_weather_layout.xml" value="0.4193109700815956" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_my_trip_layout.xml" value="0.26132246376811596" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_search_result_layout.xml" value="0.5" />
-        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_trip_button_layout.xml" value="1.8333333333333333" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_trip_button_layout.xml" value="0.3259292837715322" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_weather_per_day_layout.xml" value="0.4188576609247507" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_confirm_delete_account_layout.xml" value="0.4258230012825994" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_edit_password_layout.xml" value="0.3372620126926564" />
@@ -44,14 +44,18 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_get_trip_title_star_end_dates_layout.xml" value="0.297554347826087" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_search_trips_or_users_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_select_location_result_layout.xml" value="0.29393115942028986" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_hints_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_list_trip_help_layout.xml" value="0.4057116953762466" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_trip_planner_help_layout.xml" value="0.42667806755023513" />
-        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_trip_options_layout.xml" value="0.33" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_trip_options_layout.xml" value="0.67" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/element_trip_button_layout.xml" value="0.3381686310063463" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_home_screen_layout.xml" value="0.42667806755023513" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_list_my_trips_layout.xml" value="0.42611060743427015" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_login_layout.xml" value="0.42611060743427015" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_register_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_show_trip_route_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_trip_planner_layout.xml" value="0.42667806755023513" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_weather_forecast_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_create_trip_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_for_listing_items_layout.xml" value="0.39619220308250225" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_home_screen_layout.xml" value="0.5013440860215054" />

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/widget_bar_background"
-        app:layout_constraintBottom_toTopOf="@+id/login_username_input"
+        app:layout_constraintBottom_toBottomOf="@+id/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,6 +29,16 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="330dp"
+        app:layout_constraintBottom_toTopOf="@+id/login_username_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_toolbar"
+        app:srcCompat="@drawable/app_logo_3" />
+
     <!--input field for username-->
     <EditText
         android:id="@+id/login_username_input"
@@ -42,10 +52,10 @@
         android:textColor="@color/text_messages_color"
         android:textColorHint="@color/input_text_hint_color"
         android:background="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/login_password_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_logo"
         app:layout_constraintVertical_bias="0.279" />
 
     <!--input field for password-->
@@ -85,6 +95,7 @@
         android:id="@+id/create_account_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Don't have an account, register one!"
         android:textColor="@color/text_messages_color"
         app:layout_constraintBottom_toTopOf="@+id/register_new_account_button"

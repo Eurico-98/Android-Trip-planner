@@ -12,6 +12,7 @@
         app:cardBackgroundColor="@color/button_and_appbar_background_color"
         app:cardCornerRadius="15dp"
         app:cardElevation="20dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
@@ -23,6 +25,9 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
+
+        // Lock the orientation to portrait
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // load login fragment
         Frag_Login frag_login = new Frag_Login();
