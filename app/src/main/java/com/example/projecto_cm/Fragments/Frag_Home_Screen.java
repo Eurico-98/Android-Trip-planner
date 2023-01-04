@@ -373,17 +373,9 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             // check for camera permissions
             if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
-                // check for external storage write permissions
-                if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-                    // open camera to take picture
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startCameraLauncher.launch(cameraIntent);
-                }
-                else {
-                    // request external storage write permission
-                    requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                }
+                // open camera to take picture
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startCameraLauncher.launch(cameraIntent);
             }
             else {
                 // request camera permission
