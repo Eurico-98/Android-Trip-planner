@@ -2,9 +2,11 @@ package com.example.projecto_cm.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,6 +56,11 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
             view = inflater.inflate(R.layout.card_location_layout, parent, false);
         }
 
+        // show this card when list of locations photos for trip album is displayed
+        else if(Objects.equals(type_of_list, "list of locations photos")){
+            view = inflater.inflate(R.layout.card_location_picture_layout, parent, false);
+        }
+
         // show this card when list of locations for the weather fragment is being displayed
         else {
             view = inflater.inflate(R.layout.card_location_weather_layout, parent, false);
@@ -76,6 +83,15 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
             holder.location_title.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
         }
 
+        // set location title
+        else if(Objects.equals(type_of_list, "list of locations photos")) {
+            holder.location_picture_title.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
+            holder.location_photo.setImageResource(R.drawable.ic_photo_placehoder);
+            //TODO: aqui e preciso passar uma lista de fotos que fica na firebase e meter a foto em cada local
+            //TODO: nao esquecer de meter a visibilidade do botao de delete em funcao do tipo de imagem
+            //TODO: a propria imagem e o listener que chama a funcao de tirar foto
+        }
+
         // set location title and list of weather data for 5 days
         else {
             holder.location_title_weather_forecast.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
@@ -90,15 +106,18 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
     // to bind views with layout objects
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView location_title, location_title_weather_forecast;
+        TextView location_title, location_title_weather_forecast, location_picture_title;
         RecyclerView recyclerView_weather_forecast;
+        ImageView location_photo;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             location_title = itemView.findViewById(R.id.location_title);
+            location_picture_title = itemView.findViewById(R.id.location_picture_title);
             location_title_weather_forecast = itemView.findViewById(R.id.location_title_weather_forecast);
             recyclerView_weather_forecast = itemView.findViewById(R.id.recyclerView_weather_forecast);
+            location_photo = itemView.findViewById(R.id.location_picture);
         }
     }
 }

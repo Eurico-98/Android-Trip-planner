@@ -2,6 +2,8 @@ package com.example.projecto_cm.Fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +26,16 @@ import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Frag_Login extends Fragment implements Interface_Frag_Login {
 
     private Shared_View_Model model;
     private Interface_Frag_Change_Listener fcl; // to change fragment
     private Dialog loading_animation_dialog;
+    private ExecutorService service;
+    private Handler handler;
 
     /**
      * onCreateView of login fragment
@@ -44,6 +50,10 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
 
         // get activity to get shared view model
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
+
+        // create 1 thread so execute searches with google maps
+        service = Executors.newFixedThreadPool(1);
+        handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
         View view = inflater.inflate(R.layout.frag_login_layout, container, false);
@@ -111,8 +121,6 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
     @Override
     public void result(String result, String username) {
 
-        loading_animation_dialog.dismiss();
-
         // if credentials are wrong
         if(!Objects.equals(result, "Valid user")){
             Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
@@ -122,8 +130,16 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
             // send username to get it in home screen
             model.sendData(username);
 
-            Frag_Home_Screen home_screen = new Frag_Home_Screen();
-            fcl.replaceFragment(home_screen, "no");
+            service.execute(() -> {
+                Frag_Home_Screen home_screen = new Frag_Home_Screen();
+                fcl.replaceFragment(home_screen, "no");
+
+                handler.post(() -> {
+                    // wait for the Frag_Home_Screen fragment to be fully initialized before dismissing the loading animation
+                    while (!home_screen.isFragmentReady) {}
+                    loading_animation_dialog.dismiss();
+                });
+            });
         }
     }
 }

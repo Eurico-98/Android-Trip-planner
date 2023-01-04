@@ -14,7 +14,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -66,6 +65,7 @@ import java.util.concurrent.Executors;
 
 public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile {
 
+    public boolean isFragmentReady = false;
     private ExecutorService service;
     private Handler handler;
     private Shared_View_Model model;
@@ -79,13 +79,12 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private EditText edit_username_input, edit_pass_input, edit_fullname, trip_title_or_username_input;
     private TextView change_pass_button;
 
-    private Dialog interface_hints_dialog, search_dialog;
+    private Dialog search_dialog;
     private ViewStub searchResultsStub; // to load dialog item view dynamically according to what is needed in this frag
     private TextView username_search_result;
-    private Drawable frameDrawable;
     private Button send_friend_request;
     private ConstraintLayout send_request_cLayout;
-    MQTT_Helper helper;
+    private MQTT_Helper helper;
 
 
     /**
@@ -99,13 +98,12 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // get username
         model = new ViewModelProvider(requireActivity()).get(Shared_View_Model.class);
-        //start mqtt
+
+        // get username and start mqtt
         model.getData().observe(getViewLifecycleOwner(), item ->{
             username = (String) item;
             model.getActivityInstance().observe(getViewLifecycleOwner(), item_2 -> setUpTopics(username, item_2));
-
         });
         dao = new DAO_helper(requireActivity());
 
@@ -138,6 +136,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         // prepare loading animation
         loading_animation_dialog = new Dialog(requireActivity());
@@ -256,16 +255,24 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         create_trip = view.findViewById(R.id.plan_trip);
         create_trip.setOnClickListener(view1 -> {
 
-            // hide home screen layout while next fragment loads to prevent user from clicking in other buttons while next fragment loads
-            view.setVisibility(View.GONE);
+            loading_animation_dialog.show();
+            service.execute(() -> {
 
-            Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
-            fcl.replaceFragment(frag_trip_planner, "yes");
+                Frag_Trip_Planner frag_trip_planner = new Frag_Trip_Planner();
+                fcl.replaceFragment(frag_trip_planner, "yes");
+
+                handler.post(() -> {
+                    // wait for the Frag_Trip_Planner fragment to be fully initialized before dismissing the loading animation
+                    while (!frag_trip_planner.isFragmentReady) {
+                    }
+                    loading_animation_dialog.dismiss();
+                });
+            });
         });
 
 
 
-//--------------------------------------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------------
         add_friend = view.findViewById(R.id.add_friends);
 
         // prepare search dialog
@@ -283,9 +290,6 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         send_friend_request = send_request_cLayout.findViewById(R.id.send_friend_request_button);
         send_friend_request.setVisibility(View.INVISIBLE);*/
         username_search_result = (TextView) searchResultsStub.inflate();
-
-        // for frame around result list - just a nice touch
-        frameDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.recycler_view_frame);
 
         // dialog title
         TextView search_trips_or_users_title = search_dialog.findViewById(R.id.search_trips_or_users_title);
@@ -321,9 +325,8 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             }
         });
 
-        add_friend.setOnClickListener(view1 -> {
-            search_dialog.show();
-        });
+
+        add_friend.setOnClickListener(view1 -> search_dialog.show());
 
 
         view_my_trips = view.findViewById(R.id.view_trips);
@@ -332,11 +335,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             fcl.replaceFragment(frag_list_my_trips, "yes");
         });
 
-
-
-
-
-
+        isFragmentReady = true; // to dismiss loading animation that was initialized in the login fragment
     }
 
 
@@ -626,49 +625,47 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      * Responsible for handling the result of the username search, if exists sends friend request, if not notifies user for unexistent username
      * @param friendsUsername
      */
-    public void searchResult (String friendsUsername) throws MqttException, IOException {
+    public void searchResult(String friendsUsername) throws MqttException, IOException {
+
         loading_animation_dialog.dismiss();
+
         if (friendsUsername.equals("no result found")) {
             username_search_result.setText("User does not exist");
-            Toast.makeText(requireActivity(), "User does not exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "User does not exist!", Toast.LENGTH_SHORT).show();
         }
         else if (friendsUsername.equals("Already Friends")){
             username_search_result.setText("Already Friends");
-            Toast.makeText(requireActivity(), "Already Friends", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Already Friends!", Toast.LENGTH_SHORT).show();
         }
         else{
             username_search_result.setText(friendsUsername);
-            Toast.makeText(requireActivity(), "Convite eviado",Toast.LENGTH_SHORT).show();
-            // usar função para mandar convite
+            Toast.makeText(requireActivity(), "Request sent!",Toast.LENGTH_SHORT).show();
             helper.addFriendRequest(username, friendsUsername);
+            search_dialog.dismiss();
         }
     }
 
-
+    /**
+     * subscribes to topics when app is initialized
+     * @param user
+     * @param activity
+     */
     void setUpTopics(String user, Main_Activity activity){
 
         // already runs in background
+        // create connection to MQTT broker in the background thread
+        try {
+            helper = new MQTT_Helper(getContext(), activity);
+        } catch (MqttException ignored) {}
 
-            // create connection to MQTT broker in the background thread
+        // subscribe only if connection is OK to the user topic
+        if(helper != null){
             try {
-                helper = new MQTT_Helper(getContext(), activity);
-            } catch (MqttException e) {
-                e.printStackTrace();
-            }
-
-            // subscribe only if connection is OK and to the user topic
-            if(helper != null){
-                try {
-                    // subscribe to all topics in the database
-                    helper.subscribeToTopic(user);
-                }
-                catch (MqttException e){
-                    e.printStackTrace();
-                }
-            }
-
-            else {
-                handler.post(() -> Toast.makeText(requireActivity(), "Failed to connect to broker!", Toast.LENGTH_SHORT).show());
-            }
+                helper.subscribeToTopic(user);
+            } catch (MqttException ignored){}
+        }
+        else {
+            handler.post(() -> Toast.makeText(requireActivity(), "Unable to start notifications system due to network error!", Toast.LENGTH_SHORT).show());
+        }
     }
 }

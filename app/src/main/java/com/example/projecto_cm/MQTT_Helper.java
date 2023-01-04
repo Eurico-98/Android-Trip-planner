@@ -73,6 +73,14 @@ public class MQTT_Helper {
         aux.put("TYPE", "ACCEPTFRIEND");
         aux.put("USERNAME", myUsername);
 
+        byte[] data = sendData(aux);
+
+        myClient.publish(topic, data, 2, false);
+    }
+
+
+    public byte[] sendData(HashMap<String, String> data) throws IOException {
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(aux);
@@ -88,7 +96,7 @@ public class MQTT_Helper {
      * @throws MqttException
      */
     public void subscribeToTopic(String topic) throws MqttException {
-
+        
         myClient.subscribe(mainTopic + topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {

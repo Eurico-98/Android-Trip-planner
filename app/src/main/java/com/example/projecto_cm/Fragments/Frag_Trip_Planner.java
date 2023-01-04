@@ -65,6 +65,7 @@ import java.util.concurrent.Executors;
 
 public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, Interface_Card_Search_Result_In_Create_Trip {
 
+    public boolean isFragmentReady = false;
     private ExecutorService service;
     private Handler handler;
 
@@ -223,6 +224,8 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
                 Toast.makeText(requireActivity(), "Search locations first!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        isFragmentReady = true; // to dismiss loading animation that was initialized in the login fragment
     }
 
     /**

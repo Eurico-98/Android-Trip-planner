@@ -13,4 +13,5 @@
     <color name="fragment_background">#02252E</color>
     <color name="dialog_background_color">#02272E</color>
     <color name="menu_app_bar_title_color">#FFFFFF</color>
+    <color name="location_card_picture_background_color">#00FFFFFF</color>
 </resources>

@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Don't have an account, register one!"
-        android:textColor="@color/text_messages_color"
+        android:textColor="@color/text_messages_color_2"
         app:layout_constraintBottom_toTopOf="@+id/register_new_account_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

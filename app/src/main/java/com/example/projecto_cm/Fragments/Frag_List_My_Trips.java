@@ -429,6 +429,24 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             fcl.replaceFragment(frag_show_weather_forecast, "yes");
         });
 
+
+        ImageButton take_photo = show_trip_options_dialog.findViewById(R.id.take_photo_image_button);
+        take_photo.setOnClickListener(v -> {
+
+            // pass list of locations to next fragment
+            Bundle bundle = new Bundle();
+            bundle.putString("locations", my_trips_list.get(finalTrip_position_in_list));
+            bundle.putString("trip title", trip_options_title.getText().toString());
+
+            show_trip_options_dialog.dismiss();
+
+            my_trips_list.clear(); // clear list to avoid getting duplicates when the user return to this fragment
+
+            Frag_Photo_Album frag_photo_album = new Frag_Photo_Album();
+            frag_photo_album.setArguments(bundle);
+            fcl.replaceFragment(frag_photo_album, "yes");
+        });
+
         show_trip_options_dialog.show();
     }
 
