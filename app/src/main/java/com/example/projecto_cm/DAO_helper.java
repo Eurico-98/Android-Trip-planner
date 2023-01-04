@@ -239,10 +239,7 @@ public class DAO_helper extends SQLiteOpenHelper {
                                 else{
                                     fg.result("Wrong password!", "");
                                 }
-                            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                                e.printStackTrace();
-                            }
-
+                            } catch (NoSuchAlgorithmException | InvalidKeySpecException ignored) {}
                         }
 
                         @Override

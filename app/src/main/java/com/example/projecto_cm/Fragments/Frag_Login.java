@@ -124,6 +124,7 @@ public class Frag_Login extends Fragment implements Interface_Frag_Login {
         // if credentials are wrong
         if(!Objects.equals(result, "Valid user")){
             Toast.makeText(requireActivity(), result, Toast.LENGTH_SHORT).show();
+            loading_animation_dialog.dismiss();
         }
         else {
 

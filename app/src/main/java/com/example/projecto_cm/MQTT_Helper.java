@@ -96,7 +96,7 @@ public class MQTT_Helper {
      * @throws MqttException
      */
     public void subscribeToTopic(String topic) throws MqttException {
-        
+
         myClient.subscribe(mainTopic + topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {

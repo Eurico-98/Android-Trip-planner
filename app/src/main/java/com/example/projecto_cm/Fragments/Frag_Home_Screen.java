@@ -108,7 +108,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         dao = new DAO_helper(requireActivity());
 
         // create 1 thread so execute searches with google maps
-        service = Executors.newFixedThreadPool(1);
+        service = Executors.newFixedThreadPool(2);
         handler = new Handler(Looper.getMainLooper());
 
         // load login fragment layout
@@ -571,11 +571,11 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
             });
         }
         else if(item.getItemId() == R.id.log_out){
+
             try {
                 helper.unSubscribeToTopic(username);
-            } catch (MqttException e) {
-                e.printStackTrace();
-            }
+            } catch (MqttException ignored) {}
+
             dao.logoutUser(username);
             Frag_Login frag_login = new Frag_Login();
             fcl.replaceFragment(frag_login, "no");
