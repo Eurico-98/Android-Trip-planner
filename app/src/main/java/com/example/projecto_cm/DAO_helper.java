@@ -540,14 +540,58 @@ public class DAO_helper extends SQLiteOpenHelper {
 
                 String usernames = "";
 
-                // if user has trips return them
+                // if user exists return
                 if(dataSnapshot.exists()) {
+
                     usernames = dataSnapshot.child("username").getValue(String.class);
-                    try {
-                        fg.searchResult(usernames);
-                    } catch (MqttException | IOException e) {
-                        e.printStackTrace();
-                    }
+                    DatabaseReference userNameRef2 = databaseReference.child("Users").child(username).child("my_friends");
+                    String finalUsernames = usernames;
+
+                    ValueEventListener userNameEventListener2 = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int ctrl = 0;
+
+                            if(dataSnapshot.exists()) {
+                                System.out.println("-------------------------------------------1");
+                                // convert data snapshots to hashmap
+                                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                                    if(ds.getValue().toString().equals(finalUsernames)){
+                                        System.out.println("-------------------------------------------2");
+                                        try {
+                                            fg.searchResult("Already Friends");
+                                            ctrl = 1;
+                                        } catch (MqttException | IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        break;
+                                    }
+                                }
+
+                                if(ctrl!=1) {
+                                    System.out.println("-------------------------------------------3");
+                                    try {
+                                        fg.searchResult(finalUsernames);
+                                    } catch (MqttException | IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }else{
+                                System.out.println("-------------------------------------------4");
+                                try {
+                                    fg.searchResult(finalUsernames);
+                                } catch (MqttException | IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                    };
+                    userNameRef2.addListenerForSingleValueEvent(userNameEventListener2);
+
                 }
                 else{
                     try {

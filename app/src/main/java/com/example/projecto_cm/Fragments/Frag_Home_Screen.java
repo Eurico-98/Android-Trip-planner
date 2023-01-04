@@ -310,7 +310,11 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         execute_trip_or_username_search_button = search_dialog.findViewById(R.id.execute_trip_or_username_search_button);
         execute_trip_or_username_search_button.setOnClickListener(v -> {
 
-            if(!trip_title_or_username_input.getText().toString().equals("")){
+            if(trip_title_or_username_input.getText().toString().equals(username)){
+                Toast.makeText(requireActivity(), "Can't send friend request to yourself!",Toast.LENGTH_SHORT).show();
+                username_search_result.setText("Can't send friend request to yourself!");
+            }
+            else if(!trip_title_or_username_input.getText().toString().equals("")){
 
 
                 // dismiss keyboard
@@ -635,14 +639,18 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      */
     public void searchResult (String friendsUsername) throws MqttException, IOException {
         loading_animation_dialog.dismiss();
-        if (friendsUsername.equals("no result found")){
+        if (friendsUsername.equals("no result found")) {
             username_search_result.setText("User does not exist");
-            Toast.makeText(requireActivity(), "User does not exist",Toast.LENGTH_SHORT).show();
-        }else{
+            Toast.makeText(requireActivity(), "User does not exist", Toast.LENGTH_SHORT).show();
+        }
+        else if (friendsUsername.equals("Already Friends")){
+            username_search_result.setText("Already Friends");
+            Toast.makeText(requireActivity(), "Already Friends", Toast.LENGTH_SHORT).show();
+        }
+        else{
             username_search_result.setText(friendsUsername);
             Toast.makeText(requireActivity(), "Convite eviado",Toast.LENGTH_SHORT).show();
             // usar função para mandar convite
-            //start mqtt
             helper.addFriendRequest(username, friendsUsername);
         }
     }
