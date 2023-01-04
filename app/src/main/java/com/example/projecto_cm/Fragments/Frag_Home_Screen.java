@@ -321,6 +321,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
                 //instanciate DAO helper
                 dao.seach_friend(trip_title_or_username_input.getText().toString(), this);
 
+                search_dialog.dismiss();
             }
             else {
                 Toast.makeText(requireActivity(), "Insert username!",Toast.LENGTH_SHORT).show();

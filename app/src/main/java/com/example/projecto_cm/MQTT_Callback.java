@@ -41,9 +41,11 @@ public class MQTT_Callback implements MqttCallback{
         if(type.equals("ADDFRIEND")){
             System.out.println("----------------------------------------------------------------- ADICIONANDO AMIGO");
             String name = data.get("USERNAME");
+            String friend = data.get("FRIEND");
+
 
             //gravar no firebase numa lista de notificaçoes
-            listener.friendNotification(name);
+            listener.friendNotification(name, friend);
 
         }
 

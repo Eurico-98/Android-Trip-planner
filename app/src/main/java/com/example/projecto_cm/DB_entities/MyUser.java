@@ -16,7 +16,6 @@ public class MyUser {
     /**
      * constructor for user class
      * @param username
-     * @param email
      * @param password
      */
     public MyUser(String username, String password, String fullName) {

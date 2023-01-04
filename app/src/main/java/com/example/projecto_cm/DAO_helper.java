@@ -35,6 +35,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -563,8 +564,38 @@ public class DAO_helper extends SQLiteOpenHelper {
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
-    public void add_friend_request(String possible_friend){
-        //databaseReference.child("Users").child(username).setValue(new_user);
+    public void add_friend_request(String friend_to_add, String username, String operation){
+        System.out.println("-------------------------------DAO1------ " + friend_to_add);
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_friends");
+
+        System.out.println("-------------------------------DAO2------ " + friend_to_add);
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                List<String> my_friends = new ArrayList<>();
+
+                // if user already has a list of friends
+                if(dataSnapshot.exists()) {
+                    System.out.println("------------------------------------------------ lista de amigos: "+ dataSnapshot.getValue());
+                    my_friends = (List<String>) dataSnapshot.getValue();
+                }
+
+                // add new friend
+                if(Objects.equals(operation, "add")){
+                    my_friends.add(friend_to_add);
+                }
+                else {
+                    my_friends.remove(friend_to_add);
+                }
+                databaseReference.child("Users").child(username).child("my_friends").setValue(my_friends);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
     // ------------------------------------------------- password encryption methods --------------------------------------------------

@@ -68,10 +68,12 @@ public class MQTT_Helper {
 
         aux.put("TYPE", "ADDFRIEND");
         aux.put("USERNAME", myUsername);
+        aux.put("FRIEND", friendUsername);
+
 
         byte[] data = sendData(aux);
 
-        myClient.publish(topic, data, 0, false);
+        myClient.publish(topic, data, 2, false);
     }
 
     public void acceptFriendRequest(String myUsername, String friendUsername) throws IOException, MqttException {
@@ -85,7 +87,7 @@ public class MQTT_Helper {
 
         byte[] data = sendData(aux);
 
-        myClient.publish(topic, data, 0, false);
+        myClient.publish(topic, data, 2, false);
     }
 
 
@@ -100,7 +102,7 @@ public class MQTT_Helper {
 
 
     public void subscribeToTopic(String topic) throws MqttException {
-        myClient.subscribe(mainTopic + topic, 0, null, new IMqttActionListener() {
+        myClient.subscribe(mainTopic + topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.w(TAG, "Subscribed!");

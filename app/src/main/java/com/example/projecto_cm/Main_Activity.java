@@ -1,12 +1,21 @@
 package com.example.projecto_cm;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static android.app.PendingIntent.FLAG_MUTABLE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -27,6 +36,7 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
 
     private NotificationCompat.Builder builder;
     private Shared_View_Model model;
+    DialogReceiver receiver;
 
     /**
      * on create of login_register activity
@@ -39,6 +49,13 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
 
         // Lock the orientation to portrait
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        receiver = new DialogReceiver();
+        IntentFilter filter = new IntentFilter("com.example.projecto_cm.DIALOG_INTENT");
+        registerReceiver(receiver, filter);
+
+        //IntentFilter filter = new IntentFilter("com.example.projecto_cm.DIALOG_INTENT");
+        //registerReceiver(mMessageReceiver, filter);
 
         model = new ViewModelProvider(Main_Activity.this).get(Shared_View_Model.class);
         model.sendActivityInstance(this);
@@ -76,18 +93,28 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
         fragmentTransaction.commit();
     }
 
-    public void friendNotification(String requestUsername){
+
+
+    public void friendNotification(String requestUsername, String requestedUsername){
+
         System.out.println("--------------------------------------- Chegou Aqui: " + requestUsername);
+
+        Intent intent = new Intent("com.example.projecto_cm.DIALOG_INTENT");
+        intent.putExtra("request_username", requestUsername);
+        intent.putExtra("my_username", requestedUsername);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, FLAG_MUTABLE);
+
+
         builder.setContentTitle("New Friend Request");
         builder.setContentText(requestUsername + " wants to be your friend");
         builder.setSmallIcon(R.drawable.ic_friend_request);
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
-        //builder.setAutoCancel(true);
-
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(123, builder.build());
-
 
         System.out.println("OLa");
     }
