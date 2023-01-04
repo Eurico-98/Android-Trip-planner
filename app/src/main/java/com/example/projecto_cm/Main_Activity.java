@@ -1,20 +1,16 @@
 package com.example.projecto_cm;
 
-import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_MUTABLE;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import androidx.lifecycle.ViewModelProvider;
@@ -93,8 +89,12 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
         fragmentTransaction.commit();
     }
 
-
-
+    /**
+     * to show notification of friend request in android
+     * @param requestUsername
+     * @param requestedUsername
+     */
+    @SuppressLint("LaunchActivityFromNotification")
     public void friendNotification(String requestUsername, String requestedUsername){
 
         System.out.println("--------------------------------------- Chegou Aqui: " + requestUsername);
@@ -105,7 +105,6 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, FLAG_MUTABLE);
 
-
         builder.setContentTitle("New Friend Request");
         builder.setContentText(requestUsername + " wants to be your friend");
         builder.setSmallIcon(R.drawable.ic_friend_request);
@@ -115,19 +114,16 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(123, builder.build());
-
-        System.out.println("OLa");
     }
 
     private void requestNotificationPolicyAccess() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             if (notificationManager != null && !notificationManager.isNotificationPolicyAccessGranted()) {
-                Intent intent = new Intent(
-                        android.provider.Settings
-                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 startActivity(intent);
             }
         }

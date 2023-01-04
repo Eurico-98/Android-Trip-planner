@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,9 +33,7 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -530,7 +526,7 @@ public class DAO_helper extends SQLiteOpenHelper {
 
 
     //-------------------------------------------------Add Friend --------------------------------
-    public void seach_friend(String username, Frag_Home_Screen fg){
+    public void search_friend(String username, Frag_Home_Screen fg){
         DatabaseReference userNameRef = databaseReference.child("Users").child(username);
 
         // check if username is already registered
@@ -538,7 +534,7 @@ public class DAO_helper extends SQLiteOpenHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String usernames = "";
+                String usernames;
 
                 // if user exists return
                 if(dataSnapshot.exists()) {
@@ -548,23 +544,23 @@ public class DAO_helper extends SQLiteOpenHelper {
                     String finalUsernames = usernames;
 
                     ValueEventListener userNameEventListener2 = new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             int ctrl = 0;
 
                             if(dataSnapshot.exists()) {
+
                                 System.out.println("-------------------------------------------1");
-                                // convert data snapshots to hashmap
+
                                 for(DataSnapshot ds : dataSnapshot.getChildren()){
 
-                                    if(ds.getValue().toString().equals(finalUsernames)){
+                                    if(Objects.requireNonNull(ds.getValue()).toString().equals(finalUsernames)){
                                         System.out.println("-------------------------------------------2");
                                         try {
                                             fg.searchResult("Already Friends");
                                             ctrl = 1;
-                                        } catch (MqttException | IOException e) {
-                                            e.printStackTrace();
-                                        }
+                                        } catch (MqttException | IOException ignored) {}
                                         break;
                                     }
                                 }
@@ -573,17 +569,14 @@ public class DAO_helper extends SQLiteOpenHelper {
                                     System.out.println("-------------------------------------------3");
                                     try {
                                         fg.searchResult(finalUsernames);
-                                    } catch (MqttException | IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    } catch (MqttException | IOException ignored) {}
                                 }
-                            }else{
+                            }
+                            else{
                                 System.out.println("-------------------------------------------4");
                                 try {
                                     fg.searchResult(finalUsernames);
-                                } catch (MqttException | IOException e) {
-                                    e.printStackTrace();
-                                }
+                                } catch (MqttException | IOException ignored) {}
                             }
 
                         }
@@ -596,9 +589,7 @@ public class DAO_helper extends SQLiteOpenHelper {
                 else{
                     try {
                         fg.searchResult("no result found");
-                    } catch (MqttException | IOException e) {
-                        e.printStackTrace();
-                    }
+                    } catch (MqttException | IOException ignored) {}
                 }
             }
 
@@ -609,10 +600,9 @@ public class DAO_helper extends SQLiteOpenHelper {
     }
 
     public void add_friend_request(String friend_to_add, String username, String operation){
-        System.out.println("-------------------------------DAO1------ " + friend_to_add);
+
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_friends");
 
-        System.out.println("-------------------------------DAO2------ " + friend_to_add);
         // check if username is already registered
         ValueEventListener userNameEventListener = new ValueEventListener() {
             @Override

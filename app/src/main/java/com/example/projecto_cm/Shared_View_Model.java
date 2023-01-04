@@ -14,6 +14,10 @@ public class Shared_View_Model extends ViewModel {
      */
     public void sendData(Object data_) { data.setValue(data_); }
 
+    /**
+     * to send main activity to dialogReceiver to notify the user
+     * @param activity_
+     */
     public void sendActivityInstance(Main_Activity activity_) { activity.setValue(activity_); }
 
     /**
@@ -22,5 +26,9 @@ public class Shared_View_Model extends ViewModel {
      */
     public LiveData<Object> getData() { return data; }
 
+    /**
+     * to get the activity to use in the dialogReceiver class
+     * @return
+     */
     public LiveData<Main_Activity> getActivityInstance() { return activity; }
 }

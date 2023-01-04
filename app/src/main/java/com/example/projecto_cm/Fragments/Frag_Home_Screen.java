@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,11 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +21,6 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,11 +46,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Edit_Profile;
@@ -63,15 +57,10 @@ import com.example.projecto_cm.MQTT_Helper;
 import com.example.projecto_cm.Main_Activity;
 import com.example.projecto_cm.R;
 import com.example.projecto_cm.Shared_View_Model;
-import com.google.android.gms.tasks.Task;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -323,7 +312,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
                 loading_animation_dialog.show();
 
                 //instanciate DAO helper
-                dao.seach_friend(trip_title_or_username_input.getText().toString(), this);
+                dao.search_friend(trip_title_or_username_input.getText().toString(), this);
 
                 search_dialog.dismiss();
             }
