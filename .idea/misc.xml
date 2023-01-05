@@ -10,6 +10,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/frame_layout.xml" value="0.401" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_add.xml" value="0.272" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_delete.xml" value="0.2155" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_delete_item.xml" value="0.3875" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_help.xml" value="0.3855" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_info.xml" value="0.378" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2845" />
@@ -25,13 +26,16 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/recycler_view_frame_2.xml" value="0.3915" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/weather_forecast_background.xml" value="0.397" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/drawable/widget_bar_background.xml" value="0.2825" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_full_screen_image.xml" value="0.41069809610154123" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_function1.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_function2.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_function3.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_layout.xml" value="0.2667572463768116" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_login_register_layout.xml" value="0.28532608695652173" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/activity_main.xml" value="0.29528985507246375" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_friend_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_location_layout.xml" value="0.5" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_location_picture_layout.xml" value="0.3259292837715322" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_location_weather_layout.xml" value="0.4193109700815956" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_my_trip_layout.xml" value="0.26132246376811596" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/card_search_result_layout.xml" value="0.5" />
@@ -42,6 +46,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_edit_profile_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_edit_trip_layout.xml" value="0.5013440860215054" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_get_trip_title_star_end_dates_layout.xml" value="0.297554347826087" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_list_friends.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_search_trips_or_users_layout.xml" value="0.5" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_select_location_result_layout.xml" value="0.29393115942028986" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/dialog_show_hints_layout.xml" value="0.42667806755023513" />
@@ -55,6 +60,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_picture_in_trip_or_location.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_register_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_show_trip_route_layout.xml" value="0.42667806755023513" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_trip_photo_album.xml" value="0.41069809610154123" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_trip_planner_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/frag_weather_forecast_layout.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/fragment_create_trip_layout.xml" value="0.5" />
@@ -72,6 +78,7 @@
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/search_users_results_layout.xml" value="0.3898458748866727" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/layout/teste.xml" value="0.39619220308250225" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/create_trip_actions.xml" value="0.33229166666666665" />
+        <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/full_screen_image_menu.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/home_screen_actions.xml" value="0.33229166666666665" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/list_my_trips_actions.xml" value="0.42667806755023513" />
         <entry key="..\:/Users/eurico/StudioProjects/Projecto_CM/app/src/main/res/menu/no_actions_appbar.xml" value="0.33229166666666665" />

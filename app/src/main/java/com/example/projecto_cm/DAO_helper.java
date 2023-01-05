@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.projecto_cm.DB_entities.MyUser;
 import com.example.projecto_cm.DB_entities.Trip;
 import com.example.projecto_cm.Fragments.Frag_Home_Screen;
+import com.example.projecto_cm.Fragments.Frag_Photo_Album;
 import com.example.projecto_cm.Fragments.Frag_Trip_Planner;
 import com.example.projecto_cm.Fragments.Frag_List_My_Trips;
 import com.example.projecto_cm.Fragments.Frag_Login;
@@ -24,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -34,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -345,6 +349,98 @@ public class DAO_helper extends SQLiteOpenHelper {
                 else if(fg_list != null) {
                     fg_list.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+
+    /**
+     * to get photos of a trip
+     * @param username
+     * @param fg
+     */
+    public void getTripPhotos(String username, String trip_title, Frag_Photo_Album fg){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
+                Gson gson = new Gson();
+
+                // find trip
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                    // convert firebase data to json object to than convert to trip object
+                    String json = gson2.toJson(ds.getValue());
+                    Trip trip = gson.fromJson(json, Trip.class);
+
+                    if(trip.getTitle().equals(trip_title)){
+
+                        // return list of photos if it exists
+                        fg.setPhotoAlbum(trip.getTrip_album());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+
+    /**
+     * add new photo to firebase database
+     * @param username
+     * @param trip_title
+     */
+    public void addPhoto(String username, String trip_title, String imageEncoded, Frag_Photo_Album fg){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                List<Trip> my_trips = new ArrayList<>();
+                Gson gson = new Gson();
+
+                // find trip and update photo album
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                    // convert firebase data to json object to than convert to trip object
+                    Gson gson2 = new GsonBuilder().setPrettyPrinting().create();
+                    String json = gson2.toJson(ds.getValue());
+                    Trip trip = gson.fromJson(json, Trip.class);
+
+                    if(trip.getTitle().equals(trip_title)){
+
+                        ArrayList<String> trip_album = new ArrayList<>();
+
+                        // return list of photos if it exists
+                        if(trip.getTrip_album() != null){
+                            trip_album = trip.getTrip_album();
+                        }
+
+                        trip_album.add(imageEncoded);
+
+                        trip.setTrip_album(trip_album);
+                    }
+
+                    my_trips.add(trip);
+                }
+
+                fg.getDAOResultMessage(databaseReference.child("Users").child(username).child("my_trips").setValue(my_trips));
             }
 
             @Override

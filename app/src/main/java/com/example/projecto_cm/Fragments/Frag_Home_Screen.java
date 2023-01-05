@@ -52,7 +52,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_For_Listing_Search_Results;
 import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trips_and_Friends;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Edit_Profile;
@@ -89,7 +88,6 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private ViewStub searchResultsStub; // to load dialog item view dynamically according to what is needed in this frag
     private TextView username_search_result;
     private ImageButton list_friends;
-    private ConstraintLayout send_request_cLayout;
     private RecyclerView my_friends_recycler_view;
     private MQTT_Helper helper;
     private Adapter_For_Listing_Trips_and_Friends adapter_for_listing_friends;
@@ -705,7 +703,6 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     /**
      * get user's trip list from firebase database
      */
-    @Override
     public void getMyFriends(ArrayList<String> resultList) {
 
         if(resultList.size() > 0){
@@ -714,10 +711,8 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         }
         else {
             System.out.println("--------------------------------1");
-            my_friends.add("You don't have friends... :'(");
+            my_friends.add("You have no friends... :'( ");
         }
-
-
 
         // set up list of friends
         adapter_for_listing_friends.setMy_list(my_friends);

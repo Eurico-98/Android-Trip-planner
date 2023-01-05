@@ -435,7 +435,6 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
             // pass list of locations to next fragment
             Bundle bundle = new Bundle();
-            bundle.putString("locations", my_trips_list.get(finalTrip_position_in_list));
             bundle.putString("trip title", trip_options_title.getText().toString());
 
             show_trip_options_dialog.dismiss();

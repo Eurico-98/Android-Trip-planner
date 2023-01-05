@@ -2,7 +2,9 @@ package com.example.projecto_cm.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projecto_cm.FullScreenImageActivity;
 import com.example.projecto_cm.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -83,13 +86,23 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
             holder.location_title.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
         }
 
-        // set location title
+        // set photo
         else if(Objects.equals(type_of_list, "list of locations photos")) {
-            holder.location_picture_title.setText(String.valueOf(locations.get(position)).split("_#_")[0]);
-            holder.location_photo.setImageResource(R.drawable.ic_photo_placehoder);
-            //TODO: aqui e preciso passar uma lista de fotos que fica na firebase e meter a foto em cada local
-            //TODO: nao esquecer de meter a visibilidade do botao de delete em funcao do tipo de imagem
-            //TODO: a propria imagem e o listener que chama a funcao de tirar foto
+
+            Bitmap bitmap_ = (Bitmap) locations.get(position);
+            holder.location_photo.setImageBitmap(bitmap_);
+
+            holder.location_photo.setOnClickListener(view -> {
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap_.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                String imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                Intent intent = new Intent(context, FullScreenImageActivity.class);
+                intent.putExtra("image", imageString);
+                context.startActivity(intent);
+            });
         }
 
         // set location title and list of weather data for 5 days
@@ -106,7 +119,7 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
     // to bind views with layout objects
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView location_title, location_title_weather_forecast, location_picture_title;
+        TextView location_title, location_title_weather_forecast;
         RecyclerView recyclerView_weather_forecast;
         ImageView location_photo;
 
@@ -114,7 +127,6 @@ public class Adapter_For_Listing_Trip_Locations extends RecyclerView.Adapter<Ada
             super(itemView);
 
             location_title = itemView.findViewById(R.id.location_title);
-            location_picture_title = itemView.findViewById(R.id.location_picture_title);
             location_title_weather_forecast = itemView.findViewById(R.id.location_title_weather_forecast);
             recyclerView_weather_forecast = itemView.findViewById(R.id.recyclerView_weather_forecast);
             location_photo = itemView.findViewById(R.id.location_picture);

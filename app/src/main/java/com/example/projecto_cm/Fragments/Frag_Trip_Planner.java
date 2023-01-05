@@ -695,15 +695,15 @@ public class Frag_Trip_Planner extends Fragment implements OnMapReadyCallback, I
      */
     public void getDAOResultMessage(Task<Void> add_trip) {
 
-        // cancel loading animation and go back to home screen
-        loading_animation_dialog.dismiss();
-
         add_trip.addOnSuccessListener(suc -> {
 
             Toast.makeText(requireActivity(), "Trip saved successfully!",Toast.LENGTH_SHORT).show();
             getParentFragmentManager().popBackStack(); // take create trip fragment from stack and go back to list trip fragment
 
         }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while saving Trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());
+
+        // cancel loading animation and go back to home screen
+        loading_animation_dialog.dismiss();
     }
 
     // ------------------------------------------------------------- METHODS REQUIRED FOR MAP VIEW LIFECYCLE --------------------------------------------------------

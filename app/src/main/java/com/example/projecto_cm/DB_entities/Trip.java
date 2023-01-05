@@ -1,8 +1,6 @@
 package com.example.projecto_cm.DB_entities;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class Trip {
@@ -10,8 +8,9 @@ public class Trip {
     private String title;
     private String start_date;
     private String end_date;
-    private ArrayList<String> locations; // keys will be locations values will be a list of points of interest
-    private List invited_friend;
+    private ArrayList<String> locations;
+    private ArrayList<String> trip_album;
+    private ArrayList<String> invited_friends;
     private int election_duration;
 
     public Trip() {}
@@ -22,6 +21,10 @@ public class Trip {
         this.end_date = end_date;
         this.locations = locations;
     }
+
+    public void setTrip_album(ArrayList<String> trip_album) { this.trip_album = trip_album; }
+
+    public ArrayList<String> getTrip_album() { return trip_album; }
 
     public String getTitle() {
         return title;
@@ -53,19 +56,15 @@ public class Trip {
 
     public void setLocations(ArrayList<String> locations) {this.locations = locations;}
 
-    public List getInvited_friend() {
-        return invited_friend;
+    public ArrayList<String> getInvited_friends() {
+        return invited_friends;
     }
 
-    public void setInvited_friend(List invited_friend) {
-        this.invited_friend = invited_friend;
-    }
+    public void setInvited_friends(ArrayList<String> invited_friends) { this.invited_friends = invited_friends; }
 
     public int getElection_duration() {
         return election_duration;
     }
 
-    public void setElection_duration(int election_duration) {
-        this.election_duration = election_duration;
-    }
+    public void setElection_duration(int election_duration) { this.election_duration = election_duration; }
 }
