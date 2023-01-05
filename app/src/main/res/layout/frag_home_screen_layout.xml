@@ -69,6 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/add_friends"
         app:layout_constraintTop_toBottomOf="@+id/view_trips" />
+
     <ImageButton
         android:id="@+id/view_trips"
         android:layout_width="100dp"

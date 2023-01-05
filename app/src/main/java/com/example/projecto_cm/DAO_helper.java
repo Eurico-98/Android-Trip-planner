@@ -195,8 +195,6 @@ public class DAO_helper extends SQLiteOpenHelper {
 
             db.update(TABLE_USER_PROFILE, cv, "id_=?", new String[]{id});
         }
-
-
     }
 
 

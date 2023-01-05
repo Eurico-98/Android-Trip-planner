@@ -3,8 +3,10 @@ package com.example.projecto_cm;
 import static android.app.PendingIntent.FLAG_MUTABLE;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +21,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -53,17 +56,13 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
         model = new ViewModelProvider(Main_Activity.this).get(Shared_View_Model.class);
         model.sendActivityInstance(this);
 
-        //requestNotificationPolicyAccess();
-        builder = new NotificationCompat.Builder(Main_Activity.this, "ID1");
+        builder = new NotificationCompat.Builder(this, "Friend request notification");
 
         // if build version is oreo or latter
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("ID1", "ID1", NotificationManager.IMPORTANCE_DEFAULT);
-
-            NotificationManager noti_manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            noti_manager.createNotificationChannel(channel);
-            builder.setChannelId("ID1");
+            NotificationChannel channel = new NotificationChannel("Friend request notification", "Friend request notification channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = this.getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
         }
 
 
@@ -110,20 +109,6 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
         builder.setAutoCancel(true);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(123, builder.build());
+        managerCompat.notify(1, builder.build());
     }
-
-    private void requestNotificationPolicyAccess() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            if (notificationManager != null && !notificationManager.isNotificationPolicyAccessGranted()) {
-                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                startActivity(intent);
-            }
-        }
-    }
-
 }

@@ -325,10 +325,8 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
                 loading_animation_dialog.show();
 
-                //instanciate DAO helper
+                //instantiate DAO helper
                 dao.search_friend(trip_title_or_username_input.getText().toString(), username, this);
-
-
             }
             else {
                 Toast.makeText(requireActivity(), "Insert username!",Toast.LENGTH_SHORT).show();
@@ -406,7 +404,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
 
     /**
-     * request permissions to open camera and to write to external storage
+     * request permissions to open camera and take picture
      */
     private void takePicture() {
         if (requireActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {

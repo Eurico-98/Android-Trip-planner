@@ -1,17 +1,25 @@
 package com.example.projecto_cm.Fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,8 +31,6 @@ import com.example.projecto_cm.Shared_View_Model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Frag_Photo_Album extends Fragment {
 
@@ -35,7 +41,6 @@ public class Frag_Photo_Album extends Fragment {
     private Adapter_For_Listing_Trip_Locations adapter_for_listing_trip_locations;
     private ImageView trip_picture, delete_trip_picture;
     private TextView photo_album_page_title;
-
 
     /**
      *  onCreateView of create trip fragment
@@ -71,14 +76,19 @@ public class Frag_Photo_Album extends Fragment {
         // get locations
         locations.addAll(Arrays.asList(getArguments().getString("locations").split("locations=\\[")[1].split("]")[0].split(", ")));
 
-        trip_picture = requireActivity().findViewById(R.id.trip_picture);
-        trip_picture.setImageResource(R.drawable.ic_photo_placehoder);
-
-        delete_trip_picture = requireActivity().findViewById(R.id.delete_trip_picture);
-
         photo_album_page_title = requireActivity().findViewById(R.id.photo_album_page_title);
         photo_album_page_title.setText(getArguments().getString("trip title") + " photo album");
 
+        trip_picture = requireActivity().findViewById(R.id.trip_picture);
+        delete_trip_picture = requireActivity().findViewById(R.id.delete_trip_picture);
+
+        // call camera on click in picture
+        trip_picture.setOnClickListener(v -> {
+            takePicture();
+        });
+
+
+        //delete_trip_picture.setVisibility(View.INVISIBLE);
         //TODO: a propria imagem e o listener que chama a funcao de tirar foto
         //TODO: aqui ir buscar a imagem da trip de exitir a firebase para mostrar - e preciso meter uma imagem template lá
         //TODO: nao esquecer de meter a visibilidade do botao de delete em funcao do tipo de imagem
@@ -93,4 +103,48 @@ public class Frag_Photo_Album extends Fragment {
 
     }
 
+
+    /**
+     * permission handler
+     */
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
+
+    /**
+     * set image to location or to trip
+     */
+    private final ActivityResultLauncher<Intent> startCameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        // handle the result of the camera intent
+        if (result.getResultCode() == Activity.RESULT_OK) {
+
+            // get the image taken with the camera
+            Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+
+            trip_picture.setImageBitmap(imageBitmap);
+        }
+    });
+
+    /**
+     * request permissions to open camera and take picture
+     */
+    private void takePicture() {
+        if (requireActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+
+            // check for camera permissions
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+                // open camera to take picture
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startCameraLauncher.launch(cameraIntent);
+            }
+            else {
+                // request camera permission
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+            }
+        }
+        else {
+            // display message if device does not have a camera
+            Toast.makeText(getActivity(), "This device does not have a camera", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
