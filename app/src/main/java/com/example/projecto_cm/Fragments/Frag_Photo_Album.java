@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trip_Locations;
@@ -47,13 +48,14 @@ import java.util.ArrayList;
 public class Frag_Photo_Album extends Fragment {
 
     public boolean isFragmentReady = false;
-    private String username, trip_title;
+    private String username, trip_title, operation;
     private RecyclerView trip_locations_recyclerView;
     private ArrayList<Bitmap> photo_album = new ArrayList<>();
     private Adapter_For_Listing_Trip_Locations adapter_for_listing_trip_photos;
     private ImageView take_picture;
     private DAO_helper dao;
     private Dialog loading_animation_dialog, interface_hints_dialog;
+    private Frag_Photo_Album fg_photo_album;
 
     /**
      *  onCreateView of create trip fragment
@@ -83,6 +85,8 @@ public class Frag_Photo_Album extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.photo_album_toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
+
+        fg_photo_album = this;
 
         return view;
     }
@@ -153,7 +157,7 @@ public class Frag_Photo_Album extends Fragment {
 
         if(item.getItemId() == R.id.interface_hints){
             TextView hint = interface_hints_dialog.findViewById(R.id.hint_text);
-            hint.setText("\nHint\n\nClick on a photo to view or delete.\n");
+            hint.setText("\nHint\n\nClick on a photo to view.\n\nSwipe left on a photo to delete.\n");
             interface_hints_dialog.show();
         }
 
@@ -176,14 +180,9 @@ public class Frag_Photo_Album extends Fragment {
 
             // get the image taken with the camera
             Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
-
             photo_album.add(imageBitmap);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] imageInByte = baos.toByteArray();
-            String imageEncoded = Base64.encodeToString(imageInByte, Base64.DEFAULT);
-            dao.addPhoto(username, trip_title, imageEncoded, this);
+            operation = "added";
+            dao.addOrDeletePhoto(username, trip_title, encodeImage(imageBitmap), this, operation);
         }
     });
 
@@ -229,6 +228,11 @@ public class Frag_Photo_Album extends Fragment {
         adapter_for_listing_trip_photos = new Adapter_For_Listing_Trip_Locations(requireActivity(), photo_album, null, "list of locations photos");
         trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_photos);
         trip_locations_recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 4));
+
+        // attach callback for swipes to recycler view to delete photos
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(trip_locations_recyclerView);
+
         loading_animation_dialog.dismiss();
     }
 
@@ -247,7 +251,41 @@ public class Frag_Photo_Album extends Fragment {
             adapter_for_listing_trip_photos.setLocationsList(photo_album);
             trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_photos);
 
-            Toast.makeText(requireActivity(), "Photo added successfully!",Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while saving photo in Database!\nTry again later.",Toast.LENGTH_SHORT).show());
     }
+
+    /**
+     * to encode image and put it in string format
+     * @param imageBitmap
+     * @return
+     */
+    private String encodeImage(Bitmap imageBitmap){
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageInByte = baos.toByteArray();
+        return Base64.encodeToString(imageInByte, Base64.DEFAULT);
+    }
+
+    /**
+     * instantiate callback class to execute swipe left to delete a photo
+     */
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) { return false;}
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            loading_animation_dialog.show();
+            operation = "deleted";
+            dao.addOrDeletePhoto(username, trip_title, String.valueOf(viewHolder.getAdapterPosition()), fg_photo_album, operation);
+
+            photo_album.remove(viewHolder.getAdapterPosition());
+            adapter_for_listing_trip_photos.setLocationsList(photo_album);
+            trip_locations_recyclerView.setAdapter(adapter_for_listing_trip_photos);
+        }
+    };
+
 }

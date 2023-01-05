@@ -297,7 +297,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
         my_trips_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        // attach callback for drag and drop to recycler view to reorder and delete locations from trip
+        // attach callback for swipes to recycler view to delete trips
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(my_trips_recycler_view);
 

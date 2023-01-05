@@ -403,7 +403,7 @@ public class DAO_helper extends SQLiteOpenHelper {
      * @param username
      * @param trip_title
      */
-    public void addPhoto(String username, String trip_title, String imageEncoded, Frag_Photo_Album fg){
+    public void addOrDeletePhoto(String username, String trip_title, String imageEncoded, Frag_Photo_Album fg, String operation){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_trips");
 
@@ -432,7 +432,14 @@ public class DAO_helper extends SQLiteOpenHelper {
                             trip_album = trip.getTrip_album();
                         }
 
-                        trip_album.add(imageEncoded);
+                        // to add
+                        if(operation.equals("added")){
+                            trip_album.add(imageEncoded);
+                        }
+                        // to delete
+                        else{
+                            trip_album.remove(Integer.parseInt(imageEncoded));
+                        }
 
                         trip.setTrip_album(trip_album);
                     }
