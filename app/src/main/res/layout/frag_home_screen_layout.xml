@@ -53,10 +53,22 @@
         android:src="@drawable/add_friend"
         android:elevation="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/list_my_friends"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/plan_trip" />
 
+    <ImageButton
+        android:id="@+id/list_my_friends"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/button_background"
+        android:src="@drawable/friends_list_icon"
+        android:scaleType="fitXY"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_friends"
+        app:layout_constraintTop_toBottomOf="@+id/view_trips" />
     <ImageButton
         android:id="@+id/view_trips"
         android:layout_width="100dp"
@@ -66,10 +78,10 @@
         android:contentDescription="@string/add_friends"
         android:src="@drawable/view_my_trips_icon"
         android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/plan_trip"
+        app:layout_constraintBottom_toTopOf="@+id/list_my_friends"
         app:layout_constraintStart_toEndOf="@+id/plan_trip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/plan_trip" />
+        app:layout_constraintTop_toBottomOf="@+id/app_logo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

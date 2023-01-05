@@ -523,8 +523,15 @@ public class DAO_helper extends SQLiteOpenHelper {
 
 
     //-------------------------------------------------Add Friend --------------------------------
-    public void search_friend(String username, Frag_Home_Screen fg){
-        DatabaseReference userNameRef = databaseReference.child("Users").child(username);
+
+    /**
+     * It verifies if a user exists or if a user already is friends with them
+     * @param username
+     * @param newFriend
+     * @param fg
+     */
+    public void search_friend(String newFriend, String username, Frag_Home_Screen fg){
+        DatabaseReference userNameRef = databaseReference.child("Users").child(newFriend);
 
         // check if username is already registered
         ValueEventListener userNameEventListener = new ValueEventListener() {
@@ -552,7 +559,7 @@ public class DAO_helper extends SQLiteOpenHelper {
 
                                 for(DataSnapshot ds : dataSnapshot.getChildren()){
 
-                                    if(Objects.requireNonNull(ds.getValue()).toString().equals(finalUsernames)){
+                                    if(Objects.requireNonNull(ds.getValue()).toString().equals(newFriend)){
                                         System.out.println("-------------------------------------------2");
                                         try {
                                             fg.searchResult("Already Friends");
@@ -596,6 +603,12 @@ public class DAO_helper extends SQLiteOpenHelper {
         userNameRef.addListenerForSingleValueEvent(userNameEventListener);
     }
 
+    /**
+     * Adds a new user to the the friends list of another user
+     * @param friend_to_add
+     * @param username
+     * @param operation
+     */
     public void add_friend_request(String friend_to_add, String username, String operation){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_friends");
@@ -621,6 +634,40 @@ public class DAO_helper extends SQLiteOpenHelper {
                     my_friends.remove(friend_to_add);
                 }
                 databaseReference.child("Users").child(username).child("my_friends").setValue(my_friends);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        };
+        userNameRef.addListenerForSingleValueEvent(userNameEventListener);
+    }
+
+
+    /**
+     * get user friends from firebase
+     * @param username
+     * @param fg
+     */
+    public void getUserFriends(String username, Frag_Home_Screen fg){
+
+        DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_friends");
+
+        // check if username is already registered
+        ValueEventListener userNameEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<String> my_friends = new ArrayList<>();
+
+                // if user has friends return them
+                if(dataSnapshot.exists()) {
+
+                    // convert data snapshots to hashmap
+                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                        my_friends.add(Objects.requireNonNull(ds.getValue()).toString());
+                    }
+                }
+                fg.getMyFriends(my_friends);
             }
 
             @Override

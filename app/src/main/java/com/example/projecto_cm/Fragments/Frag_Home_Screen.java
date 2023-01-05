@@ -48,7 +48,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Search_Results;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trips_and_Friends;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Edit_Profile;
 import com.example.projecto_cm.Interfaces.Interface_Frag_Change_Listener;
@@ -60,6 +65,7 @@ import com.example.projecto_cm.Shared_View_Model;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -79,12 +85,16 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     private EditText edit_username_input, edit_pass_input, edit_fullname, trip_title_or_username_input;
     private TextView change_pass_button;
 
-    private Dialog search_dialog;
+    private Dialog search_dialog, list_friends_dialog;
     private ViewStub searchResultsStub; // to load dialog item view dynamically according to what is needed in this frag
     private TextView username_search_result;
-    private Button send_friend_request;
+    private ImageButton list_friends;
     private ConstraintLayout send_request_cLayout;
+    private RecyclerView my_friends_recycler_view;
     private MQTT_Helper helper;
+    private Adapter_For_Listing_Trips_and_Friends adapter_for_listing_friends;
+    private ArrayList<String> my_friends = new ArrayList<>();
+
 
 
     /**
@@ -316,9 +326,9 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
                 loading_animation_dialog.show();
 
                 //instanciate DAO helper
-                dao.search_friend(trip_title_or_username_input.getText().toString(), this);
+                dao.search_friend(trip_title_or_username_input.getText().toString(), username, this);
 
-                search_dialog.dismiss();
+
             }
             else {
                 Toast.makeText(requireActivity(), "Insert username!",Toast.LENGTH_SHORT).show();
@@ -327,6 +337,37 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
 
         add_friend.setOnClickListener(view1 -> search_dialog.show());
+
+
+
+
+
+
+        //list_friends--------------------------------------------------------------------------------------------------------------------------
+
+        list_friends = view.findViewById(R.id.list_my_friends);
+        // prepare search dialog
+        list_friends_dialog = new Dialog(requireActivity());
+        list_friends_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        list_friends_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        list_friends_dialog.setCanceledOnTouchOutside(true);
+        list_friends_dialog.setContentView(R.layout.dialog_list_friends);
+
+        my_friends_recycler_view = list_friends_dialog.findViewById(R.id.recyclerView_my_friends_list);
+
+        // prepare recycler view for results list inside search dialog
+        adapter_for_listing_friends = new Adapter_For_Listing_Trips_and_Friends(requireActivity(), null, my_friends, "my_friends");
+        //my_friends_recycler_view.setAdapter(adapter_for_listing_friends);
+        my_friends_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+        list_friends.setOnClickListener(v -> {
+            loading_animation_dialog.show();
+            dao.getUserFriends(username, this);
+        });
+
+
+
+
 
 
         view_my_trips = view.findViewById(R.id.view_trips);
@@ -617,6 +658,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      * Responsible for handling the result of the username search, if exists sends friend request, if not notifies user for unexistent username
      * @param friendsUsername
      */
+    @Override
     public void searchResult(String friendsUsername) throws MqttException, IOException {
 
         loading_animation_dialog.dismiss();
@@ -659,5 +701,30 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         else {
             handler.post(() -> Toast.makeText(requireActivity(), "Unable to start notifications system due to network error!", Toast.LENGTH_SHORT).show());
         }
+    }
+
+    /**
+     * get user's trip list from firebase database
+     */
+    @Override
+    public void getMyFriends(ArrayList<String> resultList) {
+
+        if(resultList.size() > 0){
+            my_friends.addAll(resultList);
+        }
+        else {
+            System.out.println("--------------------------------1");
+            my_friends.add("You don't have friends... :'(");
+        }
+
+
+
+        // set up list of friends
+        adapter_for_listing_friends.setMy_list(my_friends);
+        my_friends_recycler_view.setAdapter(adapter_for_listing_friends);
+
+
+        loading_animation_dialog.dismiss();
+        list_friends_dialog.show();
     }
 }

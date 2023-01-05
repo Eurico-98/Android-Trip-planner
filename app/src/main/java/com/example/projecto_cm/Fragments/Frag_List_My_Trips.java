@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trips;
+import com.example.projecto_cm.Adapters.Adapter_For_Listing_Trips_and_Friends;
 import com.example.projecto_cm.Adapters.Adapter_For_Listing_Search_Results;
 import com.example.projecto_cm.DAO_helper;
 import com.example.projecto_cm.Interfaces.Interface_Card_My_Trip_In_Trip_List;
@@ -49,7 +49,7 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
 
     private Shared_View_Model model;
     private Interface_Frag_Change_Listener fcl; // to change fragment
-    private Adapter_For_Listing_Trips adapter_for_listing_trips;
+    private Adapter_For_Listing_Trips_and_Friends adapter_for_listing_trips_and_friends;
     private Adapter_For_Listing_Search_Results adapter_for_listing_search_results;
     private RecyclerView my_trips_recycler_view, search_trips_results_recycler_view;
     private ArrayList<String> my_trips_list = new ArrayList<>(), search_results = new ArrayList<>();
@@ -293,8 +293,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         }
 
         // set up list of locations
-        adapter_for_listing_trips = new Adapter_For_Listing_Trips(requireActivity(), this, my_trips_list);
-        my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
+        adapter_for_listing_trips_and_friends = new Adapter_For_Listing_Trips_and_Friends(requireActivity(), this, my_trips_list, "my_trips");
+        my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
         my_trips_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         // attach callback for drag and drop to recycler view to reorder and delete locations from trip
@@ -321,8 +321,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
                 dao.addOrUpdateOrDeleteTrip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
 
                 my_trips_list.remove(viewHolder.getAdapterPosition());
-                adapter_for_listing_trips.setMy_trips(my_trips_list);
-                my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
+                adapter_for_listing_trips_and_friends.setMy_list(my_trips_list);
+                my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
             }
         }
     };
@@ -465,8 +465,8 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
             }
 
             // update recycler vie of list of trips
-            adapter_for_listing_trips.setMy_trips(my_trips_list);
-            my_trips_recycler_view.setAdapter(adapter_for_listing_trips);
+            adapter_for_listing_trips_and_friends.setMy_list(my_trips_list);
+            my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
 
             Toast.makeText(requireActivity(), "Trip deleted successfully!",Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(er -> Toast.makeText(requireActivity(), "Error while deleting trip in Database!\nTry again later.",Toast.LENGTH_SHORT).show());

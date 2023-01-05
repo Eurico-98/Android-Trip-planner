@@ -50,9 +50,6 @@ public class Main_Activity extends AppCompatActivity implements Interface_Frag_C
         IntentFilter filter = new IntentFilter("com.example.projecto_cm.DIALOG_INTENT");
         registerReceiver(receiver, filter);
 
-        //IntentFilter filter = new IntentFilter("com.example.projecto_cm.DIALOG_INTENT");
-        //registerReceiver(mMessageReceiver, filter);
-
         model = new ViewModelProvider(Main_Activity.this).get(Shared_View_Model.class);
         model.sendActivityInstance(this);
 
