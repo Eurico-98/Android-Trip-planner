@@ -26,9 +26,9 @@ public class DialogReceiver extends BroadcastReceiver {
             System.out.println("-----------------------------------------------" + requestUsername);
             dao = new DAO_helper((FragmentActivity) context);
             //add friend to receiver
-            dao.add_friend_request(requestUsername, myUsername, "add");
+            dao.addOrDelete_friend_request(requestUsername, myUsername, "add", -1, null);
             //add friend to the sender
-            dao.add_friend_request(myUsername, requestUsername, "add");
+            dao.addOrDelete_friend_request(myUsername, requestUsername, "add", -1, null);
         });
 
         builder.setNegativeButton("No", (dialog, which) -> {});

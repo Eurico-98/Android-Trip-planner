@@ -607,7 +607,7 @@ public class DAO_helper extends SQLiteOpenHelper {
      * @param username
      * @param operation
      */
-    public void add_friend_request(String friend_to_add, String username, String operation){
+    public void addOrDelete_friend_request(String friend_to_add, String username, String operation, int pos, String friend_to_rem){
 
         DatabaseReference userNameRef = databaseReference.child("Users").child(username).child("my_friends");
 
@@ -629,7 +629,11 @@ public class DAO_helper extends SQLiteOpenHelper {
                     my_friends.add(friend_to_add);
                 }
                 else {
-                    my_friends.remove(friend_to_add);
+                    if (pos!=-1){
+                        my_friends.remove(pos);
+                    }else{
+                        my_friends.remove(friend_to_rem);
+                    }
                 }
                 databaseReference.child("Users").child(username).child("my_friends").setValue(my_friends);
             }

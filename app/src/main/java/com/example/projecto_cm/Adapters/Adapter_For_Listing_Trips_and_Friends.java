@@ -46,11 +46,9 @@ public class Adapter_For_Listing_Trips_and_Friends extends RecyclerView.Adapter<
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
         if(type_of_list.equals("my_trips")){
-            System.out.println("----------------------------------------------------- 11");
             view = inflater.inflate(R.layout.card_trip_button_layout, parent, false);
         }
         else{
-            System.out.println("----------------------------------------------------- 12");
             view = inflater.inflate(R.layout.card_friend_layout, parent, false);
         }
 
@@ -71,7 +69,6 @@ public class Adapter_For_Listing_Trips_and_Friends extends RecyclerView.Adapter<
 
         if(type_of_list.equals("my_trips")) {
             try {
-                System.out.println("----------------------------------------------------- 21");
                 holder.trip_button.setText(String.valueOf(my_list.get(position)).split("title=")[1].split(",")[0]);
                 holder.trip_button.setOnClickListener(v -> listener.onTripClick(position));
             } catch (Exception e) {
@@ -79,7 +76,6 @@ public class Adapter_For_Listing_Trips_and_Friends extends RecyclerView.Adapter<
             }
         }
         else{
-            System.out.println("----------------------------------------------------- 11" + my_list.get(position));
             holder.friend.setText(String.valueOf(my_list.get(position)));
         }
     }

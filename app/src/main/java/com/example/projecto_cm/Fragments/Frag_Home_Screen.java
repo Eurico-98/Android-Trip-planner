@@ -282,7 +282,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
 
 
 
-        //--------------------------------------------------------------------------------------------------------------------------
+        //add friends--------------------------------------------------------------------------------------------------------------------------
         add_friend = view.findViewById(R.id.add_friends);
 
         // prepare search dialog
@@ -357,6 +357,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         adapter_for_listing_friends = new Adapter_For_Listing_Trips_and_Friends(requireActivity(), null, my_friends, "my_friends");
         //my_friends_recycler_view.setAdapter(adapter_for_listing_friends);
         my_friends_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
 
         list_friends.setOnClickListener(v -> {
             loading_animation_dialog.show();
@@ -708,6 +709,7 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
     public void getMyFriends(ArrayList<String> resultList) {
 
         if(resultList.size() > 0){
+            my_friends.clear();
             my_friends.addAll(resultList);
         }
         else {
@@ -721,8 +723,44 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         adapter_for_listing_friends.setMy_list(my_friends);
         my_friends_recycler_view.setAdapter(adapter_for_listing_friends);
 
+        // attach callback for drag and drop to recycler view to reorder and delete locations from trip
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(my_friends_recycler_view);
+
 
         loading_animation_dialog.dismiss();
         list_friends_dialog.show();
     }
+
+    /**
+     * instantiate callback class to execute swipe left to delete a trip
+     */
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) { return false;}
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            if(!my_friends.get(0).equals("You don't have trips created!")){
+
+                loading_animation_dialog.show();
+                //System.out.println("---------------------------------------asdasd--" + my_friends.get(viewHolder.getAdapterPosition()));
+                dao.addOrDelete_friend_request(null, username, "delete", viewHolder.getAdapterPosition(), null);
+                dao.addOrDelete_friend_request(null, my_friends.get(viewHolder.getAdapterPosition()), "delete", -1, username);
+
+                my_friends.remove(viewHolder.getAdapterPosition());
+
+                if(!(my_friends.size() > 0)){
+                    my_friends.add("You don't have friends... :'(");
+                }
+
+                adapter_for_listing_friends.setMy_list(my_friends);
+                my_friends_recycler_view.setAdapter(adapter_for_listing_friends);
+
+                loading_animation_dialog.dismiss();
+            }
+        }
+    };
 }
