@@ -311,16 +311,14 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
         execute_trip_or_username_search_button = search_dialog.findViewById(R.id.execute_trip_or_username_search_button);
         execute_trip_or_username_search_button.setOnClickListener(v -> {
 
+            // dismiss keyboard
+            trip_title_or_username_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
             if(trip_title_or_username_input.getText().toString().equals(username)){
                 Toast.makeText(requireActivity(), "Can't send friend request to yourself!",Toast.LENGTH_SHORT).show();
-                username_search_result.setText("Can't send friend request to yourself!");
+                trip_title_or_username_input.setText(""); // clear input text
             }
             else if(!trip_title_or_username_input.getText().toString().equals("")){
-
-
-                // dismiss keyboard
-                trip_title_or_username_input.onEditorAction(EditorInfo.IME_ACTION_DONE);
-
                 loading_animation_dialog.show();
 
                 //instantiate DAO helper
@@ -656,22 +654,20 @@ public class Frag_Home_Screen extends Fragment implements Interface_Edit_Profile
      * @param friendsUsername
      */
     @Override
-    public void searchResult(String friendsUsername) throws MqttException, IOException {
+    public void searchResult(String resultMessage) throws MqttException, IOException {
 
         loading_animation_dialog.dismiss();
+        trip_title_or_username_input.setText(""); // clear input text
 
-        if (friendsUsername.equals("no result found")) {
-            username_search_result.setText("User does not exist");
-            Toast.makeText(requireActivity(), "User does not exist!", Toast.LENGTH_SHORT).show();
+        if (resultMessage.equals("User does not exist!")) {
+            Toast.makeText(requireActivity(), resultMessage, Toast.LENGTH_SHORT).show();
         }
-        else if (friendsUsername.equals("Already Friends")){
-            username_search_result.setText("Already Friends");
-            Toast.makeText(requireActivity(), "Already Friends!", Toast.LENGTH_SHORT).show();
+        else if (resultMessage.equals("Already Friends")){
+            Toast.makeText(requireActivity(), resultMessage, Toast.LENGTH_SHORT).show();
         }
         else{
-            username_search_result.setText(friendsUsername);
-            Toast.makeText(requireActivity(), "Request sent!",Toast.LENGTH_SHORT).show();
-            helper.addFriendRequest(username, friendsUsername);
+            Toast.makeText(requireActivity(), resultMessage,Toast.LENGTH_SHORT).show();
+            helper.addFriendRequest(username, resultMessage);
             search_dialog.dismiss();
         }
     }

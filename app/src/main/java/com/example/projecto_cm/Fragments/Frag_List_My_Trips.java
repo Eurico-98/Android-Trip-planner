@@ -297,9 +297,12 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
         my_trips_recycler_view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
+
         // attach callback for swipes to recycler view to delete trips
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(my_trips_recycler_view);
+        if(my_trips.size() > 0){
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(my_trips_recycler_view);
+        }
 
         loading_animation_dialog.dismiss();
     }
@@ -315,15 +318,12 @@ public class Frag_List_My_Trips extends Fragment implements Interface_Card_My_Tr
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
-            if(!my_trips_list.get(0).equals("You don't have trips created!")){
+            loading_animation_dialog.show();
+            dao.addOrUpdateOrDeleteTrip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
 
-                loading_animation_dialog.show();
-                dao.addOrUpdateOrDeleteTrip(username, null, this_fragment, null, "delete", viewHolder.getAdapterPosition());
-
-                my_trips_list.remove(viewHolder.getAdapterPosition());
-                adapter_for_listing_trips_and_friends.setMy_list(my_trips_list);
-                my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
-            }
+            my_trips_list.remove(viewHolder.getAdapterPosition());
+            adapter_for_listing_trips_and_friends.setMy_list(my_trips_list);
+            my_trips_recycler_view.setAdapter(adapter_for_listing_trips_and_friends);
         }
     };
 

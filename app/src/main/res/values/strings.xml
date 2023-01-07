@@ -1,8 +1,6 @@
 <resources>
     <string name="google_Maps_SDK_API">AIzaSyCy1jYF2HNvQbRYu-vM-HsdLbEMXeQdR2w</string>
     <string name="Directions_API">AIzaSyCghdVlXbN9xT8kqzkMKHVGOP8z30ryesM</string>
-    <string name="Geocoding_API">AIzaSyBkioxrxvd-UX_QYF_jzrKKOfRpzpTxQr8</string>
-    <string name="TimeZone_API">AIzaSyBLU95wi8EvwmfPhXQHXqmbHcktBWeLEUI</string>
     <string name="OpenWeather_API">787208a17330106cf9aa85d7f15789c5</string>
     <string name="app_name">CM_Project</string>
     <string name="add_friends">Add friends</string>

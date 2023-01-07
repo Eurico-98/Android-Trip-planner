@@ -37,7 +37,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -693,7 +692,7 @@ public class DAO_helper extends SQLiteOpenHelper {
                 }
                 else{
                     try {
-                        fg.searchResult("no result found");
+                        fg.searchResult("User does not exist!");
                     } catch (MqttException | IOException ignored) {}
                 }
             }

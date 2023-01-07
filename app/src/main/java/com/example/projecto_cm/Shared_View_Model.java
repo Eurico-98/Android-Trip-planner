@@ -10,7 +10,6 @@ public class Shared_View_Model extends ViewModel {
 
     /**
      * function to send username
-     * @param username_
      */
     public void sendData(Object data_) { data.setValue(data_); }
 
